@@ -1,0 +1,43 @@
+[package]
+name = "adaptive-dkg"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+curve25519-dalek = { version = "4.1.3", features = [
+    "digest",
+    "serde",
+    "rand_core",
+    "zeroize",
+] }
+serde = { version = "1", features = ["derive"] }
+bulletproofs = "5"
+merlin = "3"
+rand = "0.8"
+sha2 = "0.10"
+zeroize = { version = "1", features = ["derive"] }
+thiserror = "1"
+rand_core = "0.6"
+ed25519-dalek = { version = "2.2.0", features = ["rand_core", "serde"] }
+bincode = "1.3"
+rayon = "1.10"
+
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "one_round_dkg_run"
+harness = false
+
+[[bench]]
+name = "two_round_dkg_run"
+harness = false
+
+[[bench]]
+name = "two_round_components"
+harness = false
+
+[[bench]]
+name = "one_round_components"
+harness = false
