@@ -3,7 +3,7 @@
 // Each benchmark isolates one step so we can see where the time goes within
 // initiate, finalize, and output.
 
-use adaptive_dkg::{
+use janus::{
     DkgParams,
     encryption::{decrypt_two_scalars, encrypt_two_scalars, keygen},
     group::g,

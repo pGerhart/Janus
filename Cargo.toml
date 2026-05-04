@@ -1,5 +1,5 @@
 [package]
-name = "adaptive-dkg"
+name = "janus"
 version = "0.1.0"
 edition = "2024"
 

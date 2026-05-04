@@ -1,14 +1,14 @@
-use adaptive_dkg::party::{Parties, PartyState, collect_public_parties, make_party_state};
+use janus::party::{Parties, PartyState, collect_public_parties, make_party_state};
 
-use adaptive_dkg::two_round::{
+use janus::two_round::{
     Round1Broadcast, Round1LocalState, Round2Broadcast, Round2LocalState, dkg_output,
     dkg_round1_initiate, dkg_round2_finalize,
 };
-use adaptive_dkg::two_round_proofs::{
+use janus::two_round_proofs::{
     DecomProofScheme, DecomStatement, DecomWitness, FischlinDecomProofParams, FischlinDecomScheme,
     SchnorrDecomProof, SchnorrDecomProofParams,
 };
-use adaptive_dkg::DkgParams;
+use janus::DkgParams;
 use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
 use curve25519_dalek::scalar::Scalar;
 use rand::thread_rng;

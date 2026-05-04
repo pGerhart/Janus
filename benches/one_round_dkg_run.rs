@@ -1,17 +1,17 @@
-use adaptive_dkg::encryption::HashedElgamalCiphertext2;
-use adaptive_dkg::one_round::{
+use janus::encryption::HashedElgamalCiphertext2;
+use janus::one_round::{
     DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation,
 };
-use adaptive_dkg::one_round_proofs::polyproof_bulletproof::{
+use janus::one_round_proofs::polyproof_bulletproof::{
     PolyWellFormedBulletproof, make_bulletproof_params,
 };
 
-use adaptive_dkg::one_round_proofs::{
+use janus::one_round_proofs::{
     BulletproofPolyProof, FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
 };
-use adaptive_dkg::party::{Parties, PartyState, collect_public_parties, make_party_state};
-use adaptive_dkg::pedersen::PedersenCommitment;
-use adaptive_dkg::DkgParams;
+use janus::party::{Parties, PartyState, collect_public_parties, make_party_state};
+use janus::pedersen::PedersenCommitment;
+use janus::DkgParams;
 use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use rand::thread_rng;

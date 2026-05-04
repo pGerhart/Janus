@@ -1,18 +1,18 @@
-use adaptive_dkg::one_round::{DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation};
-use adaptive_dkg::one_round_proofs::polyproof_bulletproof::make_bulletproof_params;
-use adaptive_dkg::one_round_proofs::{
+use janus::one_round::{DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation};
+use janus::one_round_proofs::polyproof_bulletproof::make_bulletproof_params;
+use janus::one_round_proofs::{
     BulletproofPolyProof, FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
 };
-use adaptive_dkg::party::{Parties, PartyState, collect_public_parties, make_party_state};
-use adaptive_dkg::two_round::{
+use janus::party::{Parties, PartyState, collect_public_parties, make_party_state};
+use janus::two_round::{
     Round1Broadcast, Round1LocalState, Round2Broadcast, Round2LocalState,
     dkg_output as dkg_two_round_output, dkg_round1_initiate, dkg_round2_finalize,
 };
-use adaptive_dkg::two_round_proofs::{
+use janus::two_round_proofs::{
     DecomProofScheme, DecomStatement, DecomWitness, FischlinDecomProofParams, FischlinDecomScheme,
     SchnorrDecomProof, SchnorrDecomProofParams,
 };
-use adaptive_dkg::{DkgOutput, DkgParams};
+use janus::{DkgOutput, DkgParams};
 use curve25519_dalek::scalar::Scalar;
 use rand::thread_rng;
 

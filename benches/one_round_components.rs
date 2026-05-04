@@ -1,7 +1,7 @@
 // Component-level breakdown of the one-round DKG for t=32, n=64, Fischlin Small.
 // Mirrors two_round_components.rs so the two can be compared side-by-side.
 
-use adaptive_dkg::{
+use janus::{
     DkgParams,
     encryption::{decrypt_two_scalars, encrypt_two_scalars, keygen},
     one_round::{DkgInitBroadcast, dkg_initiate},
@@ -44,7 +44,7 @@ fn random_poly_statement_and_witness() -> (PolyWellFormedStatement, PolyWellForm
         .zip(blindings.iter())
         .map(|(&e, &b)| PedersenCommitment::new(e, b))
         .collect();
-    use adaptive_dkg::group::g_mul_scalar;
+    use janus::group::g_mul_scalar;
     let f0_commitment = g_mul_scalar(coeffs[0]);
     let stmt = PolyWellFormedStatement {
         x_points: domain(),
