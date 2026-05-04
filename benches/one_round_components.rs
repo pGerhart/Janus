@@ -188,10 +188,7 @@ fn bench_output_pedvss_opening_check_batch(c: &mut Criterion) {
 }
 
 fn bench_output_vk_aggregation(c: &mut Criterion) {
-    // For each of n parties, sum the n partial pedvss commitments from all senders.
-    // O(n²) point additions.
     let mut rng = thread_rng();
-    // n senders, each with n pedvss commitments
     let all_pedvss: Vec<Vec<RistrettoPoint>> = (0..N)
         .map(|_| (0..N).map(|_| *PedersenCommitment::new(Scalar::random(&mut rng), Scalar::random(&mut rng)).point()).collect())
         .collect();
