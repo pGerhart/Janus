@@ -1,275 +1,265 @@
 # Run on MBP M3 Pro, 36GB Ram
-
-     Running benches/two_round_dkg_run.rs (target/release/deps/two_round_dkg_run-634ea09b92216220)
+    Finished `bench` profile [optimized] target(s) in 0.10s
+     Running benches/two_round_dkg_run.rs (target/release/deps/two_round_dkg_run-a371e40e3fa688df)
 Gnuplot not found, using plotters backend
-[two-round schnorr initiate t4_n16] proof=432 (432 B), broadcast=2272 (2.22 KB)
+[two-round schnorr initiate t4_n16] proof=432 (432 B), broadcast=1888 (1.84 KB)
 two_round_initiate_schnorr/initiate/t4_n16
-                        time:   [1.4608 ms 1.4880 ms 1.5346 ms]
-                        change: [+4.4287% +8.6512% +14.639%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 3 outliers among 20 measurements (15.00%)
-  3 (15.00%) high severe
-[two-round schnorr initiate t8_n32] proof=688 (688 B), broadcast=4320 (4.22 KB)
+                        time:   [1.0367 ms 1.0384 ms 1.0404 ms]
+                        change: [-2.6994% -1.9495% -1.4896%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+[two-round schnorr initiate t8_n32] proof=688 (688 B), broadcast=3424 (3.34 KB)
 two_round_initiate_schnorr/initiate/t8_n32
-                        time:   [2.6950 ms 2.7018 ms 2.7085 ms]
-                        change: [-0.6256% +0.6323% +1.8655%] (p = 0.34 > 0.05)
-                        No change in performance detected.
-Found 2 outliers among 20 measurements (10.00%)
-  1 (5.00%) low mild
-  1 (5.00%) high mild
-[two-round schnorr initiate t16_n64] proof=1200 (1.17 KB), broadcast=8416 (8.22 KB)
+                        time:   [1.7597 ms 1.7652 ms 1.7703 ms]
+                        change: [-3.4149% -2.2205% -1.4249%] (p = 0.00 < 0.05)
+                        Performance has improved.
+[two-round schnorr initiate t16_n64] proof=1200 (1.17 KB), broadcast=6496 (6.34 KB)
 two_round_initiate_schnorr/initiate/t16_n64
-                        time:   [5.2708 ms 5.2865 ms 5.3163 ms]
-                        change: [+1.1602% +1.9979% +2.9440%] (p = 0.00 < 0.05)
-                        Performance has regressed.
+                        time:   [3.2968 ms 3.3137 ms 3.3372 ms]
+                        change: [-3.0201% -1.8202% -0.5449%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
 Found 2 outliers among 20 measurements (10.00%)
-  1 (5.00%) low mild
+  1 (5.00%) high mild
   1 (5.00%) high severe
-[two-round schnorr initiate t32_n64] proof=2224 (2.17 KB), broadcast=9952 (9.72 KB)
+[two-round schnorr initiate t32_n64] proof=2224 (2.17 KB), broadcast=8032 (7.84 KB)
 two_round_initiate_schnorr/initiate/t32_n64
-                        time:   [6.4084 ms 6.4565 ms 6.5256 ms]
-                        change: [+1.9852% +2.6876% +3.4597%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 1 outliers among 20 measurements (5.00%)
-  1 (5.00%) high severe
+                        time:   [4.3835 ms 4.4958 ms 4.7286 ms]
+                        change: [-4.3382% -2.4736% +1.1018%] (p = 0.06 > 0.05)
+                        No change in performance detected.
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high severe
 
-[two-round schnorr finalize t4_n16] round1-received=34080 (33.28 KB)
+[two-round schnorr finalize t4_n16] round1-received=28320 (27.66 KB)
 two_round_finalize_schnorr/finalize/t4_n16
-                        time:   [9.0873 ms 9.1489 ms 9.2468 ms]
-                        change: [+2.3330% +3.3387% +4.3806%] (p = 0.00 < 0.05)
-                        Performance has regressed.
+                        time:   [8.2179 ms 8.3288 ms 8.4985 ms]
+                        change: [-1.6907% -0.6006% +0.5516%] (p = 0.31 > 0.05)
+                        No change in performance detected.
 Found 1 outliers among 20 measurements (5.00%)
-  1 (5.00%) high severe
-[two-round schnorr finalize t8_n32] round1-received=133920 (130.78 KB)
+  1 (5.00%) high mild
+[two-round schnorr finalize t8_n32] round1-received=106144 (103.66 KB)
 Benchmarking two_round_finalize_schnorr/finalize/t8_n32: Warming up for 3.0000 s
-Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 6.0s, enable flat sampling, or reduce sample count to 10.
+Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 5.1s, enable flat sampling, or reduce sample count to 10.
 two_round_finalize_schnorr/finalize/t8_n32
-                        time:   [28.906 ms 28.952 ms 28.998 ms]
-                        change: [+1.4812% +2.4335% +3.4243%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 1 outliers among 20 measurements (5.00%)
-  1 (5.00%) high mild
-[two-round schnorr finalize t16_n64] round1-received=530208 (517.78 KB)
+                        time:   [24.273 ms 24.497 ms 24.895 ms]
+                        change: [-2.9168% -2.0175% -0.7487%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) high mild
+  1 (5.00%) high severe
+[two-round schnorr finalize t16_n64] round1-received=409248 (399.66 KB)
 two_round_finalize_schnorr/finalize/t16_n64
-                        time:   [101.57 ms 101.83 ms 102.10 ms]
-                        change: [-2.4742% +0.4434% +2.9361%] (p = 0.77 > 0.05)
-                        No change in performance detected.
-[two-round schnorr finalize t32_n64] round1-received=626976 (612.28 KB)
+                        time:   [81.301 ms 81.855 ms 82.781 ms]
+                        change: [-8.2783% -5.4408% -2.8432%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+[two-round schnorr finalize t32_n64] round1-received=506016 (494.16 KB)
 two_round_finalize_schnorr/finalize/t32_n64
-                        time:   [168.05 ms 168.31 ms 168.60 ms]
-                        change: [+1.0460% +1.6567% +2.2179%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 3 outliers among 20 measurements (15.00%)
-  2 (10.00%) high mild
-  1 (5.00%) high severe
-
-[two-round schnorr output t4_n16] round1-received=34080 (33.28 KB), round2-received=7320 (7.15 KB), total=41400 (40.43 KB)
-two_round_output_schnorr/output/t4_n16
-                        time:   [4.0325 ms 4.0383 ms 4.0444 ms]
-                        change: [+0.0162% +0.7328% +1.3788%] (p = 0.04 < 0.05)
-                        Change within noise threshold.
-[two-round schnorr output t8_n32] round1-received=133920 (130.78 KB), round2-received=15128 (14.77 KB), total=149048 (145.55 KB)
-two_round_output_schnorr/output/t8_n32
-                        time:   [8.0750 ms 8.0908 ms 8.1062 ms]
-                        change: [+0.7902% +1.1854% +1.5763%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 1 outliers among 20 measurements (5.00%)
-  1 (5.00%) high mild
-[two-round schnorr output t16_n64] round1-received=530208 (517.78 KB), round2-received=30744 (30.02 KB), total=560952 (547.80 KB)
-two_round_output_schnorr/output/t16_n64
-                        time:   [16.187 ms 16.257 ms 16.370 ms]
-                        change: [+0.9230% +1.3917% +1.9437%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 3 outliers among 20 measurements (15.00%)
-  1 (5.00%) high mild
-  2 (10.00%) high severe
-[two-round schnorr output t32_n64] round1-received=626976 (612.28 KB), round2-received=30744 (30.02 KB), total=657720 (642.30 KB)
-two_round_output_schnorr/output/t32_n64
-                        time:   [16.216 ms 16.324 ms 16.505 ms]
-                        change: [+1.5209% +2.2275% +3.1589%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 3 outliers among 20 measurements (15.00%)
-  3 (15.00%) high severe
-
-[two-round fischlin-small initiate t4_n16] proof=6952 (6.79 KB), broadcast=8792 (8.59 KB)
-two_round_initiate_fischlin_small/initiate/t4_n16
-                        time:   [6.3191 ms 6.4436 ms 6.5516 ms]
-                        change: [-0.2582% +1.6134% +3.4025%] (p = 0.10 > 0.05)
-                        No change in performance detected.
-[two-round fischlin-small initiate t8_n32] proof=11048 (10.79 KB), broadcast=14680 (14.34 KB)
-two_round_initiate_fischlin_small/initiate/t8_n32
-                        time:   [9.4817 ms 9.6127 ms 9.7467 ms]
-                        change: [-1.6369% +0.4065% +2.3135%] (p = 0.70 > 0.05)
-                        No change in performance detected.
-Found 1 outliers among 20 measurements (5.00%)
-  1 (5.00%) low mild
-[two-round fischlin-small initiate t16_n64] proof=19240 (18.79 KB), broadcast=26456 (25.84 KB)
-two_round_initiate_fischlin_small/initiate/t16_n64
-                        time:   [16.489 ms 16.873 ms 17.293 ms]
-                        change: [-0.0401% +2.7243% +5.9532%] (p = 0.09 > 0.05)
-                        No change in performance detected.
-[two-round fischlin-small initiate t32_n64] proof=35624 (34.79 KB), broadcast=43352 (42.34 KB)
-Benchmarking two_round_initiate_fischlin_small/initiate/t32_n64: Warming up for 3.0000 s
-Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 5.7s, enable flat sampling, or reduce sample count to 10.
-two_round_initiate_fischlin_small/initiate/t32_n64
-                        time:   [27.387 ms 27.780 ms 28.196 ms]
-                        change: [-3.3354% +1.2487% +6.0758%] (p = 0.60 > 0.05)
-                        No change in performance detected.
-Found 2 outliers among 20 measurements (10.00%)
-  1 (5.00%) low mild
-  1 (5.00%) high mild
-
-[two-round fischlin-small finalize t4_n16] round1-received=131880 (128.79 KB)
-two_round_finalize_fischlin_small/finalize/t4_n16
-                        time:   [20.528 ms 20.598 ms 20.728 ms]
-                        change: [+0.6198% +1.0505% +1.5602%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 3 outliers among 20 measurements (15.00%)
-  1 (5.00%) low mild
-  1 (5.00%) high mild
-  1 (5.00%) high severe
-[two-round fischlin-small finalize t8_n32] round1-received=455080 (444.41 KB)
-two_round_finalize_fischlin_small/finalize/t8_n32
-                        time:   [53.202 ms 53.459 ms 53.906 ms]
-                        change: [-0.5294% +0.6364% +1.7905%] (p = 0.34 > 0.05)
-                        No change in performance detected.
-Found 2 outliers among 20 measurements (10.00%)
-  1 (5.00%) high mild
-  1 (5.00%) high severe
-[two-round fischlin-small finalize t16_n64] round1-received=1666728 (1.59 MB)
-two_round_finalize_fischlin_small/finalize/t16_n64
-                        time:   [153.90 ms 154.08 ms 154.27 ms]
-                        change: [-0.0178% +0.3869% +0.7973%] (p = 0.08 > 0.05)
-                        No change in performance detected.
-[two-round fischlin-small finalize t32_n64] round1-received=2731176 (2.60 MB)
-two_round_finalize_fischlin_small/finalize/t32_n64
-                        time:   [229.58 ms 231.06 ms 233.04 ms]
-                        change: [+0.2284% +1.0343% +2.0276%] (p = 0.02 < 0.05)
-                        Change within noise threshold.
-Found 2 outliers among 20 measurements (10.00%)
-  1 (5.00%) high mild
-  1 (5.00%) high severe
-
-[two-round fischlin-small output t4_n16] round1-received=131880 (128.79 KB), round2-received=7320 (7.15 KB), total=139200 (135.94 KB)
-two_round_output_fischlin_small/output/t4_n16
-                        time:   [4.0201 ms 4.0426 ms 4.0811 ms]
-                        change: [-0.3583% +0.3085% +0.9658%] (p = 0.40 > 0.05)
-                        No change in performance detected.
-Found 2 outliers among 20 measurements (10.00%)
-  1 (5.00%) high mild
-  1 (5.00%) high severe
-[two-round fischlin-small output t8_n32] round1-received=455080 (444.41 KB), round2-received=15128 (14.77 KB), total=470208 (459.19 KB)
-two_round_output_fischlin_small/output/t8_n32
-                        time:   [8.1985 ms 8.8596 ms 9.4368 ms]
-                        change: [-0.2924% +3.4712% +8.4623%] (p = 0.12 > 0.05)
-                        No change in performance detected.
-Found 5 outliers among 20 measurements (25.00%)
-  1 (5.00%) high mild
-  4 (20.00%) high severe
-[two-round fischlin-small output t16_n64] round1-received=1666728 (1.59 MB), round2-received=30744 (30.02 KB), total=1697472 (1.62 MB)
-two_round_output_fischlin_small/output/t16_n64
-                        time:   [16.096 ms 16.107 ms 16.117 ms]
-                        change: [-1.0845% -0.5901% -0.2024%] (p = 0.01 < 0.05)
-                        Change within noise threshold.
-Found 2 outliers among 20 measurements (10.00%)
-  2 (10.00%) high severe
-[two-round fischlin-small output t32_n64] round1-received=2731176 (2.60 MB), round2-received=30744 (30.02 KB), total=2761920 (2.63 MB)
-two_round_output_fischlin_small/output/t32_n64
-                        time:   [16.148 ms 16.333 ms 16.689 ms]
-                        change: [+0.2702% +1.0596% +2.4406%] (p = 0.05 < 0.05)
-                        Change within noise threshold.
-Found 1 outliers among 20 measurements (5.00%)
-  1 (5.00%) high severe
-
-[two-round fischlin-large initiate t4_n16] proof=18670 (18.23 KB), broadcast=20510 (20.03 KB)
-two_round_initiate_fischlin_large/initiate/t4_n16
-                        time:   [3.5811 ms 3.6009 ms 3.6182 ms]
-                        change: [+2.4500% +3.2321% +4.1671%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 1 outliers among 20 measurements (5.00%)
-  1 (5.00%) high mild
-[two-round fischlin-large initiate t8_n32] proof=29678 (28.98 KB), broadcast=33310 (32.53 KB)
-two_round_initiate_fischlin_large/initiate/t8_n32
-                        time:   [5.0321 ms 5.0561 ms 5.0854 ms]
-                        change: [+0.5611% +1.3204% +2.1502%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 2 outliers among 20 measurements (10.00%)
-  2 (10.00%) high mild
-[two-round fischlin-large initiate t16_n64] proof=51694 (50.48 KB), broadcast=58910 (57.53 KB)
-two_round_initiate_fischlin_large/initiate/t16_n64
-                        time:   [8.1969 ms 8.2321 ms 8.2845 ms]
-                        change: [+0.3079% +0.8885% +1.4912%] (p = 0.01 < 0.05)
-                        Change within noise threshold.
-[two-round fischlin-large initiate t32_n64] proof=95726 (93.48 KB), broadcast=103454 (101.03 KB)
-two_round_initiate_fischlin_large/initiate/t32_n64
-                        time:   [10.525 ms 10.543 ms 10.560 ms]
-                        change: [-0.2027% +0.0997% +0.4451%] (p = 0.56 > 0.05)
-                        No change in performance detected.
-Found 1 outliers among 20 measurements (5.00%)
-  1 (5.00%) high severe
-
-[two-round fischlin-large finalize t4_n16] round1-received=307650 (300.44 KB)
-Benchmarking two_round_finalize_fischlin_large/finalize/t4_n16: Warming up for 3.0000 s
-Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 8.3s, enable flat sampling, or reduce sample count to 10.
-two_round_finalize_fischlin_large/finalize/t4_n16
-                        time:   [39.340 ms 39.387 ms 39.468 ms]
-                        change: [-0.2740% +0.3488% +1.0910%] (p = 0.36 > 0.05)
-                        No change in performance detected.
-Found 4 outliers among 20 measurements (20.00%)
-  4 (20.00%) high severe
-[two-round fischlin-large finalize t8_n32] round1-received=1032610 (1008.41 KB)
-two_round_finalize_fischlin_large/finalize/t8_n32
-                        time:   [92.003 ms 92.073 ms 92.158 ms]
-                        change: [-6.6783% -3.2250% -1.1351%] (p = 0.03 < 0.05)
+                        time:   [145.27 ms 145.55 ms 145.89 ms]
+                        change: [-2.0153% -1.5478% -1.1670%] (p = 0.00 < 0.05)
                         Performance has improved.
 Found 3 outliers among 20 measurements (15.00%)
   2 (10.00%) high mild
   1 (5.00%) high severe
-[two-round fischlin-large finalize t16_n64] round1-received=3711330 (3.54 MB)
-two_round_finalize_fischlin_large/finalize/t16_n64
-                        time:   [238.31 ms 238.42 ms 238.55 ms]
-                        change: [-0.8241% -0.5356% -0.2751%] (p = 0.00 < 0.05)
+
+[two-round schnorr output t4_n16] round1-received=28320 (27.66 KB), round2-received=7320 (7.15 KB), total=35640 (34.80 KB)
+two_round_output_schnorr/output/t4_n16
+                        time:   [4.0260 ms 4.0347 ms 4.0454 ms]
+                        change: [-1.1925% -0.6223% -0.1112%] (p = 0.03 < 0.05)
                         Change within noise threshold.
 Found 1 outliers among 20 measurements (5.00%)
   1 (5.00%) high mild
-[two-round fischlin-large finalize t32_n64] round1-received=6517602 (6.22 MB)
-Benchmarking two_round_finalize_fischlin_large/finalize/t32_n64: Warming up for 3.0000 s
-Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 6.4s, or reduce sample count to 10.
-two_round_finalize_fischlin_large/finalize/t32_n64
-                        time:   [324.63 ms 327.73 ms 332.52 ms]
-                        change: [-0.6049% +0.4720% +1.9082%] (p = 0.56 > 0.05)
-                        No change in performance detected.
+[two-round schnorr output t8_n32] round1-received=106144 (103.66 KB), round2-received=15128 (14.77 KB), total=121272 (118.43 KB)
+two_round_output_schnorr/output/t8_n32
+                        time:   [8.0373 ms 8.0460 ms 8.0567 ms]
+                        change: [-1.1701% -0.6814% -0.2281%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+[two-round schnorr output t16_n64] round1-received=409248 (399.66 KB), round2-received=30744 (30.02 KB), total=439992 (429.68 KB)
+two_round_output_schnorr/output/t16_n64
+                        time:   [16.085 ms 16.095 ms 16.105 ms]
+                        change: [-1.5881% -1.2171% -0.8347%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high severe
+[two-round schnorr output t32_n64] round1-received=506016 (494.16 KB), round2-received=30744 (30.02 KB), total=536760 (524.18 KB)
+two_round_output_schnorr/output/t32_n64
+                        time:   [16.087 ms 16.093 ms 16.100 ms]
+                        change: [-2.7320% -1.9661% -1.3195%] (p = 0.00 < 0.05)
+                        Performance has improved.
 Found 2 outliers among 20 measurements (10.00%)
   2 (10.00%) high severe
 
-[two-round fischlin-large output t4_n16] round1-received=307650 (300.44 KB), round2-received=7320 (7.15 KB), total=314970 (307.59 KB)
-two_round_output_fischlin_large/output/t4_n16
-                        time:   [4.0239 ms 4.0459 ms 4.0941 ms]
-                        change: [-2.0642% -0.5367% +1.1370%] (p = 0.56 > 0.05)
+[two-round fischlin-small initiate t4_n16] proof=6952 (6.79 KB), broadcast=8408 (8.21 KB)
+two_round_initiate_fischlin_small/initiate/t4_n16
+                        time:   [5.8827 ms 5.9616 ms 6.0440 ms]
+                        change: [-3.9406% -1.3743% +1.1119%] (p = 0.31 > 0.05)
+                        No change in performance detected.
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low mild
+  1 (5.00%) high mild
+[two-round fischlin-small initiate t8_n32] proof=11048 (10.79 KB), broadcast=13784 (13.46 KB)
+two_round_initiate_fischlin_small/initiate/t8_n32
+                        time:   [8.5042 ms 8.6005 ms 8.6913 ms]
+                        change: [-2.4415% -0.0968% +2.3108%] (p = 0.94 > 0.05)
+                        No change in performance detected.
+Found 4 outliers among 20 measurements (20.00%)
+  1 (5.00%) low mild
+  2 (10.00%) high mild
+  1 (5.00%) high severe
+[two-round fischlin-small initiate t16_n64] proof=19240 (18.79 KB), broadcast=24536 (23.96 KB)
+two_round_initiate_fischlin_small/initiate/t16_n64
+                        time:   [14.557 ms 14.816 ms 15.037 ms]
+                        change: [-6.9321% -3.3196% +0.2551%] (p = 0.09 > 0.05)
+                        No change in performance detected.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+[two-round fischlin-small initiate t32_n64] proof=35624 (34.79 KB), broadcast=41432 (40.46 KB)
+Benchmarking two_round_initiate_fischlin_small/initiate/t32_n64: Warming up for 3.0000 s
+Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 5.2s, enable flat sampling, or reduce sample count to 10.
+two_round_initiate_fischlin_small/initiate/t32_n64
+                        time:   [24.225 ms 25.251 ms 26.252 ms]
+                        change: [-4.9209% -0.5284% +4.0446%] (p = 0.82 > 0.05)
+                        No change in performance detected.
+
+[two-round fischlin-small finalize t4_n16] round1-received=126120 (123.16 KB)
+two_round_finalize_fischlin_small/finalize/t4_n16
+                        time:   [19.374 ms 19.386 ms 19.397 ms]
+                        change: [-9.3284% -5.1824% -2.6654%] (p = 0.01 < 0.05)
+                        Performance has improved.
+Found 3 outliers among 20 measurements (15.00%)
+  3 (15.00%) high severe
+[two-round fischlin-small finalize t8_n32] round1-received=427304 (417.29 KB)
+two_round_finalize_fischlin_small/finalize/t8_n32
+                        time:   [47.823 ms 47.861 ms 47.908 ms]
+                        change: [-5.4716% -4.3261% -3.4655%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+[two-round fischlin-small finalize t16_n64] round1-received=1545768 (1.47 MB)
+two_round_finalize_fischlin_small/finalize/t16_n64
+                        time:   [132.91 ms 133.08 ms 133.29 ms]
+                        change: [-3.6598% -3.0604% -2.6734%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+[two-round fischlin-small finalize t32_n64] round1-received=2610216 (2.49 MB)
+two_round_finalize_fischlin_small/finalize/t32_n64
+                        time:   [210.77 ms 213.63 ms 216.71 ms]
+                        change: [-2.7691% -1.1122% +0.5207%] (p = 0.23 > 0.05)
+                        No change in performance detected.
+
+[two-round fischlin-small output t4_n16] round1-received=126120 (123.16 KB), round2-received=7320 (7.15 KB), total=133440 (130.31 KB)
+two_round_output_fischlin_small/output/t4_n16
+                        time:   [4.0153 ms 4.0260 ms 4.0451 ms]
+                        change: [-2.1275% -0.3621% +1.8868%] (p = 0.77 > 0.05)
                         No change in performance detected.
 Found 3 outliers among 20 measurements (15.00%)
   1 (5.00%) high mild
   2 (10.00%) high severe
-[two-round fischlin-large output t8_n32] round1-received=1032610 (1008.41 KB), round2-received=15128 (14.77 KB), total=1047738 (1023.18 KB)
-two_round_output_fischlin_large/output/t8_n32
-                        time:   [8.0420 ms 8.0519 ms 8.0635 ms]
-                        change: [-0.3260% -0.0563% +0.2652%] (p = 0.73 > 0.05)
-                        No change in performance detected.
+[two-round fischlin-small output t8_n32] round1-received=427304 (417.29 KB), round2-received=15128 (14.77 KB), total=442432 (432.06 KB)
+two_round_output_fischlin_small/output/t8_n32
+                        time:   [8.0407 ms 8.0481 ms 8.0556 ms]
+                        change: [-6.7728% -4.8098% -3.0913%] (p = 0.00 < 0.05)
+                        Performance has improved.
 Found 1 outliers among 20 measurements (5.00%)
   1 (5.00%) high severe
-[two-round fischlin-large output t16_n64] round1-received=3711330 (3.54 MB), round2-received=30744 (30.02 KB), total=3742074 (3.57 MB)
-two_round_output_fischlin_large/output/t16_n64
-                        time:   [16.108 ms 16.116 ms 16.126 ms]
-                        change: [-0.2249% -0.0294% +0.1667%] (p = 0.79 > 0.05)
+[two-round fischlin-small output t16_n64] round1-received=1545768 (1.47 MB), round2-received=30744 (30.02 KB), total=1576512 (1.50 MB)
+two_round_output_fischlin_small/output/t16_n64
+                        time:   [16.731 ms 16.944 ms 17.116 ms]
+                        change: [-5.0599% -1.1584% +1.5935%] (p = 0.61 > 0.05)
                         No change in performance detected.
+[two-round fischlin-small output t32_n64] round1-received=2610216 (2.49 MB), round2-received=30744 (30.02 KB), total=2640960 (2.52 MB)
+two_round_output_fischlin_small/output/t32_n64
+                        time:   [16.249 ms 16.320 ms 16.397 ms]
+                        change: [-2.2320% -1.3665% -0.6129%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+
+[two-round fischlin-large initiate t4_n16] proof=18670 (18.23 KB), broadcast=20126 (19.65 KB)
+two_round_initiate_fischlin_large/initiate/t4_n16
+                        time:   [3.0721 ms 3.0938 ms 3.1217 ms]
+                        change: [-11.605% -4.6622% -0.3741%] (p = 0.19 > 0.05)
+                        No change in performance detected.
+[two-round fischlin-large initiate t8_n32] proof=29678 (28.98 KB), broadcast=32414 (31.65 KB)
+two_round_initiate_fischlin_large/initiate/t8_n32
+                        time:   [4.0790 ms 4.1273 ms 4.1666 ms]
+                        change: [-2.9021% -1.9724% -1.1093%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
+[two-round fischlin-large initiate t16_n64] proof=51694 (50.48 KB), broadcast=56990 (55.65 KB)
+two_round_initiate_fischlin_large/initiate/t16_n64
+                        time:   [6.3647 ms 6.4206 ms 6.4844 ms]
+                        change: [-1.3511% +0.3502% +1.7747%] (p = 0.70 > 0.05)
+                        No change in performance detected.
+[two-round fischlin-large initiate t32_n64] proof=95726 (93.48 KB), broadcast=101534 (99.15 KB)
+two_round_initiate_fischlin_large/initiate/t32_n64
+                        time:   [8.7127 ms 8.8517 ms 8.9811 ms]
+                        change: [-3.6146% +0.1331% +2.6090%] (p = 0.95 > 0.05)
+                        No change in performance detected.
+
+[two-round fischlin-large finalize t4_n16] round1-received=301890 (294.81 KB)
+Benchmarking two_round_finalize_fischlin_large/finalize/t4_n16: Warming up for 3.0000 s
+Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 8.7s, enable flat sampling, or reduce sample count to 10.
+two_round_finalize_fischlin_large/finalize/t4_n16
+                        time:   [38.571 ms 39.327 ms 40.168 ms]
+                        change: [-4.7798% -2.9756% -1.3277%] (p = 0.00 < 0.05)
+                        Performance has improved.
 Found 4 outliers among 20 measurements (20.00%)
+  1 (5.00%) high mild
+  3 (15.00%) high severe
+[two-round fischlin-large finalize t8_n32] round1-received=1004834 (981.28 KB)
+two_round_finalize_fischlin_large/finalize/t8_n32
+                        time:   [87.767 ms 87.926 ms 88.092 ms]
+                        change: [-4.1497% -3.3338% -2.6090%] (p = 0.00 < 0.05)
+                        Performance has improved.
+[two-round fischlin-large finalize t16_n64] round1-received=3590370 (3.42 MB)
+two_round_finalize_fischlin_large/finalize/t16_n64
+                        time:   [218.41 ms 218.87 ms 219.38 ms]
+                        change: [-5.4420% -4.6797% -3.9832%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 3 outliers among 20 measurements (15.00%)
   3 (15.00%) high mild
-  1 (5.00%) high severe
-[two-round fischlin-large output t32_n64] round1-received=6517602 (6.22 MB), round2-received=30744 (30.02 KB), total=6548346 (6.24 MB)
-two_round_output_fischlin_large/output/t32_n64
-                        time:   [16.116 ms 16.133 ms 16.150 ms]
-                        change: [+0.0073% +0.2030% +0.4358%] (p = 0.08 > 0.05)
+[two-round fischlin-large finalize t32_n64] round1-received=6396642 (6.10 MB)
+Benchmarking two_round_finalize_fischlin_large/finalize/t32_n64: Warming up for 3.0000 s
+Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 6.1s, or reduce sample count to 10.
+two_round_finalize_fischlin_large/finalize/t32_n64
+                        time:   [302.89 ms 303.51 ms 304.22 ms]
+                        change: [-51.018% -37.243% -18.105%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+[two-round fischlin-large output t4_n16] round1-received=301890 (294.81 KB), round2-received=7320 (7.15 KB), total=309210 (301.96 KB)
+two_round_output_fischlin_large/output/t4_n16
+                        time:   [4.0244 ms 4.0326 ms 4.0411 ms]
+                        change: [-0.3536% +0.1915% +0.7157%] (p = 0.51 > 0.05)
                         No change in performance detected.
 Found 2 outliers among 20 measurements (10.00%)
   1 (5.00%) high mild
   1 (5.00%) high severe
+[two-round fischlin-large output t8_n32] round1-received=1004834 (981.28 KB), round2-received=15128 (14.77 KB), total=1019962 (996.06 KB)
+two_round_output_fischlin_large/output/t8_n32
+                        time:   [8.0539 ms 8.0656 ms 8.0786 ms]
+                        change: [-0.6748% -0.1442% +0.3639%] (p = 0.62 > 0.05)
+                        No change in performance detected.
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+[two-round fischlin-large output t16_n64] round1-received=3590370 (3.42 MB), round2-received=30744 (30.02 KB), total=3621114 (3.45 MB)
+two_round_output_fischlin_large/output/t16_n64
+                        time:   [16.127 ms 16.141 ms 16.157 ms]
+                        change: [+0.0172% +0.3037% +0.6615%] (p = 0.06 > 0.05)
+                        No change in performance detected.
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high severe
+[two-round fischlin-large output t32_n64] round1-received=6396642 (6.10 MB), round2-received=30744 (30.02 KB), total=6427386 (6.13 MB)
+two_round_output_fischlin_large/output/t32_n64
+                        time:   [16.116 ms 16.135 ms 16.161 ms]
+                        change: [-4.6456% -2.0547% -0.4041%] (p = 0.06 > 0.05)
+                        No change in performance detected.
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) high mild
+  2 (10.00%) high severe

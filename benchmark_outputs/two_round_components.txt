@@ -1,108 +1,105 @@
 # Run on MBP M3 Pro, 36GB Ram
 
-     Running benches/two_round_components.rs (target/release/deps/two_round_components-fb8e5d07408867bd)
+    Finished `bench` profile [optimized] target(s) in 0.09s
+     Running benches/two_round_components.rs (target/release/deps/two_round_components-5b5ada60db913d2b)
 Gnuplot not found, using plotters backend
 initiate/decom_prove_fischlin
-                        time:   [20.071 ms 20.562 ms 21.063 ms]
-                        change: [-4.1607% -0.6950% +2.8159%] (p = 0.70 > 0.05)
+                        time:   [20.627 ms 21.207 ms 21.801 ms]
+                        change: [-4.4535% -0.6270% +3.3949%] (p = 0.76 > 0.05)
                         No change in performance detected.
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+
+initiate/pk_prove       time:   [85.699 µs 85.786 µs 85.896 µs]
+                        change: [+0.2319% +0.8976% +1.5373%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
 Found 1 outliers among 100 measurements (1.00%)
   1 (1.00%) high mild
 
-initiate/pk_prove       time:   [85.617 µs 85.705 µs 85.808 µs]
-                        change: [-0.2323% +0.0258% +0.2872%] (p = 0.84 > 0.05)
-                        No change in performance detected.
-Found 14 outliers among 100 measurements (14.00%)
-  2 (2.00%) low severe
-  2 (2.00%) low mild
-  4 (4.00%) high mild
-  6 (6.00%) high severe
-
+Benchmarking initiate/encrypt_shares_batch: Warming up for 3.0000 s
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.1s, enable flat sampling, or reduce sample count to 50.
 initiate/encrypt_shares_batch
-                        time:   [3.8920 ms 3.8959 ms 3.9006 ms]
-                        change: [-4.9612% -4.8190% -4.6823%] (p = 0.00 < 0.05)
+                        time:   [1.7967 ms 1.8000 ms 1.8038 ms]
+                        change: [-4.0700% -3.4589% -2.9620%] (p = 0.00 < 0.05)
                         Performance has improved.
-Found 10 outliers among 100 measurements (10.00%)
-  1 (1.00%) low mild
+Found 19 outliers among 100 measurements (19.00%)
   3 (3.00%) high mild
-  6 (6.00%) high severe
+  16 (16.00%) high severe
 
 Benchmarking finalize/decom_verify_fischlin_single: Warming up for 3.0000 s
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.5s, enable flat sampling, or reduce sample count to 60.
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.6s, enable flat sampling, or reduce sample count to 60.
 finalize/decom_verify_fischlin_single
-                        time:   [1.0844 ms 1.0853 ms 1.0864 ms]
-                        change: [+6.6723% +7.0133% +7.3111%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 14 outliers among 100 measurements (14.00%)
-  1 (1.00%) low severe
-  5 (5.00%) high mild
-  8 (8.00%) high severe
+                        time:   [1.1156 ms 1.1406 ms 1.1732 ms]
+                        change: [+0.8444% +2.2521% +3.8920%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 7 outliers among 100 measurements (7.00%)
+  1 (1.00%) high mild
+  6 (6.00%) high severe
 
 Benchmarking finalize/decom_verify_fischlin_batch_n64: Warming up for 3.0000 s
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.1s, or reduce sample count to 70.
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.3s, or reduce sample count to 60.
 finalize/decom_verify_fischlin_batch_n64
-                        time:   [71.234 ms 71.462 ms 71.869 ms]
-                        change: [+3.7766% +4.3910% +5.1558%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 12 outliers among 100 measurements (12.00%)
-  1 (1.00%) low severe
-  2 (2.00%) high mild
-  9 (9.00%) high severe
+                        time:   [71.374 ms 71.468 ms 71.568 ms]
+                        change: [-0.4614% -0.2903% -0.1229%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) high mild
+  1 (1.00%) high severe
 
-Benchmarking finalize/decrypt_batch_n63: Warming up for 3.0000 s
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.6s, enable flat sampling, or reduce sample count to 50.
 finalize/decrypt_batch_n63
-                        time:   [1.9007 ms 1.9019 ms 1.9034 ms]
-                        change: [-0.5155% -0.2406% -0.0042%] (p = 0.07 > 0.05)
-                        No change in performance detected.
-Found 15 outliers among 100 measurements (15.00%)
-  4 (4.00%) high mild
-  11 (11.00%) high severe
+                        time:   [3.1488 ms 3.1521 ms 3.1557 ms]
+                        change: [-1.4688% -1.1924% -0.9455%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 10 outliers among 100 measurements (10.00%)
+  8 (8.00%) high mild
+  2 (2.00%) high severe
 
 Benchmarking finalize/pedvss_eval_check_batch_n63: Warming up for 3.0000 s
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.4s, or reduce sample count to 70.
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.5s, or reduce sample count to 90.
 finalize/pedvss_eval_check_batch_n63
-                        time:   [54.320 ms 54.370 ms 54.429 ms]
-                        change: [-12.895% -12.795% -12.688%] (p = 0.00 < 0.05)
+                        time:   [54.482 ms 54.579 ms 54.696 ms]
+                        change: [-3.2553% -2.3743% -1.7626%] (p = 0.00 < 0.05)
                         Performance has improved.
-Found 10 outliers among 100 measurements (10.00%)
-  3 (3.00%) high mild
+Found 14 outliers among 100 measurements (14.00%)
+  7 (7.00%) high mild
   7 (7.00%) high severe
 
 Benchmarking finalize/cstar_aggregate_and_eval_n64: Warming up for 3.0000 s
 Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.2s, or reduce sample count to 90.
 finalize/cstar_aggregate_and_eval_n64
-                        time:   [57.808 ms 57.856 ms 57.913 ms]
-                        change: [+10.916% +11.040% +11.160%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 12 outliers among 100 measurements (12.00%)
-  5 (5.00%) high mild
-  7 (7.00%) high severe
-
-finalize/comeq_prove    time:   [165.17 µs 165.31 µs 165.47 µs]
-                        change: [+0.1459% +0.3237% +0.5077%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 13 outliers among 100 measurements (13.00%)
-  5 (5.00%) high mild
-  8 (8.00%) high severe
-
-finalize/signature_verify_batch_n64
-                        time:   [44.059 ms 44.128 ms 44.198 ms]
-                        change: [+4.0763% +4.8368% +5.3657%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-
-output/pk_verify_batch_n64
-                        time:   [4.6034 ms 4.6070 ms 4.6112 ms]
-                        change: [+0.0700% +0.1739% +0.2752%] (p = 0.00 < 0.05)
+                        time:   [52.338 ms 52.429 ms 52.533 ms]
+                        change: [-1.6461% -0.8366% -0.3064%] (p = 0.01 < 0.05)
                         Change within noise threshold.
 Found 11 outliers among 100 measurements (11.00%)
+  9 (9.00%) high mild
+  2 (2.00%) high severe
+
+finalize/comeq_prove    time:   [165.72 µs 166.23 µs 166.82 µs]
+                        change: [-0.2378% +0.0344% +0.3687%] (p = 0.81 > 0.05)
+                        No change in performance detected.
+Found 10 outliers among 100 measurements (10.00%)
+  7 (7.00%) high mild
+  3 (3.00%) high severe
+
+finalize/signature_verify_batch_n64
+                        time:   [24.697 ms 24.759 ms 24.837 ms]
+                        change: [-2.3607% -1.6104% -1.0130%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 7 outliers among 100 measurements (7.00%)
   4 (4.00%) high mild
-  7 (7.00%) high severe
+  3 (3.00%) high severe
+
+output/pk_verify_batch_n64
+                        time:   [4.6191 ms 4.6273 ms 4.6362 ms]
+                        change: [-1.3043% -0.6276% -0.1669%] (p = 0.02 < 0.05)
+                        Change within noise threshold.
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
 
 output/comeq_verify_batch_n64
-                        time:   [7.3323 ms 7.3404 ms 7.3502 ms]
-                        change: [+0.0893% +0.2179% +0.3555%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 10 outliers among 100 measurements (10.00%)
-  5 (5.00%) high mild
-  5 (5.00%) high severe
+                        time:   [7.3624 ms 7.3742 ms 7.3873 ms]
+                        change: [-2.5165% -1.6848% -1.0676%] (p = 0.00 < 0.05)
+                        Performance has improved.
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) high mild
+  2 (2.00%) high severe
