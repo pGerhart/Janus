@@ -15,7 +15,6 @@ pub struct SchnorrDLogProof {
     pub z: Scalar,
 }
 
-// Standalone ciphertext with its own PoK — for single-recipient use.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct HashedElgamalCiphertext2 {
     pub u: RistrettoPoint,
@@ -24,14 +23,12 @@ pub struct HashedElgamalCiphertext2 {
     pub pok: SchnorrDLogProof,
 }
 
-// Lightweight per-recipient payload — u and PoK live once in BatchEncryptedShares.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct EncryptedShare {
     pub v1: Scalar,
     pub v2: Scalar,
 }
 
-// One ephemeral keypair + PoK shared across all recipients.
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct BatchEncryptedShares {
     pub u: RistrettoPoint,
@@ -39,17 +36,21 @@ pub struct BatchEncryptedShares {
     pub shares: BTreeMap<usize, EncryptedShare>,
 }
 
-// ── internal helpers ──────────────────────────────────────────────────────────
-
-fn hash_to_scalar(shared: &RistrettoPoint, idx: u64) -> Scalar {
+fn scalar_from_hash(compressed_bytes: &[u8], idx: u64) -> Scalar {
     let mut h = Sha512::new();
     h.update(b"hashed-elgamal-2scalar-v1");
-    h.update(shared.compress().as_bytes());
+    h.update(compressed_bytes);
     h.update(idx.to_le_bytes());
     let digest = h.finalize();
     let mut wide = [0u8; 64];
     wide.copy_from_slice(&digest);
     Scalar::from_bytes_mod_order_wide(&wide)
+}
+
+fn hash_to_two_scalars(shared: &RistrettoPoint) -> (Scalar, Scalar) {
+    let compressed = shared.compress();
+    let bytes = compressed.as_bytes();
+    (scalar_from_hash(bytes, 1), scalar_from_hash(bytes, 2))
 }
 
 fn schnorr_challenge(u: &RistrettoPoint, r_pt: &RistrettoPoint) -> Scalar {
@@ -68,7 +69,10 @@ fn prove_dlog(u: &RistrettoPoint, alpha: Scalar) -> SchnorrDLogProof {
     let r = Scalar::random(&mut rng);
     let r_pt = g() * r;
     let c = schnorr_challenge(u, &r_pt);
-    SchnorrDLogProof { r_pt, z: r + c * alpha }
+    SchnorrDLogProof {
+        r_pt,
+        z: r + c * alpha,
+    }
 }
 
 fn batch_weight(seed: &[u8; 64], i: usize) -> Scalar {
@@ -82,7 +86,6 @@ fn batch_weight(seed: &[u8; 64], i: usize) -> Scalar {
     Scalar::from_bytes_mod_order_wide(&wide)
 }
 
-// Core batch verifier. Checks g*z_i == R_i + c_i*U_i for all pairs with random weights.
 fn batch_verify_u_pok_pairs(pairs: &[(RistrettoPoint, &SchnorrDLogProof)]) -> bool {
     if pairs.is_empty() {
         return true;
@@ -117,7 +120,6 @@ fn batch_verify_u_pok_pairs(pairs: &[(RistrettoPoint, &SchnorrDLogProof)]) -> bo
     RistrettoPoint::vartime_multiscalar_mul(scalars, points) == RistrettoPoint::identity()
 }
 
-// ── public API ────────────────────────────────────────────────────────────────
 
 pub fn verify_dlog(u: &RistrettoPoint, pok: &SchnorrDLogProof) -> bool {
     batch_verify_u_pok_pairs(&[(*u, pok)])
@@ -130,26 +132,30 @@ pub fn keygen() -> (Scalar, RistrettoPoint) {
     (sk, pk)
 }
 
-/// Single-recipient encryption with its own PoK.
-pub fn encrypt_two_scalars(pk: &RistrettoPoint, m1: Scalar, m2: Scalar) -> HashedElgamalCiphertext2 {
+pub fn encrypt_two_scalars(
+    pk: &RistrettoPoint,
+    m1: Scalar,
+    m2: Scalar,
+) -> HashedElgamalCiphertext2 {
     let mut rng = OsRng;
     let alpha = Scalar::random(&mut rng);
     let u = g() * alpha;
     let shared = pk * alpha;
-    let k1 = hash_to_scalar(&shared, 1);
-    let k2 = hash_to_scalar(&shared, 2);
-    HashedElgamalCiphertext2 { u, v1: m1 + k1, v2: m2 + k2, pok: prove_dlog(&u, alpha) }
+    let (k1, k2) = hash_to_two_scalars(&shared);
+    HashedElgamalCiphertext2 {
+        u,
+        v1: m1 + k1,
+        v2: m2 + k2,
+        pok: prove_dlog(&u, alpha),
+    }
 }
 
 pub fn decrypt_two_scalars(sk: &Scalar, ct: &HashedElgamalCiphertext2) -> (Scalar, Scalar) {
     let shared = ct.u * *sk;
-    let k1 = hash_to_scalar(&shared, 1);
-    let k2 = hash_to_scalar(&shared, 2);
+    let (k1, k2) = hash_to_two_scalars(&shared);
     (ct.v1 - k1, ct.v2 - k2)
 }
 
-/// Batch encryption: one ephemeral keypair + PoK shared across all `receivers`.
-/// `receivers` is a slice of `(receiver_idx, enc_pk)` pairs, parallel to `m1s`/`m2s`.
 pub fn encrypt_batch(
     receivers: &[(usize, RistrettoPoint)],
     m1s: &[Scalar],
@@ -166,19 +172,20 @@ pub fn encrypt_batch(
         .zip(m1s.iter().zip(m2s.iter()))
         .map(|((idx, pk), (m1, m2))| {
             let shared = pk * alpha;
-            let k1 = hash_to_scalar(&shared, 1);
-            let k2 = hash_to_scalar(&shared, 2);
-            (*idx, EncryptedShare { v1: m1 + k1, v2: m2 + k2 })
+            let (k1, k2) = hash_to_two_scalars(&shared);
+            (
+                *idx,
+                EncryptedShare {
+                    v1: m1 + k1,
+                    v2: m2 + k2,
+                },
+            )
         })
         .collect();
 
     BatchEncryptedShares { u, pok, shares }
 }
 
-/// Batch-verifies all PoKs across `batches`, then decrypts each batch's share at `my_idx`.
-///
-/// Returns `Ok(Vec<Option<(Scalar, Scalar)>>)` — `None` when `my_idx` is absent in a batch.
-/// Returns `Err(Vec<usize>)` with the indices of batches whose PoK failed.
 pub fn decrypt_my_shares(
     sk: &Scalar,
     batches: &[&BatchEncryptedShares],
@@ -206,15 +213,12 @@ pub fn decrypt_my_shares(
         .map(|b| {
             b.shares.get(&my_idx).map(|share| {
                 let shared = b.u * *sk;
-                let k1 = hash_to_scalar(&shared, 1);
-                let k2 = hash_to_scalar(&shared, 2);
+                let (k1, k2) = hash_to_two_scalars(&shared);
                 (share.v1 - k1, share.v2 - k2)
             })
         })
         .collect())
 }
-
-// ── tests ─────────────────────────────────────────────────────────────────────
 
 #[test]
 fn test_hashed_elgamal_two_scalars() {
@@ -252,8 +256,16 @@ fn test_decrypt_my_shares_multi_batch() {
     let (sk, pk) = keygen();
     let (_, pk2) = keygen();
 
-    let b1 = encrypt_batch(&[(3usize, pk)], &[Scalar::from(1u64)], &[Scalar::from(2u64)]);
-    let b2 = encrypt_batch(&[(3usize, pk), (7usize, pk2)], &[Scalar::from(3u64), Scalar::from(99u64)], &[Scalar::from(4u64), Scalar::from(99u64)]);
+    let b1 = encrypt_batch(
+        &[(3usize, pk)],
+        &[Scalar::from(1u64)],
+        &[Scalar::from(2u64)],
+    );
+    let b2 = encrypt_batch(
+        &[(3usize, pk), (7usize, pk2)],
+        &[Scalar::from(3u64), Scalar::from(99u64)],
+        &[Scalar::from(4u64), Scalar::from(99u64)],
+    );
 
     let result = decrypt_my_shares(&sk, &[&b1, &b2], 3).unwrap();
     assert_eq!(result[0], Some((Scalar::from(1u64), Scalar::from(2u64))));
@@ -263,7 +275,11 @@ fn test_decrypt_my_shares_multi_batch() {
 #[test]
 fn test_decrypt_my_shares_missing_idx() {
     let (sk, pk) = keygen();
-    let batch = encrypt_batch(&[(5usize, pk)], &[Scalar::from(7u64)], &[Scalar::from(8u64)]);
+    let batch = encrypt_batch(
+        &[(5usize, pk)],
+        &[Scalar::from(7u64)],
+        &[Scalar::from(8u64)],
+    );
     let result = decrypt_my_shares(&sk, &[&batch], 99).unwrap();
     assert_eq!(result[0], None);
 }
@@ -271,9 +287,21 @@ fn test_decrypt_my_shares_missing_idx() {
 #[test]
 fn test_decrypt_my_shares_bad_pok() {
     let (sk, pk) = keygen();
-    let mut b0 = encrypt_batch(&[(1usize, pk)], &[Scalar::from(1u64)], &[Scalar::from(2u64)]);
-    let b1 = encrypt_batch(&[(1usize, pk)], &[Scalar::from(3u64)], &[Scalar::from(4u64)]);
-    let b2 = encrypt_batch(&[(1usize, pk)], &[Scalar::from(5u64)], &[Scalar::from(6u64)]);
+    let mut b0 = encrypt_batch(
+        &[(1usize, pk)],
+        &[Scalar::from(1u64)],
+        &[Scalar::from(2u64)],
+    );
+    let b1 = encrypt_batch(
+        &[(1usize, pk)],
+        &[Scalar::from(3u64)],
+        &[Scalar::from(4u64)],
+    );
+    let b2 = encrypt_batch(
+        &[(1usize, pk)],
+        &[Scalar::from(5u64)],
+        &[Scalar::from(6u64)],
+    );
     b0.pok.z += Scalar::ONE; // corrupt
 
     let err = decrypt_my_shares(&sk, &[&b0, &b1, &b2], 1).unwrap_err();

@@ -2,7 +2,8 @@
 
 This is a research prototype of **Janus**, a family of distributed key generation (DKG) protocols for discrete-logarithm-based threshold cryptosystems, based on the work:
 
-**Practically Efficient Key Management for Fully Adaptive DLog-Based Threshold Cryptosystems**
+> **Adaptive Distributed Key Generation for Discrete-Log Cryptosystems**
+> Ruben Baecker, Paul Gerhart, Stanislaw Jarecki, Phillip Nazarian, Daniel Rausch, and Dominique Schröder
 
 Janus achieves full adaptive security in the dishonest-majority setting ($t_c < t \leq n$) and provides identifiable aborts and proactive key refresh. The construction is designed to serve as the foundational setup layer for DLog-based threshold signing schemes such as FROST and threshold BLS.
 

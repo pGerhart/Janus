@@ -1,4 +1,3 @@
-use janus::encryption::HashedElgamalCiphertext2;
 use janus::one_round::{
     DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation,
 };
@@ -15,7 +14,6 @@ use janus::DkgParams;
 use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use rand::thread_rng;
-use std::collections::BTreeMap;
 
 #[derive(Clone, Copy, Debug)]
 struct FischlinProfile {
@@ -183,7 +181,7 @@ struct BroadcastWithoutProof<'a> {
     dealer_idx: usize,
     pedvss: &'a Vec<PedersenCommitment>,
     f0_commitment: &'a RistrettoPoint,
-    encrypted_shares: &'a BTreeMap<usize, HashedElgamalCiphertext2>,
+    encrypted_shares: &'a janus::encryption::BatchEncryptedShares,
     signature: &'a ed25519_dalek::Signature,
 }
 

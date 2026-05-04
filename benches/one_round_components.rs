@@ -3,7 +3,7 @@
 
 use janus::{
     DkgParams,
-    encryption::{decrypt_two_scalars, encrypt_two_scalars, keygen},
+    encryption::{decrypt_my_shares, encrypt_batch, keygen},
     one_round::{DkgInitBroadcast, dkg_initiate},
     one_round_proofs::{
         FischlinPolyProof, FischlinProofParams, PolyProofScheme, PolyWellFormedStatement,
@@ -27,7 +27,6 @@ const FISCHLIN: FischlinProofParams = FischlinProofParams {
     t_bits: 13,
 };
 
-// ── helpers ──────────────────────────────────────────────────────────────────
 
 fn domain() -> Vec<Scalar> {
     (1..=N).map(|i| Scalar::from(i as u64)).collect()
@@ -62,7 +61,6 @@ fn make_fischlin_proof(
     FischlinPolyProof::prove(&FISCHLIN, stmt, wit)
 }
 
-// N pre-baked proofs for batch-verify benchmarks
 fn n_fischlin_proofs() -> Vec<(<FischlinPolyProof as PolyProofScheme>::Proof, PolyWellFormedStatement)> {
     (0..N)
         .map(|_| {
@@ -73,7 +71,6 @@ fn n_fischlin_proofs() -> Vec<(<FischlinPolyProof as PolyProofScheme>::Proof, Po
         .collect()
 }
 
-// ── initiate components ──────────────────────────────────────────────────────
 
 fn bench_initiate_poly_prove(c: &mut Criterion) {
     let (stmt, wit) = random_poly_statement_and_witness();
@@ -97,21 +94,23 @@ fn bench_initiate_encrypt_shares(c: &mut Criterion) {
     let blindings: Vec<Scalar> = (0..N).map(|_| Scalar::random(&mut rng)).collect();
     let evals = eval_poly_on_1_to_n(&coeffs, N);
 
+    let receivers: Vec<(usize, RistrettoPoint)> =
+        enc_pks.iter().enumerate().map(|(j, &pk)| (j + 2, pk)).collect();
+    let m1s: Vec<Scalar> = evals[1..].to_vec();
+    let m2s: Vec<Scalar> = blindings[1..].to_vec();
+
     c.bench_function("initiate/encrypt_shares_batch", |b| {
         b.iter(|| {
-            for (j, pk) in enc_pks.iter().enumerate() {
-                let ct = encrypt_two_scalars(
-                    black_box(pk),
-                    black_box(evals[j + 1]),      // skip index 0 (self)
-                    black_box(blindings[j + 1]),
-                );
-                black_box(ct);
-            }
+            let batch = encrypt_batch(
+                black_box(&receivers),
+                black_box(&m1s),
+                black_box(&m2s),
+            );
+            black_box(batch);
         });
     });
 }
 
-// ── output components ─────────────────────────────────────────────────────────
 
 fn bench_output_poly_verify_single(c: &mut Criterion) {
     let (stmt, wit) = random_poly_statement_and_witness();
@@ -147,22 +146,29 @@ fn bench_output_poly_verify_batch(c: &mut Criterion) {
 fn bench_output_decrypt_batch(c: &mut Criterion) {
     let mut rng = thread_rng();
     let (sk, pk) = keygen();
-    let cts: Vec<_> = (0..N - 1)
-        .map(|_| encrypt_two_scalars(&pk, Scalar::random(&mut rng), Scalar::random(&mut rng)))
+    let my_idx = 1usize;
+    let batches: Vec<_> = (0..N - 1)
+        .map(|_| encrypt_batch(
+            &[(my_idx, pk)],
+            &[Scalar::random(&mut rng)],
+            &[Scalar::random(&mut rng)],
+        ))
         .collect();
+    let batch_refs: Vec<_> = batches.iter().collect();
+
     c.bench_function("output/decrypt_batch_n63", |b| {
         b.iter(|| {
-            for ct in &cts {
-                let pair = decrypt_two_scalars(black_box(&sk), black_box(ct));
-                black_box(pair);
-            }
+            let result = decrypt_my_shares(
+                black_box(&sk),
+                black_box(&batch_refs),
+                black_box(my_idx),
+            );
+            let _ = black_box(result);
         });
     });
 }
 
 fn bench_output_pedvss_opening_check_batch(c: &mut Criterion) {
-    // In one-round, pedvss[i] IS the commitment to the evaluation at i.
-    // The check is a single matches_opening per sender — O(1), no polynomial eval.
     let mut rng = thread_rng();
     let commitments: Vec<PedersenCommitment> = (0..N - 1)
         .map(|_| PedersenCommitment::new(Scalar::random(&mut rng), Scalar::random(&mut rng)))
@@ -239,7 +245,6 @@ fn bench_output_signature_verify_batch(c: &mut Criterion) {
     });
 }
 
-// ── criterion setup ───────────────────────────────────────────────────────────
 
 criterion_group!(
     benches,

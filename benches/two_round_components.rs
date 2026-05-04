@@ -5,7 +5,7 @@
 
 use janus::{
     DkgParams,
-    encryption::{decrypt_two_scalars, encrypt_two_scalars, keygen},
+    encryption::{decrypt_my_shares, encrypt_batch, keygen},
     group::g,
     party::{collect_public_parties, make_party_state},
     pedersen::PedersenCommitment,
@@ -32,7 +32,6 @@ const FISCHLIN: FischlinDecomProofParams = FischlinDecomProofParams {
     t_bits: 13,
 };
 
-// ── helpers ──────────────────────────────────────────────────────────────────
 
 fn random_decom_statement_and_witness() -> (DecomStatement, DecomWitness) {
     let mut rng = thread_rng();
@@ -60,7 +59,6 @@ fn make_fischlin_proof(
     FischlinDecomScheme::prove(&FISCHLIN, stmt, wit)
 }
 
-// N pre-baked Fischlin proofs for batch-verify benchmarks
 fn n_fischlin_proofs() -> Vec<(
     <FischlinDecomScheme as DecomProofScheme>::Proof,
     DecomStatement,
@@ -106,16 +104,13 @@ fn random_comeq_statement_and_witness() -> (ComEqStatement, ComEqWitness) {
     (stmt, wit)
 }
 
-// Aggregate N sets of t+1 commitment points and evaluate C_star for all N parties.
 fn build_cstar(all_pedvss: &[Vec<PedersenCommitment>]) -> Vec<RistrettoPoint> {
-    // Aggregate coefficient points
     let mut agg = vec![RistrettoPoint::default(); T + 1];
     for pedvss in all_pedvss {
         for (k, c) in pedvss.iter().enumerate() {
             agg[k] += c.point();
         }
     }
-    // Evaluate at i = 1..=N
     (1..=N)
         .map(|i| {
             let x = Scalar::from(i as u64);
@@ -130,7 +125,6 @@ fn build_cstar(all_pedvss: &[Vec<PedersenCommitment>]) -> Vec<RistrettoPoint> {
         .collect()
 }
 
-// ── initiate components ──────────────────────────────────────────────────────
 
 fn bench_initiate_decom_prove(c: &mut Criterion) {
     let (stmt, wit) = random_decom_statement_and_witness();
@@ -156,28 +150,33 @@ fn bench_initiate_pk_prove(c: &mut Criterion) {
 
 fn bench_initiate_encrypt_shares(c: &mut Criterion) {
     let mut rng = thread_rng();
-    // N-1 recipient public keys
     let enc_pks: Vec<RistrettoPoint> = (0..N - 1).map(|_| keygen().1).collect();
-    // One polynomial to encrypt evaluations of
     let c0 = Scalar::random(&mut rng);
     let f: Vec<Scalar> = sample_random_polynomial_with_constant(&mut rng, T, c0);
     let c0p = Scalar::random(&mut rng);
     let fp: Vec<Scalar> = sample_random_polynomial_with_constant(&mut rng, T, c0p);
 
+    let receivers: Vec<(usize, RistrettoPoint)> =
+        enc_pks.iter().enumerate().map(|(j, &pk)| (j + 2, pk)).collect();
+    let m1s: Vec<Scalar> = (0..N - 1)
+        .map(|j| eval_poly_at(&f, Scalar::from((j + 2) as u64)))
+        .collect();
+    let m2s: Vec<Scalar> = (0..N - 1)
+        .map(|j| eval_poly_at(&fp, Scalar::from((j + 2) as u64)))
+        .collect();
+
     c.bench_function("initiate/encrypt_shares_batch", |b| {
         b.iter(|| {
-            for (j, pk) in enc_pks.iter().enumerate() {
-                let x = Scalar::from((j + 2) as u64);
-                let s = eval_poly_at(black_box(&f), x);
-                let sp = eval_poly_at(black_box(&fp), x);
-                let ct = encrypt_two_scalars(black_box(pk), s, sp);
-                black_box(ct);
-            }
+            let batch = encrypt_batch(
+                black_box(&receivers),
+                black_box(&m1s),
+                black_box(&m2s),
+            );
+            black_box(batch);
         });
     });
 }
 
-// ── finalize components ──────────────────────────────────────────────────────
 
 fn bench_finalize_decom_verify_single(c: &mut Criterion) {
     let (stmt, wit) = random_decom_statement_and_witness();
@@ -213,16 +212,24 @@ fn bench_finalize_decom_verify_batch(c: &mut Criterion) {
 fn bench_finalize_decrypt_batch(c: &mut Criterion) {
     let mut rng = thread_rng();
     let (sk, pk) = keygen();
-    // N-1 ciphertexts
-    let cts: Vec<_> = (0..N - 1)
-        .map(|_| encrypt_two_scalars(&pk, Scalar::random(&mut rng), Scalar::random(&mut rng)))
+    let my_idx = 1usize;
+    let batches: Vec<_> = (0..N - 1)
+        .map(|_| encrypt_batch(
+            &[(my_idx, pk)],
+            &[Scalar::random(&mut rng)],
+            &[Scalar::random(&mut rng)],
+        ))
         .collect();
+    let batch_refs: Vec<_> = batches.iter().collect();
+
     c.bench_function("finalize/decrypt_batch_n63", |b| {
         b.iter(|| {
-            for ct in &cts {
-                let pair = decrypt_two_scalars(black_box(&sk), black_box(ct));
-                black_box(pair);
-            }
+            let result = decrypt_my_shares(
+                black_box(&sk),
+                black_box(&batch_refs),
+                black_box(my_idx),
+            );
+            let _ = black_box(result);
         });
     });
 }
@@ -298,8 +305,6 @@ fn bench_finalize_signature_verify_batch(c: &mut Criterion) {
     let mut rng = thread_rng();
     let dkg_params = DkgParams { t: T, n: N };
 
-    // Build n real Round1Broadcast<FischlinProof> messages (with valid signatures)
-    // and collect the corresponding verifying keys.
     let mut party_states = Vec::with_capacity(N);
     for dealer_idx in 1..=N {
         party_states.push(make_party_state(&mut rng, dealer_idx));
@@ -331,7 +336,6 @@ fn bench_finalize_signature_verify_batch(c: &mut Criterion) {
     });
 }
 
-// ── output components ─────────────────────────────────────────────────────────
 
 fn bench_output_pk_verify_batch(c: &mut Criterion) {
     let mut rng = thread_rng();
@@ -371,7 +375,6 @@ fn bench_output_comeq_verify_batch(c: &mut Criterion) {
     });
 }
 
-// ── criterion setup ───────────────────────────────────────────────────────────
 
 criterion_group!(
     benches,
