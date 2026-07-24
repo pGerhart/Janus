@@ -120,7 +120,6 @@ fn batch_verify_u_pok_pairs(pairs: &[(RistrettoPoint, &SchnorrDLogProof)]) -> bo
     RistrettoPoint::vartime_multiscalar_mul(scalars, points) == RistrettoPoint::identity()
 }
 
-
 pub fn verify_dlog(u: &RistrettoPoint, pok: &SchnorrDLogProof) -> bool {
     batch_verify_u_pok_pairs(&[(*u, pok)])
 }

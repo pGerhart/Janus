@@ -32,7 +32,6 @@ const FISCHLIN: FischlinDecomProofParams = FischlinDecomProofParams {
     t_bits: 13,
 };
 
-
 fn random_decom_statement_and_witness() -> (DecomStatement, DecomWitness) {
     let mut rng = thread_rng();
     let a: Vec<Scalar> = (0..=T).map(|_| Scalar::random(&mut rng)).collect();
@@ -125,7 +124,6 @@ fn build_cstar(all_pedvss: &[Vec<PedersenCommitment>]) -> Vec<RistrettoPoint> {
         .collect()
 }
 
-
 fn bench_initiate_decom_prove(c: &mut Criterion) {
     let (stmt, wit) = random_decom_statement_and_witness();
     c.bench_function("initiate/decom_prove_fischlin", |b| {
@@ -156,8 +154,11 @@ fn bench_initiate_encrypt_shares(c: &mut Criterion) {
     let c0p = Scalar::random(&mut rng);
     let fp: Vec<Scalar> = sample_random_polynomial_with_constant(&mut rng, T, c0p);
 
-    let receivers: Vec<(usize, RistrettoPoint)> =
-        enc_pks.iter().enumerate().map(|(j, &pk)| (j + 2, pk)).collect();
+    let receivers: Vec<(usize, RistrettoPoint)> = enc_pks
+        .iter()
+        .enumerate()
+        .map(|(j, &pk)| (j + 2, pk))
+        .collect();
     let m1s: Vec<Scalar> = (0..N - 1)
         .map(|j| eval_poly_at(&f, Scalar::from((j + 2) as u64)))
         .collect();
@@ -167,16 +168,11 @@ fn bench_initiate_encrypt_shares(c: &mut Criterion) {
 
     c.bench_function("initiate/encrypt_shares_batch", |b| {
         b.iter(|| {
-            let batch = encrypt_batch(
-                black_box(&receivers),
-                black_box(&m1s),
-                black_box(&m2s),
-            );
+            let batch = encrypt_batch(black_box(&receivers), black_box(&m1s), black_box(&m2s));
             black_box(batch);
         });
     });
 }
-
 
 fn bench_finalize_decom_verify_single(c: &mut Criterion) {
     let (stmt, wit) = random_decom_statement_and_witness();
@@ -214,21 +210,20 @@ fn bench_finalize_decrypt_batch(c: &mut Criterion) {
     let (sk, pk) = keygen();
     let my_idx = 1usize;
     let batches: Vec<_> = (0..N - 1)
-        .map(|_| encrypt_batch(
-            &[(my_idx, pk)],
-            &[Scalar::random(&mut rng)],
-            &[Scalar::random(&mut rng)],
-        ))
+        .map(|_| {
+            encrypt_batch(
+                &[(my_idx, pk)],
+                &[Scalar::random(&mut rng)],
+                &[Scalar::random(&mut rng)],
+            )
+        })
         .collect();
     let batch_refs: Vec<_> = batches.iter().collect();
 
     c.bench_function("finalize/decrypt_batch_n63", |b| {
         b.iter(|| {
-            let result = decrypt_my_shares(
-                black_box(&sk),
-                black_box(&batch_refs),
-                black_box(my_idx),
-            );
+            let result =
+                decrypt_my_shares(black_box(&sk), black_box(&batch_refs), black_box(my_idx));
             let _ = black_box(result);
         });
     });
@@ -336,7 +331,6 @@ fn bench_finalize_signature_verify_batch(c: &mut Criterion) {
     });
 }
 
-
 fn bench_output_pk_verify_batch(c: &mut Criterion) {
     let mut rng = thread_rng();
     let pk_pairs: Vec<(PkStatement, PkProof)> = (0..N)
@@ -374,7 +368,6 @@ fn bench_output_comeq_verify_batch(c: &mut Criterion) {
         });
     });
 }
-
 
 criterion_group!(
     benches,

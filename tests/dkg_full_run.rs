@@ -1,4 +1,7 @@
-use janus::one_round::{DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation};
+use curve25519_dalek::scalar::Scalar;
+use janus::one_round::{
+    DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation,
+};
 use janus::one_round_proofs::polyproof_bulletproof::make_bulletproof_params;
 use janus::one_round_proofs::{
     BulletproofPolyProof, FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
@@ -13,7 +16,6 @@ use janus::two_round_proofs::{
     SchnorrDecomProof, SchnorrDecomProofParams,
 };
 use janus::{DkgOutput, DkgParams};
-use curve25519_dalek::scalar::Scalar;
 use rand::thread_rng;
 
 // Small parameters: fast for tests, still exercise the full protocol
@@ -139,8 +141,7 @@ where
 
     let round1_broadcasts: Vec<Round1Broadcast<S::Proof>> =
         round1_results.iter().map(|r| r.0.clone()).collect();
-    let round1_locals: Vec<Round1LocalState> =
-        round1_results.into_iter().map(|r| r.1).collect();
+    let round1_locals: Vec<Round1LocalState> = round1_results.into_iter().map(|r| r.1).collect();
 
     let round2_results: Vec<(Round2Broadcast, Round2LocalState)> = (1..=n)
         .map(|i| {
@@ -158,8 +159,7 @@ where
 
     let round2_broadcasts: Vec<Round2Broadcast> =
         round2_results.iter().map(|r| r.0.clone()).collect();
-    let round2_locals: Vec<Round2LocalState> =
-        round2_results.into_iter().map(|r| r.1).collect();
+    let round2_locals: Vec<Round2LocalState> = round2_results.into_iter().map(|r| r.1).collect();
 
     let outputs: Vec<DkgOutput> = (1..=n)
         .map(|i| {
@@ -194,7 +194,11 @@ fn one_round_schnorr_mid() {
 
 #[test]
 fn one_round_fischlin_small() {
-    let proof_params = FischlinProofParams { rho: 4, b: 4, t_bits: 9 };
+    let proof_params = FischlinProofParams {
+        rho: 4,
+        b: 4,
+        t_bits: 9,
+    };
     run_one_round::<FischlinPolyProof>(&PARAMS_SMALL, &proof_params);
 }
 
@@ -218,6 +222,10 @@ fn two_round_schnorr_mid() {
 
 #[test]
 fn two_round_fischlin_small() {
-    let decom_params = FischlinDecomProofParams { rho: 4, b: 4, t_bits: 9 };
+    let decom_params = FischlinDecomProofParams {
+        rho: 4,
+        b: 4,
+        t_bits: 9,
+    };
     run_two_round::<FischlinDecomScheme>(&PARAMS_SMALL, &decom_params);
 }

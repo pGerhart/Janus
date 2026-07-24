@@ -117,9 +117,7 @@ fn derive_lambdas(statement: &DecomStatement) -> Vec<Scalar> {
 
 fn precompute_pedvss_star(statement: &DecomStatement, lambdas: &[Scalar]) -> RistrettoPoint {
     let m = statement.pedvss.len();
-    let scalars = lambdas[..m]
-        .iter()
-        .chain(std::iter::once(&lambdas[m]));
+    let scalars = lambdas[..m].iter().chain(std::iter::once(&lambdas[m]));
     let points = statement
         .pedvss
         .iter()

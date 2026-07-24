@@ -44,6 +44,10 @@ impl Parties {
     pub fn len(&self) -> usize {
         self.parties.len()
     }
+
+    pub fn is_empty(&self) -> bool {
+        self.parties.is_empty()
+    }
 }
 
 pub fn make_party_state<R: RngCore + CryptoRng>(rng: &mut R, dealer_idx: usize) -> PartyState {

@@ -1,5 +1,8 @@
 use janus::party::{Parties, PartyState, collect_public_parties, make_party_state};
 
+use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
+use curve25519_dalek::scalar::Scalar;
+use janus::DkgParams;
 use janus::two_round::{
     Round1Broadcast, Round1LocalState, Round2Broadcast, Round2LocalState, dkg_output,
     dkg_round1_initiate, dkg_round2_finalize,
@@ -8,9 +11,6 @@ use janus::two_round_proofs::{
     DecomProofScheme, DecomStatement, DecomWitness, FischlinDecomProofParams, FischlinDecomScheme,
     SchnorrDecomProof, SchnorrDecomProofParams,
 };
-use janus::DkgParams;
-use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
-use curve25519_dalek::scalar::Scalar;
 use rand::thread_rng;
 
 #[derive(Clone, Copy, Debug)]

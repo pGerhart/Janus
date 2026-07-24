@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 pub mod encryption;
 pub mod group;
 pub mod one_round;

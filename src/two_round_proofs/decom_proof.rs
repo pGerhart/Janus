@@ -55,20 +55,18 @@ impl DecomProof {
             return false;
         }
 
-        if let Some(witness) = witness {
-            if witness.a.len() != statement.pedvss.len()
-                || witness.b.len() != statement.pedvss.len()
-            {
-                return false;
-            }
+        if let Some(witness) = witness
+            && (witness.a.len() != statement.pedvss.len()
+                || witness.b.len() != statement.pedvss.len())
+        {
+            return false;
         }
 
-        if let Some(proof) = proof {
-            if proof.z_a.len() != statement.pedvss.len()
-                || proof.z_b.len() != statement.pedvss.len()
-            {
-                return false;
-            }
+        if let Some(proof) = proof
+            && (proof.z_a.len() != statement.pedvss.len()
+                || proof.z_b.len() != statement.pedvss.len())
+        {
+            return false;
         }
 
         true

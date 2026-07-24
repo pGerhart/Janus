@@ -314,6 +314,23 @@ impl crate::one_round_proofs::PolyProofScheme for BulletproofPolyProof {
     }
 }
 
+pub trait PolyProofScheme {
+    type Proof: Clone + std::fmt::Debug;
+    type Params: Clone + std::fmt::Debug;
+
+    fn prove(
+        params: &Self::Params,
+        statement: &PolyWellFormedStatement,
+        witness: &PolyWellFormedWitness,
+    ) -> Self::Proof;
+
+    fn verify(
+        params: &Self::Params,
+        statement: &PolyWellFormedStatement,
+        proof: &Self::Proof,
+    ) -> bool;
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -366,21 +383,4 @@ mod tests {
             Err(e) => panic!("{e}"),
         }
     }
-}
-
-pub trait PolyProofScheme {
-    type Proof: Clone + std::fmt::Debug;
-    type Params: Clone + std::fmt::Debug;
-
-    fn prove(
-        params: &Self::Params,
-        statement: &PolyWellFormedStatement,
-        witness: &PolyWellFormedWitness,
-    ) -> Self::Proof;
-
-    fn verify(
-        params: &Self::Params,
-        statement: &PolyWellFormedStatement,
-        proof: &Self::Proof,
-    ) -> bool;
 }

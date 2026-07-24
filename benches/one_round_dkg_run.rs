@@ -5,14 +5,14 @@ use janus::one_round_proofs::polyproof_bulletproof::{
     PolyWellFormedBulletproof, make_bulletproof_params,
 };
 
+use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
+use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
+use janus::DkgParams;
 use janus::one_round_proofs::{
     BulletproofPolyProof, FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
 };
 use janus::party::{Parties, PartyState, collect_public_parties, make_party_state};
 use janus::pedersen::PedersenCommitment;
-use janus::DkgParams;
-use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
-use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use rand::thread_rng;
 
 #[derive(Clone, Copy, Debug)]

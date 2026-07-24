@@ -1,3 +1,5 @@
+#![forbid(unsafe_code)]
+
 use janus::one_round::{
     DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation,
 };
@@ -12,12 +14,12 @@ use janus::two_round::{
     dkg_output as dkg_two_round_output, dkg_round1_initiate, dkg_round2_finalize,
 };
 
+use curve25519_dalek::scalar::Scalar;
 use janus::two_round_proofs::{
     DecomProofScheme, DecomStatement, DecomWitness, FischlinDecomProofParams, FischlinDecomScheme,
     SchnorrDecomProof, SchnorrDecomProofParams,
 };
 use janus::{DkgOutput, DkgParams};
-use curve25519_dalek::scalar::Scalar;
 use rayon::prelude::*;
 use std::time::Instant;
 
@@ -37,15 +39,15 @@ fn main_one_round(dkg_params: &DkgParams) {
     );
     println!();
 
-    run_case::<SchnorrPolyProof>("Schnorr", &dkg_params, &());
+    run_case::<SchnorrPolyProof>("Schnorr", dkg_params, &());
     run_case::<BulletproofPolyProof>(
         "Bulletproof",
-        &dkg_params,
+        dkg_params,
         &make_bulletproof_params(dkg_params.t + 1, dkg_params.n),
     );
     run_case::<FischlinPolyProof>(
         "Fischlin small proof / high prover work",
-        &dkg_params,
+        dkg_params,
         &FischlinProofParams {
             rho: 16,
             b: 8,
@@ -55,7 +57,7 @@ fn main_one_round(dkg_params: &DkgParams) {
 
     run_case::<FischlinPolyProof>(
         "Fischlin large proof / low prover work",
-        &dkg_params,
+        dkg_params,
         &FischlinProofParams {
             rho: 43,
             b: 3,
@@ -72,12 +74,12 @@ fn main_two_round(dkg_params: &DkgParams) {
     println!();
 
     // Schnorr
-    run_two_round_case::<SchnorrDecomProof>("Schnorr", &dkg_params, &SchnorrDecomProofParams);
+    run_two_round_case::<SchnorrDecomProof>("Schnorr", dkg_params, &SchnorrDecomProofParams);
 
     // Fischlin small proof / high prover work
     run_two_round_case::<FischlinDecomScheme>(
         "Fischlin small proof / high prover work",
-        &dkg_params,
+        dkg_params,
         &FischlinDecomProofParams {
             rho: 16,
             b: 8,
@@ -88,7 +90,7 @@ fn main_two_round(dkg_params: &DkgParams) {
     // Fischlin large proof / low prover work
     run_two_round_case::<FischlinDecomScheme>(
         "Fischlin large proof / low prover work",
-        &dkg_params,
+        dkg_params,
         &FischlinDecomProofParams {
             rho: 43,
             b: 3,

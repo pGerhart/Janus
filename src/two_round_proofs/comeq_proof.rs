@@ -1,6 +1,6 @@
 use super::*;
 use curve25519_dalek::traits::{Identity, VartimeMultiscalarMul};
-use zeroize::{Zeroizing, ZeroizeOnDrop};
+use zeroize::{ZeroizeOnDrop, Zeroizing};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ComEqStatement {
@@ -296,7 +296,15 @@ mod tests {
         let z_s_prime = alpha_s_prime + e * s_prime;
         let z_r = alpha_r + e * r;
 
-        let cheating_proof = ComEqProof { t_c, t_vk, t_d, z_s, z_s_prime, z_omega, z_r };
+        let cheating_proof = ComEqProof {
+            t_c,
+            t_vk,
+            t_d,
+            z_s,
+            z_s_prime,
+            z_omega,
+            z_r,
+        };
         assert!(!cheating_proof.verify(&statement));
     }
 }

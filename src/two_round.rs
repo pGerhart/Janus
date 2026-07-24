@@ -17,7 +17,7 @@ use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use ed25519_dalek::{Signature, Signer, SigningKey, VerifyingKey};
 use rand_core::{CryptoRng, RngCore};
 use serde::{Deserialize, Serialize};
-use zeroize::{Zeroizing, ZeroizeOnDrop};
+use zeroize::{ZeroizeOnDrop, Zeroizing};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Round1Broadcast<P> {
     pub dealer_idx: usize,
@@ -73,21 +73,38 @@ pub struct Round2LocalState {
 #[derive(Clone, Debug)]
 pub enum TwoRoundDkgError {
     InvalidParameters,
-    InvalidSignature { dealer_idx: usize },
-    MissingCiphertext { dealer_idx: usize, receiver_idx: usize },
+    InvalidSignature {
+        dealer_idx: usize,
+    },
+    MissingCiphertext {
+        dealer_idx: usize,
+        receiver_idx: usize,
+    },
     InvalidDecryptionOpening {
         dealer_idx: usize,
         receiver_idx: usize,
         s_ji: Scalar,
         sprime_ji: Scalar,
-        pi_i: (RistrettoPoint, DecryptionProof),
+        pi_i: Box<(RistrettoPoint, DecryptionProof)>,
     },
-    InvalidEncryptionProof { dealer_idx: usize },
-    InvalidDecomProof { dealer_idx: usize },
-    InvalidPkProof { dealer_idx: usize },
-    InvalidComEqProof { dealer_idx: usize },
-    InvalidPedVssLength { dealer_idx: usize },
-    MissingRound2Message { dealer_idx: usize },
+    InvalidEncryptionProof {
+        dealer_idx: usize,
+    },
+    InvalidDecomProof {
+        dealer_idx: usize,
+    },
+    InvalidPkProof {
+        dealer_idx: usize,
+    },
+    InvalidComEqProof {
+        dealer_idx: usize,
+    },
+    InvalidPedVssLength {
+        dealer_idx: usize,
+    },
+    MissingRound2Message {
+        dealer_idx: usize,
+    },
 }
 impl<P: Clone + Serialize> Round1Broadcast<P> {
     pub fn new(
@@ -121,7 +138,8 @@ impl<P: Clone + Serialize> Round1Broadcast<P> {
     }
 
     pub fn verify(&self, pk: &VerifyingKey) -> bool {
-        pk.verify_strict(&self.signing_bytes(), &self.signature).is_ok()
+        pk.verify_strict(&self.signing_bytes(), &self.signature)
+            .is_ok()
     }
 }
 impl Round2Broadcast {
@@ -156,7 +174,8 @@ impl Round2Broadcast {
     }
 
     pub fn verify(&self, pk: &VerifyingKey) -> bool {
-        pk.verify_strict(&self.signing_bytes(), &self.signature).is_ok()
+        pk.verify_strict(&self.signing_bytes(), &self.signature)
+            .is_ok()
     }
 }
 #[inline]
@@ -248,17 +267,26 @@ where
             return Err(TwoRoundDkgError::InvalidParameters);
         }
         if msg.pedvss.len() != params.t + 1 {
-            return Err(TwoRoundDkgError::InvalidPedVssLength { dealer_idx: msg.dealer_idx });
+            return Err(TwoRoundDkgError::InvalidPedVssLength {
+                dealer_idx: msg.dealer_idx,
+            });
         }
         if !msg.verify(parties.sig_pk(msg.dealer_idx)) {
-            return Err(TwoRoundDkgError::InvalidSignature { dealer_idx: msg.dealer_idx });
+            return Err(TwoRoundDkgError::InvalidSignature {
+                dealer_idx: msg.dealer_idx,
+            });
         }
         if !S::verify(
             decom_params,
-            &DecomStatement { pedvss: msg.pedvss.clone(), d: msg.d_commitment.clone() },
+            &DecomStatement {
+                pedvss: msg.pedvss.clone(),
+                d: msg.d_commitment.clone(),
+            },
             &msg.decom_proof,
         ) {
-            return Err(TwoRoundDkgError::InvalidDecomProof { dealer_idx: msg.dealer_idx });
+            return Err(TwoRoundDkgError::InvalidDecomProof {
+                dealer_idx: msg.dealer_idx,
+            });
         }
         valid.push(msg);
     }
@@ -277,14 +305,15 @@ fn accumulate_decrypted_shares<P: Clone + Serialize>(
             dealer_idx: msg.dealer_idx,
             receiver_idx: state.dealer_idx,
         })?;
-        if !evaluate_pedvss_at(&msg.pedvss, x_of(state.dealer_idx)).matches_opening(s_ji, sprime_ji) {
+        if !evaluate_pedvss_at(&msg.pedvss, x_of(state.dealer_idx)).matches_opening(s_ji, sprime_ji)
+        {
             let pi_i = prove_decryption(&state.enc_sk, &state.enc_pk, &msg.encrypted_shares.u);
             return Err(TwoRoundDkgError::InvalidDecryptionOpening {
                 dealer_idx: msg.dealer_idx,
                 receiver_idx: state.dealer_idx,
                 s_ji,
                 sprime_ji,
-                pi_i,
+                pi_i: Box::new(pi_i),
             });
         }
         sum_s += s_ji;
@@ -305,9 +334,11 @@ fn decrypt_and_accumulate<P: Clone + Serialize>(
         .collect();
     let batches: Vec<&BatchEncryptedShares> =
         other_msgs.iter().map(|m| &m.encrypted_shares).collect();
-    let decrypted = decrypt_my_shares(&state.enc_sk, &batches, state.dealer_idx)
-        .map_err(|failed| TwoRoundDkgError::InvalidEncryptionProof {
-            dealer_idx: other_msgs[failed[0]].dealer_idx,
+    let decrypted =
+        decrypt_my_shares(&state.enc_sk, &batches, state.dealer_idx).map_err(|failed| {
+            TwoRoundDkgError::InvalidEncryptionProof {
+                dealer_idx: other_msgs[failed[0]].dealer_idx,
+            }
         })?;
     accumulate_decrypted_shares(state, &other_msgs, &decrypted, init)
 }
@@ -328,7 +359,12 @@ fn build_round2_output<R: RngCore + CryptoRng>(
             vk: vk_i.clone(),
             d: local_d(local),
         },
-        &ComEqWitness { s: sum_s_i, s_prime: sum_sprime_i, omega: local.omega, r: local.r },
+        &ComEqWitness {
+            s: sum_s_i,
+            s_prime: sum_sprime_i,
+            omega: local.omega,
+            r: local.r,
+        },
     );
     let broadcast = Round2Broadcast::new(
         state.dealer_idx,
@@ -338,7 +374,11 @@ fn build_round2_output<R: RngCore + CryptoRng>(
         comeq_proof,
         &state.sig_sk,
     );
-    let local2 = Round2LocalState { s_i: sum_s_i, omega: local.omega, verified_round1 };
+    let local2 = Round2LocalState {
+        s_i: sum_s_i,
+        omega: local.omega,
+        verified_round1,
+    };
     (broadcast, local2)
 }
 fn validate_output_params(
@@ -365,7 +405,9 @@ fn index_round2_msgs<'a>(
     let mut by_idx: Vec<Option<&Round2Broadcast>> = vec![None; params.n + 1];
     for msg in round2_msgs {
         if !msg.verify(parties.sig_pk(msg.dealer_idx)) {
-            return Err(TwoRoundDkgError::InvalidSignature { dealer_idx: msg.dealer_idx });
+            return Err(TwoRoundDkgError::InvalidSignature {
+                dealer_idx: msg.dealer_idx,
+            });
         }
         by_idx[msg.dealer_idx] = Some(msg);
     }
@@ -378,7 +420,10 @@ fn verify_round2_msg(
     r2: &Round2Broadcast,
     c_star: &PedersenCommitment,
 ) -> Result<(), TwoRoundDkgError> {
-    if !r2.pk_proof.verify(&PkStatement { pk: r2.pk, commitment: r1.c_0.clone() }) {
+    if !r2.pk_proof.verify(&PkStatement {
+        pk: r2.pk,
+        commitment: r1.c_0.clone(),
+    }) {
         return Err(TwoRoundDkgError::InvalidPkProof { dealer_idx });
     }
     if !r2.comeq_proof.verify(&ComEqStatement {
@@ -411,8 +456,9 @@ where
     let f_coeffs: Zeroizing<Vec<Scalar>> =
         Zeroizing::new(sample_random_polynomial_with_constant(rng, params.t, share));
     let blinding_constant = Scalar::random(rng);
-    let fprime_coeffs: Zeroizing<Vec<Scalar>> =
-        Zeroizing::new(sample_random_polynomial_with_constant(rng, params.t, blinding_constant));
+    let fprime_coeffs: Zeroizing<Vec<Scalar>> = Zeroizing::new(
+        sample_random_polynomial_with_constant(rng, params.t, blinding_constant),
+    );
 
     let pedvss: Vec<PedersenCommitment> = (0..=params.t)
         .map(|k| PedersenCommitment::new(f_coeffs[k], fprime_coeffs[k]))
@@ -425,14 +471,25 @@ where
 
     let decom_proof = S::prove(
         decom_params,
-        &DecomStatement { pedvss: pedvss.clone(), d: d_commitment.clone() },
-        &DecomWitness { a: f_coeffs.to_vec(), b: fprime_coeffs.to_vec(), omega, r },
+        &DecomStatement {
+            pedvss: pedvss.clone(),
+            d: d_commitment.clone(),
+        },
+        &DecomWitness {
+            a: f_coeffs.to_vec(),
+            b: fprime_coeffs.to_vec(),
+            omega,
+            r,
+        },
     );
 
     let pk = g() * a0;
     let pk_proof = PkProof::prove(
         rng,
-        &PkStatement { pk, commitment: pedvss[0].clone() },
+        &PkStatement {
+            pk,
+            commitment: pedvss[0].clone(),
+        },
         &PkWitness { a: a0, b: b0 },
     );
 
@@ -440,10 +497,14 @@ where
         .filter(|&j| j != state.dealer_idx)
         .map(|j| (j, *parties.enc_pk(j)))
         .collect();
-    let m1s: Vec<Scalar> =
-        receivers.iter().map(|(j, _)| eval_poly_at(&f_coeffs, x_of(*j))).collect();
-    let m2s: Vec<Scalar> =
-        receivers.iter().map(|(j, _)| eval_poly_at(&fprime_coeffs, x_of(*j))).collect();
+    let m1s: Vec<Scalar> = receivers
+        .iter()
+        .map(|(j, _)| eval_poly_at(&f_coeffs, x_of(*j)))
+        .collect();
+    let m2s: Vec<Scalar> = receivers
+        .iter()
+        .map(|(j, _)| eval_poly_at(&fprime_coeffs, x_of(*j)))
+        .collect();
     let encrypted_shares = encrypt_batch(&receivers, &m1s, &m2s);
 
     let my_x = x_of(state.dealer_idx);
@@ -488,7 +549,14 @@ where
     let verified_round1 = build_verified_round1_cache(params, &valid_round1);
 
     let mut rng = rand::thread_rng();
-    Ok(build_round2_output(&mut rng, state, local, sum_s_i, sum_sprime_i, verified_round1))
+    Ok(build_round2_output(
+        &mut rng,
+        state,
+        local,
+        sum_s_i,
+        sum_sprime_i,
+        verified_round1,
+    ))
 }
 
 pub fn dkg_output<S>(
@@ -514,7 +582,12 @@ where
             .ok_or(TwoRoundDkgError::MissingRound2Message { dealer_idx })?;
         let r2 = round2_by_idx[dealer_idx]
             .ok_or(TwoRoundDkgError::MissingRound2Message { dealer_idx })?;
-        verify_round2_msg(dealer_idx, r1, r2, &local2.verified_round1.c_stars[dealer_idx])?;
+        verify_round2_msg(
+            dealer_idx,
+            r1,
+            r2,
+            &local2.verified_round1.c_stars[dealer_idx],
+        )?;
     }
 
     let mut public_key = RistrettoPoint::default();

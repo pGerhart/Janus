@@ -40,16 +40,23 @@ pub struct DkgInitResult<P> {
 pub enum DkgOutputError {
     InvalidParameters,
     InvalidBatchProof,
-    MissingCiphertext { dealer_idx: usize, receiver_idx: usize },
-    InvalidEncryptionProof { dealer_idx: usize },
+    MissingCiphertext {
+        dealer_idx: usize,
+        receiver_idx: usize,
+    },
+    InvalidEncryptionProof {
+        dealer_idx: usize,
+    },
     InvalidDecryptionOpening {
         dealer_idx: usize,
         receiver_idx: usize,
         s_ji: Scalar,
         r_ji: Scalar,
-        pi_i: (RistrettoPoint, DecryptionProof),
+        pi_i: Box<(RistrettoPoint, DecryptionProof)>,
     },
-    InvalidSignature { dealer_idx: usize },
+    InvalidSignature {
+        dealer_idx: usize,
+    },
 }
 impl<P: Clone + Serialize> DkgInitBroadcast<P> {
     pub fn new(
@@ -83,7 +90,8 @@ impl<P: Clone + Serialize> DkgInitBroadcast<P> {
     }
 
     pub fn verify(&self, pk: &VerifyingKey) -> bool {
-        pk.verify_strict(&self.signing_bytes(), &self.signature).is_ok()
+        pk.verify_strict(&self.signing_bytes(), &self.signature)
+            .is_ok()
     }
 }
 #[inline]
@@ -112,7 +120,9 @@ fn validate_broadcasts<P: Clone + Serialize>(
             return Err(DkgOutputError::InvalidParameters);
         }
         if !msg.verify(parties.sig_pk(msg.dealer_idx)) {
-            return Err(DkgOutputError::InvalidSignature { dealer_idx: msg.dealer_idx });
+            return Err(DkgOutputError::InvalidSignature {
+                dealer_idx: msg.dealer_idx,
+            });
         }
         let slot = idx1_to_vec(msg.dealer_idx);
         if seen[slot] {
@@ -168,7 +178,7 @@ fn accumulate_decrypted_shares<P: Clone + Serialize>(
                 receiver_idx: state.dealer_idx,
                 s_ji,
                 r_ji,
-                pi_i,
+                pi_i: Box::new(pi_i),
             });
         }
         s_i += s_ji;
@@ -188,9 +198,11 @@ fn decrypt_and_accumulate<P: Clone + Serialize>(
         .collect();
     let batches: Vec<&BatchEncryptedShares> =
         other_msgs.iter().map(|m| &m.encrypted_shares).collect();
-    let decrypted = decrypt_my_shares(&state.enc_sk, &batches, state.dealer_idx)
-        .map_err(|failed| DkgOutputError::InvalidEncryptionProof {
-            dealer_idx: other_msgs[failed[0]].dealer_idx,
+    let decrypted =
+        decrypt_my_shares(&state.enc_sk, &batches, state.dealer_idx).map_err(|failed| {
+            DkgOutputError::InvalidEncryptionProof {
+                dealer_idx: other_msgs[failed[0]].dealer_idx,
+            }
         })?;
     accumulate_decrypted_shares(state, &other_msgs, &decrypted, init)
 }
@@ -235,8 +247,11 @@ where
     assert_eq!(parties.len(), dkg_params.n, "parties length must equal n");
     assert!(dkg_params.t < dkg_params.n, "typically need t < n");
 
-    let coeffs: Zeroizing<Vec<Scalar>> =
-        Zeroizing::new(sample_random_polynomial_with_constant(rng, dkg_params.t, share));
+    let coeffs: Zeroizing<Vec<Scalar>> = Zeroizing::new(sample_random_polynomial_with_constant(
+        rng,
+        dkg_params.t,
+        share,
+    ));
     let blindings: Zeroizing<Vec<Scalar>> =
         Zeroizing::new((0..dkg_params.n).map(|_| Scalar::random(rng)).collect());
     let evaluations: Zeroizing<Vec<Scalar>> =
@@ -265,10 +280,14 @@ where
         .filter(|&j| j != state.dealer_idx)
         .map(|j| (j, *parties.enc_pk(j)))
         .collect();
-    let m1s: Vec<Scalar> =
-        receivers.iter().map(|(j, _)| evaluations[idx1_to_vec(*j)]).collect();
-    let m2s: Vec<Scalar> =
-        receivers.iter().map(|(j, _)| blindings[idx1_to_vec(*j)]).collect();
+    let m1s: Vec<Scalar> = receivers
+        .iter()
+        .map(|(j, _)| evaluations[idx1_to_vec(*j)])
+        .collect();
+    let m2s: Vec<Scalar> = receivers
+        .iter()
+        .map(|(j, _)| blindings[idx1_to_vec(*j)])
+        .collect();
     let encrypted_shares = encrypt_batch(&receivers, &m1s, &m2s);
 
     let local = DkgInitLocalState {

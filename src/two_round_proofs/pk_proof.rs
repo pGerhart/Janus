@@ -1,6 +1,6 @@
 use super::*;
 use curve25519_dalek::traits::{Identity, VartimeMultiscalarMul};
-use zeroize::{Zeroizing, ZeroizeOnDrop};
+use zeroize::{ZeroizeOnDrop, Zeroizing};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PkStatement {
@@ -216,7 +216,12 @@ mod tests {
         let z_a = (alpha1 + alpha2 + e * (a1 + a2)) * two_inv;
         let z_b = alpha_b + e * b;
 
-        let cheating_proof = PkProof { t_pk, t_com, z_a, z_b };
+        let cheating_proof = PkProof {
+            t_pk,
+            t_com,
+            z_a,
+            z_b,
+        };
         assert!(!cheating_proof.verify(&statement));
     }
 }
