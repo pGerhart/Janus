@@ -9,7 +9,6 @@ use crate::pedersen::PedersenCommitment;
 use crate::poly::{eval_poly_on_1_to_n, sample_random_polynomial_with_constant};
 use zeroize::{ZeroizeOnDrop, Zeroizing};
 
-use bincode;
 use curve25519_dalek::ristretto::RistrettoPoint;
 use curve25519_dalek::scalar::Scalar;
 use ed25519_dalek::{Signature, Signer, SigningKey, VerifyingKey};
@@ -84,7 +83,7 @@ impl<P: Clone + Serialize> DkgInitBroadcast<P> {
     pub fn signing_bytes(&self) -> Vec<u8> {
         let mut tmp = self.clone();
         tmp.signature = Signature::from_bytes(&[0u8; 64]);
-        bincode::serialize(&tmp).expect("serialization for signing failed")
+        crate::wire::signing_bytes(&tmp)
     }
 
     pub fn sign(&mut self, sk: &SigningKey) {

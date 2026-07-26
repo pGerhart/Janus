@@ -13,7 +13,6 @@ use crate::two_round_proofs::{
     pk_proof::{PkProof, PkStatement, PkWitness},
 };
 
-use bincode;
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use ed25519_dalek::{Signature, Signer, SigningKey, VerifyingKey};
 use rand_core::{CryptoRng, RngCore};
@@ -132,7 +131,7 @@ impl<P: Clone + Serialize> Round1Broadcast<P> {
     fn signing_bytes(&self) -> Vec<u8> {
         let mut tmp = self.clone();
         tmp.signature = Signature::from_bytes(&[0u8; 64]);
-        bincode::serialize(&tmp).expect("serialization for signing failed")
+        crate::wire::signing_bytes(&tmp)
     }
 
     pub fn sign(&mut self, sk: &SigningKey) {
@@ -168,7 +167,7 @@ impl Round2Broadcast {
     fn signing_bytes(&self) -> Vec<u8> {
         let mut tmp = self.clone();
         tmp.signature = Signature::from_bytes(&[0u8; 64]);
-        bincode::serialize(&tmp).expect("serialization for signing failed")
+        crate::wire::signing_bytes(&tmp)
     }
 
     pub fn sign(&mut self, sk: &SigningKey) {

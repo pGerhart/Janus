@@ -64,7 +64,7 @@ impl AbortReport {
     fn signing_bytes(&self) -> Vec<u8> {
         let mut tmp = self.clone();
         tmp.signature = Signature::from_bytes(&[0u8; 64]);
-        bincode::serialize(&tmp).expect("serialization for signing failed")
+        crate::wire::signing_bytes(&tmp)
     }
 
     pub fn sign(&mut self, sk: &SigningKey) {

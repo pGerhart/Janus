@@ -1,16 +1,20 @@
 #![forbid(unsafe_code)]
 
+// Protocol code.
 pub mod abort;
-pub mod encryption;
-pub mod group;
 pub mod one_round;
-pub mod one_round_proofs;
 pub mod party;
-pub mod pedersen;
-pub mod poly;
-pub mod transcript;
 pub mod two_round;
+pub mod wire;
+
+// Cryptographic modules.
+pub mod encryption;
+pub mod one_round_proofs;
 pub mod two_round_proofs;
+
+// Small shared primitives, re-exported at the crate root so existing paths hold.
+pub mod primitives;
+pub use primitives::{group, pedersen, poly, transcript};
 
 use crate::pedersen::PedersenCommitment;
 use curve25519_dalek::ristretto::RistrettoPoint;
