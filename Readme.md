@@ -43,8 +43,9 @@ The Fischlin transform is parameterized by the number of repetitions $\rho$, the
 
 | Path | Description |
 |---|---|
-| `src/one_round.rs` | Janus-1: initiation and output |
+| `src/one_round.rs` | Janus-1: initiation, output, and a parallel output variant |
 | `src/two_round.rs` | Janus-2: round 1, round 2, and output |
+| `src/abort.rs` | Identifiable abort: signed complaint and its verdict, shared by both variants |
 | `src/one_round_proofs/` | Well-formedness proofs (Schnorr, Fischlin, Bulletproof) |
 | `src/two_round_proofs/` | Decomposition and consistency proofs (Schnorr, Fischlin) |
 | `src/encryption/` | Hashed ElGamal encryption and decryption proofs |
@@ -54,7 +55,7 @@ The Fischlin transform is parameterized by the number of repetitions $\rho$, the
 | `src/group.rs` | Group generators `g` and `h` |
 | `src/main.rs` | Runs both protocols across all proof systems |
 
-Integration tests covering end-to-end protocol runs for all combinations of protocol variant and proof system are in `tests/dkg_full_run.rs`.
+Integration tests covering end-to-end protocol runs for all combinations of protocol variant and proof system are in `tests/dkg_full_run.rs`. The identifiable-abort path is tested in `tests/abort.rs` (a malicious dealer is convicted, a false complaint and a malformed proof fall back on the reporter), and `tests/parallel_output.rs` checks that the parallel output matches the sequential one.
 
 # Usage
 
@@ -74,7 +75,7 @@ The tests exercise full protocol runs for both variants and verify that all part
 
 # Benchmarks
 
-The repository includes [Criterion](https://github.com/bheisler/criterion.rs) benchmarks across four suites:
+The repository includes [Criterion](https://github.com/bheisler/criterion.rs) benchmarks across six suites:
 
 | Suite | File | Results | What is measured |
 |---|---|---|---|
@@ -82,8 +83,10 @@ The repository includes [Criterion](https://github.com/bheisler/criterion.rs) be
 | Janus-1 components | `benches/one_round_components.rs` | [results](benchmark_outputs/one_round_components.txt) | Individual operations (proving, encryption, decryption, VSS checks) in isolation at Fischlin small with $(t=32, n=64)$ |
 | Janus-2 DKG | `benches/two_round_dkg_run.rs` | [results](benchmark_outputs/two_round_dkg_run.txt) | Round 1 (initiate), round 2 (finalize), and output per party |
 | Janus-2 components | `benches/two_round_components.rs` | [results](benchmark_outputs/two_round_components.txt) | Individual operations in isolation at Fischlin small with $(t=32, n=64)$ |
+| Identifiable abort | `benches/abort_path.rs` | [results](benchmark_outputs/abort_path.txt) | Building and verifying a complaint, and the worst case where every other party complains |
+| Optimizations | `benches/optimizations.rs` | | Batch proof verification and a multi-threaded output phase at large committees |
 
-All DKG benchmarks run over four parameter sets: **(t=4, n=16)**, **(t=8, n=32)**, **(t=16, n=64)**, **(t=32, n=64)** at 128-bit security on Ristretto (Curve25519).
+All DKG benchmarks run over seven parameter sets: **(t=4, n=16)**, **(t=8, n=32)**, **(t=16, n=64)**, **(t=32, n=64)**, **(t=64, n=128)**, **(t=128, n=256)**, **(t=256, n=512)** at 128-bit security on Ristretto (Curve25519). Bulletproofs and the large Fischlin profile are benchmarked up to $n < 256$; Schnorr and the small Fischlin profile cover the full range.
 
 ```
 cargo bench
