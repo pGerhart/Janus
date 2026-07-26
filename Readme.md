@@ -1,5 +1,10 @@
 # Janus – Adaptive DKG Prototype
 
+[![CI](https://github.com/pGerhart/Janus/actions/workflows/ci.yml/badge.svg)](https://github.com/pGerhart/Janus/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![MSRV](https://img.shields.io/badge/MSRV-1.85-blue.svg)](Cargo.toml)
+[![unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg)](https://github.com/rust-secure-code/safety-dance/)
+
 This is a research prototype of **Janus**, a family of distributed key generation (DKG) protocols for discrete-logarithm-based threshold cryptosystems, based on the work:
 
 > **Adaptive Distributed Key Generation for Discrete-Log Cryptosystems**  
