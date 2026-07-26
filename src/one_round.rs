@@ -1,4 +1,5 @@
 use super::{DkgOutput, DkgParams};
+use crate::abort::{AbortReport, AbortVerdict, verify_report_core};
 use crate::encryption::proofs::{DecryptionProof, prove_decryption};
 use crate::encryption::{BatchEncryptedShares, decrypt_my_shares, encrypt_batch};
 use crate::group::g_mul_scalar;
@@ -13,6 +14,7 @@ use curve25519_dalek::ristretto::RistrettoPoint;
 use curve25519_dalek::scalar::Scalar;
 use ed25519_dalek::{Signature, Signer, SigningKey, VerifyingKey};
 use rand_core::{CryptoRng, RngCore};
+use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct DkgInitBroadcast<P> {
@@ -79,7 +81,7 @@ impl<P: Clone + Serialize> DkgInitBroadcast<P> {
         msg
     }
 
-    fn signing_bytes(&self) -> Vec<u8> {
+    pub fn signing_bytes(&self) -> Vec<u8> {
         let mut tmp = self.clone();
         tmp.signature = Signature::from_bytes(&[0u8; 64]);
         bincode::serialize(&tmp).expect("serialization for signing failed")
@@ -145,13 +147,17 @@ where
     S: PolyProofScheme,
     S::Proof: Clone + std::fmt::Debug + Serialize,
 {
-    let domain = domain_points_1_to_n(dkg_params.n);
+    // Reuse one statement so the domain and commitment buffer are not
+    // reallocated per dealer.
+    let mut stmt = PolyWellFormedStatement {
+        x_points: domain_points_1_to_n(dkg_params.n),
+        commitments: Vec::with_capacity(dkg_params.n),
+        f0_commitment: RistrettoPoint::default(),
+    };
     for msg in broadcasts {
-        let stmt = PolyWellFormedStatement {
-            x_points: domain.clone(),
-            commitments: msg.pedvss.clone(),
-            f0_commitment: msg.f0_commitment,
-        };
+        stmt.commitments.clear();
+        stmt.commitments.extend_from_slice(&msg.pedvss);
+        stmt.f0_commitment = msg.f0_commitment;
         if !S::verify(proof_params, &stmt, &msg.proof) {
             return Err(DkgOutputError::InvalidBatchProof);
         }
@@ -334,4 +340,184 @@ where
         public_key,
         partial_verification_keys,
     })
+}
+
+fn validate_broadcasts_parallel<P: Clone + Serialize + Sync>(
+    n: usize,
+    my_idx: usize,
+    broadcasts: &[DkgInitBroadcast<P>],
+    parties: &Parties,
+) -> Result<(), DkgOutputError> {
+    if n == 0 || my_idx == 0 || my_idx > n {
+        return Err(DkgOutputError::InvalidParameters);
+    }
+    let mut seen = vec![false; n];
+    for msg in broadcasts {
+        if msg.dealer_idx == 0 || msg.dealer_idx > n || msg.pedvss.len() != n {
+            return Err(DkgOutputError::InvalidParameters);
+        }
+        let slot = idx1_to_vec(msg.dealer_idx);
+        if seen[slot] {
+            return Err(DkgOutputError::InvalidParameters);
+        }
+        seen[slot] = true;
+    }
+    if seen.iter().any(|b| !*b) {
+        return Err(DkgOutputError::InvalidParameters);
+    }
+    match broadcasts
+        .par_iter()
+        .find_any(|msg| !msg.verify(parties.sig_pk(msg.dealer_idx)))
+    {
+        Some(bad) => Err(DkgOutputError::InvalidSignature {
+            dealer_idx: bad.dealer_idx,
+        }),
+        None => Ok(()),
+    }
+}
+
+fn verify_poly_proofs_parallel<S>(
+    dkg_params: &DkgParams,
+    proof_params: &S::Params,
+    broadcasts: &[DkgInitBroadcast<S::Proof>],
+) -> Result<(), DkgOutputError>
+where
+    S: PolyProofScheme,
+    S::Proof: Clone + std::fmt::Debug + Serialize + Sync,
+    S::Params: Sync,
+{
+    let domain = domain_points_1_to_n(dkg_params.n);
+    let ok = broadcasts.par_iter().all(|msg| {
+        let stmt = PolyWellFormedStatement {
+            x_points: domain.clone(),
+            commitments: msg.pedvss.clone(),
+            f0_commitment: msg.f0_commitment,
+        };
+        S::verify(proof_params, &stmt, &msg.proof)
+    });
+    if ok {
+        Ok(())
+    } else {
+        Err(DkgOutputError::InvalidBatchProof)
+    }
+}
+
+fn aggregate_public_outputs_parallel<P: Clone + Serialize + Sync>(
+    n: usize,
+    broadcasts: &[DkgInitBroadcast<P>],
+) -> (RistrettoPoint, Vec<PedersenCommitment>) {
+    let mut public_key = RistrettoPoint::default();
+    for msg in broadcasts {
+        public_key += msg.f0_commitment;
+    }
+    let partial_verification_keys = (1..=n)
+        .into_par_iter()
+        .map(|k| {
+            let mut agg = RistrettoPoint::default();
+            for msg in broadcasts {
+                agg += msg.pedvss[idx1_to_vec(k)].point();
+            }
+            PedersenCommitment::from_point(agg)
+        })
+        .collect();
+    (public_key, partial_verification_keys)
+}
+
+/// Multi-threaded [`dkg_output_key_generation`], for large committees where the
+/// output phase dominates. Same result as the sequential version.
+pub fn dkg_output_key_generation_parallel<S>(
+    dkg_params: &DkgParams,
+    proof_params: &S::Params,
+    state: &PartyState,
+    local: &DkgInitLocalState,
+    broadcasts: &[DkgInitBroadcast<S::Proof>],
+    parties: &Parties,
+) -> Result<DkgOutput, DkgOutputError>
+where
+    S: PolyProofScheme,
+    S::Proof: Clone + std::fmt::Debug + Serialize + Sync,
+    S::Params: Sync,
+{
+    validate_broadcasts_parallel(dkg_params.n, state.dealer_idx, broadcasts, parties)?;
+    verify_poly_proofs_parallel::<S>(dkg_params, proof_params, broadcasts)?;
+
+    let (s_i, s_i_blind) =
+        decrypt_and_accumulate(state, broadcasts, (local.my_share, local.my_blinding))?;
+
+    let (public_key, partial_verification_keys) =
+        aggregate_public_outputs_parallel(dkg_params.n, broadcasts);
+
+    Ok(DkgOutput {
+        idx: state.dealer_idx,
+        secret_share: s_i,
+        blinding_share: s_i_blind,
+        public_key,
+        partial_verification_keys,
+    })
+}
+
+/// Batch-verifies all broadcast signatures at once. `true` iff every signature
+/// is valid; it does not say which one failed, so identifying a culprit needs
+/// the per-message check.
+pub fn batch_verify_signatures<P: Clone + Serialize>(
+    broadcasts: &[DkgInitBroadcast<P>],
+    parties: &Parties,
+) -> bool {
+    let messages: Vec<Vec<u8>> = broadcasts.iter().map(|m| m.signing_bytes()).collect();
+    let message_refs: Vec<&[u8]> = messages.iter().map(|m| m.as_slice()).collect();
+    let signatures: Vec<Signature> = broadcasts.iter().map(|m| m.signature).collect();
+    let keys: Vec<VerifyingKey> = broadcasts
+        .iter()
+        .map(|m| *parties.sig_pk(m.dealer_idx))
+        .collect();
+    ed25519_dalek::verify_batch(&message_refs, &signatures, &keys).is_ok()
+}
+
+/// Builds the signed complaint from a bad-opening error. `None` for any other
+/// error, which is not a share-opening dispute.
+pub fn build_abort_report(state: &PartyState, err: &DkgOutputError) -> Option<AbortReport> {
+    if let DkgOutputError::InvalidDecryptionOpening {
+        dealer_idx,
+        s_ji,
+        r_ji,
+        pi_i,
+        ..
+    } = err
+    {
+        let (shared, proof) = pi_i.as_ref();
+        Some(AbortReport::new(
+            state.dealer_idx,
+            *dealer_idx,
+            *s_ji,
+            *r_ji,
+            *shared,
+            proof.clone(),
+            &state.sig_sk,
+        ))
+    } else {
+        None
+    }
+}
+
+/// Checks a complaint against the accused dealer's broadcast.
+pub fn verify_abort_report<P: Clone + Serialize>(
+    parties: &Parties,
+    accused: &DkgInitBroadcast<P>,
+    report: &AbortReport,
+) -> AbortVerdict {
+    if accused.dealer_idx != report.accused_idx
+        || report.reporter_idx == 0
+        || report.reporter_idx > accused.pedvss.len()
+        || report.reporter_idx == accused.dealer_idx
+    {
+        return AbortVerdict::InvalidReport;
+    }
+    let reporter_share = accused.encrypted_shares.shares.get(&report.reporter_idx);
+    verify_report_core(
+        parties,
+        &accused.encrypted_shares.u,
+        reporter_share,
+        report,
+        |s, r| accused.pedvss[idx1_to_vec(report.reporter_idx)].matches_opening(s, r),
+    )
 }

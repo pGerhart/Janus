@@ -155,6 +155,13 @@ pub fn decrypt_two_scalars(sk: &Scalar, ct: &HashedElgamalCiphertext2) -> (Scala
     (ct.v1 - k1, ct.v2 - k2)
 }
 
+/// Opens an [`EncryptedShare`] from the DH value `shared = u^{sk}`, without the
+/// receiver's key. Used when checking an abort report, which carries `shared`.
+pub fn open_share_with_shared(shared: &RistrettoPoint, share: &EncryptedShare) -> (Scalar, Scalar) {
+    let (k1, k2) = hash_to_two_scalars(shared);
+    (share.v1 - k1, share.v2 - k2)
+}
+
 pub fn encrypt_batch(
     receivers: &[(usize, RistrettoPoint)],
     m1s: &[Scalar],

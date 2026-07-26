@@ -1,4 +1,5 @@
 use super::{DkgOutput, DkgParams};
+use crate::abort::{AbortReport, AbortVerdict, verify_report_core};
 use crate::encryption::proofs::{DecryptionProof, prove_decryption};
 use crate::encryption::{BatchEncryptedShares, decrypt_my_shares, encrypt_batch};
 use crate::group::g;
@@ -16,6 +17,7 @@ use bincode;
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use ed25519_dalek::{Signature, Signer, SigningKey, VerifyingKey};
 use rand_core::{CryptoRng, RngCore};
+use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use zeroize::{ZeroizeOnDrop, Zeroizing};
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -588,6 +590,294 @@ where
             r2,
             &local2.verified_round1.c_stars[dealer_idx],
         )?;
+    }
+
+    let mut public_key = RistrettoPoint::default();
+    let mut partial_verification_keys = Vec::with_capacity(params.n);
+    for dealer_idx in 1..=params.n {
+        let r2 = round2_by_idx[dealer_idx].unwrap();
+        public_key += r2.pk;
+        partial_verification_keys.push(r2.vk_i.clone());
+    }
+
+    Ok(DkgOutput {
+        idx: state.dealer_idx,
+        secret_share: local2.s_i,
+        blinding_share: local2.omega,
+        public_key,
+        partial_verification_keys,
+    })
+}
+
+/// Builds the signed complaint from a bad-opening error. `None` for any other
+/// error, which is not a share-opening dispute.
+pub fn build_abort_report(state: &PartyState, err: &TwoRoundDkgError) -> Option<AbortReport> {
+    if let TwoRoundDkgError::InvalidDecryptionOpening {
+        dealer_idx,
+        s_ji,
+        sprime_ji,
+        pi_i,
+        ..
+    } = err
+    {
+        let (shared, proof) = pi_i.as_ref();
+        Some(AbortReport::new(
+            state.dealer_idx,
+            *dealer_idx,
+            *s_ji,
+            *sprime_ji,
+            *shared,
+            proof.clone(),
+            &state.sig_sk,
+        ))
+    } else {
+        None
+    }
+}
+
+/// Checks a complaint against the accused dealer's round-one broadcast. The
+/// opening check evaluates the commitment polynomial at the reporter's point, so
+/// it grows with `t`.
+pub fn verify_abort_report<P: Clone + Serialize>(
+    parties: &Parties,
+    accused: &Round1Broadcast<P>,
+    report: &AbortReport,
+) -> AbortVerdict {
+    if accused.dealer_idx != report.accused_idx
+        || report.reporter_idx == 0
+        || report.reporter_idx == accused.dealer_idx
+    {
+        return AbortVerdict::InvalidReport;
+    }
+    let reporter_share = accused.encrypted_shares.shares.get(&report.reporter_idx);
+    verify_report_core(
+        parties,
+        &accused.encrypted_shares.u,
+        reporter_share,
+        report,
+        |s, r| evaluate_pedvss_at(&accused.pedvss, x_of(report.reporter_idx)).matches_opening(s, r),
+    )
+}
+
+fn validate_round1_msgs_parallel<'a, S>(
+    params: &DkgParams,
+    my_idx: usize,
+    round1_msgs: &'a [Round1Broadcast<S::Proof>],
+    parties: &Parties,
+    decom_params: &S::Params,
+) -> Result<Vec<&'a Round1Broadcast<S::Proof>>, TwoRoundDkgError>
+where
+    S: DecomProofScheme<Statement = DecomStatement, Witness = DecomWitness>,
+    S::Proof: Clone + std::fmt::Debug + Serialize + Sync,
+    S::Params: Sync,
+{
+    if params.n == 0 || my_idx == 0 || my_idx > params.n {
+        return Err(TwoRoundDkgError::InvalidParameters);
+    }
+    for msg in round1_msgs {
+        if msg.dealer_idx == 0 || msg.dealer_idx > params.n {
+            return Err(TwoRoundDkgError::InvalidParameters);
+        }
+        if msg.pedvss.len() != params.t + 1 {
+            return Err(TwoRoundDkgError::InvalidPedVssLength {
+                dealer_idx: msg.dealer_idx,
+            });
+        }
+    }
+    if let Some(bad) = round1_msgs
+        .par_iter()
+        .find_any(|msg| !msg.verify(parties.sig_pk(msg.dealer_idx)))
+    {
+        return Err(TwoRoundDkgError::InvalidSignature {
+            dealer_idx: bad.dealer_idx,
+        });
+    }
+    if let Some(bad) = round1_msgs.par_iter().find_any(|msg| {
+        !S::verify(
+            decom_params,
+            &DecomStatement {
+                pedvss: msg.pedvss.clone(),
+                d: msg.d_commitment.clone(),
+            },
+            &msg.decom_proof,
+        )
+    }) {
+        return Err(TwoRoundDkgError::InvalidDecomProof {
+            dealer_idx: bad.dealer_idx,
+        });
+    }
+    Ok(round1_msgs.iter().collect())
+}
+
+fn accumulate_decrypted_shares_parallel<P: Clone + Serialize + Sync>(
+    state: &PartyState,
+    other_msgs: &[&Round1Broadcast<P>],
+    decrypted: &[Option<(Scalar, Scalar)>],
+    init: (Scalar, Scalar),
+) -> Result<(Scalar, Scalar), TwoRoundDkgError> {
+    let pairs: Vec<(Scalar, Scalar)> = other_msgs
+        .par_iter()
+        .zip(decrypted.par_iter())
+        .map(|(msg, dec)| {
+            let (s_ji, sprime_ji) = dec.ok_or(TwoRoundDkgError::MissingCiphertext {
+                dealer_idx: msg.dealer_idx,
+                receiver_idx: state.dealer_idx,
+            })?;
+            if !evaluate_pedvss_at(&msg.pedvss, x_of(state.dealer_idx))
+                .matches_opening(s_ji, sprime_ji)
+            {
+                let pi_i = prove_decryption(&state.enc_sk, &state.enc_pk, &msg.encrypted_shares.u);
+                return Err(TwoRoundDkgError::InvalidDecryptionOpening {
+                    dealer_idx: msg.dealer_idx,
+                    receiver_idx: state.dealer_idx,
+                    s_ji,
+                    sprime_ji,
+                    pi_i: Box::new(pi_i),
+                });
+            }
+            Ok((s_ji, sprime_ji))
+        })
+        .collect::<Result<_, _>>()?;
+    let (mut sum_s, mut sum_sprime) = init;
+    for (s, sprime) in pairs {
+        sum_s += s;
+        sum_sprime += sprime;
+    }
+    Ok((sum_s, sum_sprime))
+}
+
+fn decrypt_and_accumulate_parallel<P: Clone + Serialize + Sync>(
+    state: &PartyState,
+    valid_round1: &[&Round1Broadcast<P>],
+    init: (Scalar, Scalar),
+) -> Result<(Scalar, Scalar), TwoRoundDkgError> {
+    let other_msgs: Vec<_> = valid_round1
+        .iter()
+        .filter(|&&m| m.dealer_idx != state.dealer_idx)
+        .copied()
+        .collect();
+    let batches: Vec<&BatchEncryptedShares> =
+        other_msgs.iter().map(|m| &m.encrypted_shares).collect();
+    let decrypted =
+        decrypt_my_shares(&state.enc_sk, &batches, state.dealer_idx).map_err(|failed| {
+            TwoRoundDkgError::InvalidEncryptionProof {
+                dealer_idx: other_msgs[failed[0]].dealer_idx,
+            }
+        })?;
+    accumulate_decrypted_shares_parallel(state, &other_msgs, &decrypted, init)
+}
+
+fn evaluate_many_from_coeff_points_parallel(
+    coeff_points: &[RistrettoPoint],
+    n: usize,
+) -> Vec<PedersenCommitment> {
+    let mut out = Vec::with_capacity(n + 1);
+    out.push(PedersenCommitment::from_point(RistrettoPoint::default()));
+    let rest: Vec<PedersenCommitment> = (1..=n)
+        .into_par_iter()
+        .map(|i| {
+            PedersenCommitment::from_point(evaluate_commitment_polynomial_points_at(
+                coeff_points,
+                x_of(i),
+            ))
+        })
+        .collect();
+    out.extend(rest);
+    out
+}
+
+fn build_verified_round1_cache_parallel<P>(
+    params: &DkgParams,
+    valid_round1: &[&Round1Broadcast<P>],
+) -> VerifiedRound1Cache {
+    let mut by_idx = vec![None; params.n + 1];
+    for msg in valid_round1 {
+        by_idx[msg.dealer_idx] = Some(VerifiedRound1Info {
+            c_0: msg.pedvss[0].clone(),
+            d_commitment: msg.d_commitment.clone(),
+        });
+    }
+    let agg_coeffs = aggregate_pedvss_coefficients_points(valid_round1, params.t);
+    let c_stars = evaluate_many_from_coeff_points_parallel(&agg_coeffs, params.n);
+    VerifiedRound1Cache { by_idx, c_stars }
+}
+
+/// Multi-threaded [`dkg_round2_finalize`], parallel over the decom proofs,
+/// opening checks, and commitment-polynomial evaluations. Same result.
+pub fn dkg_round2_finalize_parallel<S>(
+    params: &DkgParams,
+    decom_params: &S::Params,
+    state: &PartyState,
+    local: &Round1LocalState,
+    round1_msgs: &[Round1Broadcast<S::Proof>],
+    parties: &Parties,
+) -> Result<(Round2Broadcast, Round2LocalState), TwoRoundDkgError>
+where
+    S: DecomProofScheme<Statement = DecomStatement, Witness = DecomWitness>,
+    S::Proof: Clone + std::fmt::Debug + Serialize + Sync,
+    S::Params: Sync,
+{
+    let valid_round1 = validate_round1_msgs_parallel::<S>(
+        params,
+        state.dealer_idx,
+        round1_msgs,
+        parties,
+        decom_params,
+    )?;
+
+    let (sum_s_i, sum_sprime_i) =
+        decrypt_and_accumulate_parallel(state, &valid_round1, (local.my_s_ii, local.my_sprime_ii))?;
+
+    let verified_round1 = build_verified_round1_cache_parallel(params, &valid_round1);
+
+    let mut rng = rand::thread_rng();
+    Ok(build_round2_output(
+        &mut rng,
+        state,
+        local,
+        sum_s_i,
+        sum_sprime_i,
+        verified_round1,
+    ))
+}
+
+/// Multi-threaded [`dkg_output`], parallel over the round-two proof checks.
+pub fn dkg_output_parallel<S>(
+    params: &DkgParams,
+    _decom_params: &S::Params,
+    state: &PartyState,
+    local2: &Round2LocalState,
+    _round1_msgs: &[Round1Broadcast<S::Proof>],
+    round2_msgs: &[Round2Broadcast],
+    parties: &Parties,
+) -> Result<DkgOutput, TwoRoundDkgError>
+where
+    S: DecomProofScheme<Statement = DecomStatement, Witness = DecomWitness>,
+    S::Proof: Clone + std::fmt::Debug + Serialize,
+{
+    validate_output_params(params, state.dealer_idx, local2)?;
+
+    let round2_by_idx = index_round2_msgs(params, round2_msgs, parties)?;
+
+    let failure = (1..=params.n).into_par_iter().find_map_any(|dealer_idx| {
+        let r1 = match local2.verified_round1.by_idx[dealer_idx].as_ref() {
+            Some(r1) => r1,
+            None => return Some(TwoRoundDkgError::MissingRound2Message { dealer_idx }),
+        };
+        let r2 = match round2_by_idx[dealer_idx] {
+            Some(r2) => r2,
+            None => return Some(TwoRoundDkgError::MissingRound2Message { dealer_idx }),
+        };
+        verify_round2_msg(
+            dealer_idx,
+            r1,
+            r2,
+            &local2.verified_round1.c_stars[dealer_idx],
+        )
+        .err()
+    });
+    if let Some(err) = failure {
+        return Err(err);
     }
 
     let mut public_key = RistrettoPoint::default();
