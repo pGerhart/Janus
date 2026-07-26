@@ -22,7 +22,7 @@ use rand::thread_rng;
 const PARAMS_SMALL: DkgParams = DkgParams { t: 2, n: 5 };
 const PARAMS_MID: DkgParams = DkgParams { t: 4, n: 9 };
 
-// ── helpers ───────────────────────────────────────────────────────────────────
+// helpers
 
 fn setup(n: usize) -> (Vec<PartyState>, Parties, Vec<Scalar>) {
     let mut rng = thread_rng();
@@ -180,7 +180,7 @@ where
     outputs
 }
 
-// ── one-round tests ───────────────────────────────────────────────────────────
+// one-round tests
 
 #[test]
 fn one_round_schnorr_small() {
@@ -208,7 +208,7 @@ fn one_round_bulletproof_small() {
     run_one_round::<BulletproofPolyProof>(&PARAMS_SMALL, &proof_params);
 }
 
-// ── two-round tests ───────────────────────────────────────────────────────────
+// two-round tests
 
 #[test]
 fn two_round_schnorr_small() {

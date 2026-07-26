@@ -58,7 +58,7 @@ fn setup_parties(n: usize) -> Vec<PartyState> {
     (1..=n).map(|i| make_party_state(&mut rng, i)).collect()
 }
 
-// ── one round ───────────────────────────────────────────────────────────────
+// one round
 
 struct OneRoundCase {
     parties: Parties,
@@ -187,7 +187,7 @@ fn bench_one_round_report_verify(c: &mut Criterion) {
     group.finish();
 }
 
-// ── two round ─────────────────────────────────────────────────────────────────
+// two round
 
 struct TwoRoundCase {
     parties: Parties,
@@ -315,7 +315,7 @@ fn bench_two_round_report_verify(c: &mut Criterion) {
     group.finish();
 }
 
-// ── worst case: one malicious dealer, every other party complains ──────────────
+// worst case: one malicious dealer, every other party complains
 
 fn build_one_round_worstcase(
     p: BaseParams,

@@ -25,7 +25,7 @@ fn setup(n: usize) -> (Vec<PartyState>, Parties) {
     (states, parties)
 }
 
-// ── one round ───────────────────────────────────────────────────────────────
+// one round
 
 fn one_round_broadcasts(
     states: &[PartyState],
@@ -196,7 +196,7 @@ fn one_round_discards_unauthenticated_report() {
     assert_eq!(verdict, AbortVerdict::InvalidReport);
 }
 
-// ── two round ─────────────────────────────────────────────────────────────────
+// two round
 
 fn two_round_broadcasts(
     states: &[PartyState],

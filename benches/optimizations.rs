@@ -261,5 +261,73 @@ fn bench_fischlin_small(c: &mut Criterion) {
     group.finish();
 }
 
-criterion_group!(benches, bench_schnorr, bench_fischlin_small);
+fn bench_two_round_finalize(c: &mut Criterion) {
+    let mut group = c.benchmark_group("opt_two_round_finalize_schnorr");
+    group.sample_size(10);
+
+    for p in large_sets() {
+        let dkg = DkgParams { t: p.t, n: p.n };
+        let mut rng = thread_rng();
+        let states: Vec<PartyState> = (1..=dkg.n).map(|i| make_party_state(&mut rng, i)).collect();
+        let parties = collect_public_parties(&states);
+        let mut r1 = Vec::with_capacity(dkg.n);
+        let mut r1_locals = Vec::with_capacity(dkg.n);
+        for i in 1..=dkg.n {
+            let (b, l) = dkg_round1_initiate::<_, SchnorrDecomProof>(
+                &mut rng,
+                &dkg,
+                &SchnorrDecomProofParams,
+                &states[i - 1],
+                Scalar::from((i + 1) as u64),
+                &parties,
+            );
+            r1.push(b);
+            r1_locals.push(l);
+        }
+        let recv = 1usize;
+
+        group.bench_with_input(BenchmarkId::new("finalize_seq", p.label()), &p, |b, _| {
+            b.iter(|| {
+                black_box(
+                    dkg_round2_finalize::<SchnorrDecomProof>(
+                        &dkg,
+                        &SchnorrDecomProofParams,
+                        &states[recv - 1],
+                        &r1_locals[recv - 1],
+                        &r1,
+                        &parties,
+                    )
+                    .unwrap(),
+                );
+            });
+        });
+        group.bench_with_input(
+            BenchmarkId::new("finalize_parallel", p.label()),
+            &p,
+            |b, _| {
+                b.iter(|| {
+                    black_box(
+                        dkg_round2_finalize_parallel::<SchnorrDecomProof>(
+                            &dkg,
+                            &SchnorrDecomProofParams,
+                            &states[recv - 1],
+                            &r1_locals[recv - 1],
+                            &r1,
+                            &parties,
+                        )
+                        .unwrap(),
+                    );
+                });
+            },
+        );
+    }
+    group.finish();
+}
+
+criterion_group!(
+    benches,
+    bench_schnorr,
+    bench_fischlin_small,
+    bench_two_round_finalize
+);
 criterion_main!(benches);
