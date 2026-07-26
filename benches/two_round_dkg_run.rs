@@ -57,7 +57,17 @@ fn parameter_sets() -> Vec<BaseParams> {
         BaseParams { t: 8, n: 32 },
         BaseParams { t: 16, n: 64 },
         BaseParams { t: 32, n: 64 },
+        BaseParams { t: 64, n: 128 },
+        BaseParams { t: 128, n: 256 },
+        BaseParams { t: 256, n: 512 },
     ]
+}
+
+// The large Fischlin profile is not recommended for large committees, so it is
+// only benchmarked up to n < 256. Schnorr and the small Fischlin profile cover
+// the full range.
+fn parameter_sets_bounded() -> Vec<BaseParams> {
+    parameter_sets().into_iter().filter(|p| p.n < 256).collect()
 }
 
 fn setup_parties(n: usize) -> (Vec<PartyState>, Parties) {
@@ -219,7 +229,7 @@ where
 
 fn bench_two_round_initiate_schnorr(c: &mut Criterion) {
     let mut group = c.benchmark_group("two_round_initiate_schnorr");
-    group.sample_size(20);
+    group.sample_size(10);
 
     for p in parameter_sets() {
         let dkg_params = p.to_dkg_params();
@@ -269,7 +279,7 @@ fn bench_two_round_initiate_schnorr(c: &mut Criterion) {
 
 fn bench_two_round_finalize_schnorr(c: &mut Criterion) {
     let mut group = c.benchmark_group("two_round_finalize_schnorr");
-    group.sample_size(20);
+    group.sample_size(10);
 
     for p in parameter_sets() {
         let dkg_params = p.to_dkg_params();
@@ -308,7 +318,7 @@ fn bench_two_round_finalize_schnorr(c: &mut Criterion) {
 
 fn bench_two_round_output_schnorr(c: &mut Criterion) {
     let mut group = c.benchmark_group("two_round_output_schnorr");
-    group.sample_size(20);
+    group.sample_size(10);
 
     for p in parameter_sets() {
         let dkg_params = p.to_dkg_params();
@@ -358,7 +368,7 @@ fn bench_two_round_output_schnorr(c: &mut Criterion) {
 
 fn bench_two_round_initiate_fischlin_small(c: &mut Criterion) {
     let mut group = c.benchmark_group("two_round_initiate_fischlin_small");
-    group.sample_size(20);
+    group.sample_size(10);
 
     for p in parameter_sets() {
         let dkg_params = p.to_dkg_params();
@@ -412,7 +422,7 @@ fn bench_two_round_initiate_fischlin_small(c: &mut Criterion) {
 
 fn bench_two_round_finalize_fischlin_small(c: &mut Criterion) {
     let mut group = c.benchmark_group("two_round_finalize_fischlin_small");
-    group.sample_size(20);
+    group.sample_size(10);
 
     for p in parameter_sets() {
         let dkg_params = p.to_dkg_params();
@@ -455,7 +465,7 @@ fn bench_two_round_finalize_fischlin_small(c: &mut Criterion) {
 
 fn bench_two_round_output_fischlin_small(c: &mut Criterion) {
     let mut group = c.benchmark_group("two_round_output_fischlin_small");
-    group.sample_size(20);
+    group.sample_size(10);
 
     for p in parameter_sets() {
         let dkg_params = p.to_dkg_params();
@@ -511,7 +521,7 @@ fn bench_two_round_initiate_fischlin_large(c: &mut Criterion) {
     let mut group = c.benchmark_group("two_round_initiate_fischlin_large");
     group.sample_size(20);
 
-    for p in parameter_sets() {
+    for p in parameter_sets_bounded() {
         let dkg_params = p.to_dkg_params();
         let decom_params = FischlinDecomProofParams {
             rho: FISCHLIN_LARGE_PROOF.rho,
@@ -565,7 +575,7 @@ fn bench_two_round_finalize_fischlin_large(c: &mut Criterion) {
     let mut group = c.benchmark_group("two_round_finalize_fischlin_large");
     group.sample_size(20);
 
-    for p in parameter_sets() {
+    for p in parameter_sets_bounded() {
         let dkg_params = p.to_dkg_params();
         let decom_params = FischlinDecomProofParams {
             rho: FISCHLIN_LARGE_PROOF.rho,
@@ -608,7 +618,7 @@ fn bench_two_round_output_fischlin_large(c: &mut Criterion) {
     let mut group = c.benchmark_group("two_round_output_fischlin_large");
     group.sample_size(20);
 
-    for p in parameter_sets() {
+    for p in parameter_sets_bounded() {
         let dkg_params = p.to_dkg_params();
         let decom_params = FischlinDecomProofParams {
             rho: FISCHLIN_LARGE_PROOF.rho,
