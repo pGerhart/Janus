@@ -11,7 +11,7 @@ use janus::two_round_proofs::{
     DecomProofScheme, DecomStatement, DecomWitness, FischlinDecomProofParams, FischlinDecomScheme,
     SchnorrDecomProof, SchnorrDecomProofParams,
 };
-use rand::thread_rng;
+use rand::rng;
 
 #[derive(Clone, Copy, Debug)]
 struct FischlinProfile {
@@ -71,7 +71,7 @@ fn parameter_sets_bounded() -> Vec<BaseParams> {
 }
 
 fn setup_parties(n: usize) -> (Vec<PartyState>, Parties) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
 
     let mut party_states = Vec::with_capacity(n);
     for dealer_idx in 1..=n {
@@ -105,19 +105,19 @@ fn format_bytes_verbose(bytes: u64) -> String {
 }
 
 fn round1_broadcast_size_bytes<P: serde::Serialize>(msg: &Round1Broadcast<P>) -> u64 {
-    bincode::serialize(msg)
+    postcard::to_allocvec(msg)
         .expect("round1 broadcast serialization failed")
         .len() as u64
 }
 
 fn round2_broadcast_size_bytes(msg: &Round2Broadcast) -> u64 {
-    bincode::serialize(msg)
+    postcard::to_allocvec(msg)
         .expect("round2 broadcast serialization failed")
         .len() as u64
 }
 
 fn round1_proof_size_bytes<P: serde::Serialize>(msg: &Round1Broadcast<P>) -> u64 {
-    bincode::serialize(&msg.decom_proof)
+    postcard::to_allocvec(&msg.decom_proof)
         .expect("round1 proof serialization failed")
         .len() as u64
 }
@@ -155,7 +155,7 @@ where
     S::Params: Clone + std::fmt::Debug + Sync,
     S::Proof: Clone + std::fmt::Debug + serde::Serialize + Send + Sync,
 {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let (party_states, parties) = setup_parties(dkg_params.n);
 
     let dealer_secrets: Vec<Scalar> = (0..dkg_params.n)
@@ -238,7 +238,7 @@ fn bench_two_round_initiate_schnorr(c: &mut Criterion) {
         let dealer_idx = 1usize;
         let share = Scalar::from(42u64);
 
-        let mut setup_rng = thread_rng();
+        let mut setup_rng = rng();
         let sample = dkg_round1_initiate::<_, SchnorrDecomProof>(
             &mut setup_rng,
             &dkg_params,
@@ -260,7 +260,7 @@ fn bench_two_round_initiate_schnorr(c: &mut Criterion) {
 
         group.bench_with_input(BenchmarkId::new("initiate", p.label()), &p, |b, _| {
             b.iter(|| {
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 let res = dkg_round1_initiate::<_, SchnorrDecomProof>(
                     &mut rng,
                     black_box(&dkg_params),
@@ -381,7 +381,7 @@ fn bench_two_round_initiate_fischlin_small(c: &mut Criterion) {
         let dealer_idx = 1usize;
         let share = Scalar::from(42u64);
 
-        let mut setup_rng = thread_rng();
+        let mut setup_rng = rng();
         let sample = dkg_round1_initiate::<_, FischlinDecomScheme>(
             &mut setup_rng,
             &dkg_params,
@@ -403,7 +403,7 @@ fn bench_two_round_initiate_fischlin_small(c: &mut Criterion) {
 
         group.bench_with_input(BenchmarkId::new("initiate", p.label()), &p, |b, _| {
             b.iter(|| {
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 let res = dkg_round1_initiate::<_, FischlinDecomScheme>(
                     &mut rng,
                     black_box(&dkg_params),
@@ -532,7 +532,7 @@ fn bench_two_round_initiate_fischlin_large(c: &mut Criterion) {
         let dealer_idx = 1usize;
         let share = Scalar::from(42u64);
 
-        let mut setup_rng = thread_rng();
+        let mut setup_rng = rng();
         let sample = dkg_round1_initiate::<_, FischlinDecomScheme>(
             &mut setup_rng,
             &dkg_params,
@@ -554,7 +554,7 @@ fn bench_two_round_initiate_fischlin_large(c: &mut Criterion) {
 
         group.bench_with_input(BenchmarkId::new("initiate", p.label()), &p, |b, _| {
             b.iter(|| {
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 let res = dkg_round1_initiate::<_, FischlinDecomScheme>(
                     &mut rng,
                     black_box(&dkg_params),

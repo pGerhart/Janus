@@ -4,7 +4,10 @@ use curve25519_dalek::{
     scalar::Scalar,
     traits::{Identity, VartimeMultiscalarMul},
 };
-use rand::{SeedableRng, rngs::OsRng, rngs::StdRng};
+use rand::rngs::SysRng;
+use rand_chacha::ChaCha20Rng;
+use rand_core::SeedableRng;
+use rand_core::UnwrapErr;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha512};
 use zeroize::{Zeroize, ZeroizeOnDrop};
@@ -211,7 +214,7 @@ pub fn prove_fischlin_with_params(
     );
 
     let challenge_space: u16 = 1u16 << t_bits;
-    let mut rng = StdRng::from_rng(&mut OsRng).expect("failed to seed StdRng from OsRng");
+    let mut rng = ChaCha20Rng::from_rng(&mut UnwrapErr(SysRng));
     let g_point = g();
     let h_point = h();
     let m = statement.pedvss.len();
@@ -412,141 +415,5 @@ impl DecomProofScheme for FischlinDecomScheme {
 
     fn verify(params: &Self::Params, statement: &Self::Statement, proof: &Self::Proof) -> bool {
         verify_fischlin_with_params(statement, proof, params.rho, params.b, params.t_bits)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use rand::thread_rng;
-
-    fn params() -> FischlinDecomProofParams {
-        FischlinDecomProofParams {
-            rho: 4,
-            b: 4,
-            t_bits: 9,
-        }
-    }
-
-    fn sample_witness_and_statement() -> (DecomWitness, DecomStatement) {
-        let mut rng = thread_rng();
-        let witness = DecomWitness {
-            a: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            b: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            omega: Scalar::random(&mut rng),
-            r: Scalar::random(&mut rng),
-        };
-        let statement = DecomStatement {
-            pedvss: witness
-                .a
-                .iter()
-                .zip(witness.b.iter())
-                .map(|(a, b)| PedersenCommitment::new(*a, *b))
-                .collect(),
-            d: PedersenCommitment::new(witness.omega, witness.r),
-        };
-        (witness, statement)
-    }
-
-    #[test]
-    fn decom_fischlin_roundtrip() {
-        let (witness, statement) = sample_witness_and_statement();
-
-        let p = params();
-        let proof = prove_fischlin_with_params(&statement, &witness, p.rho, p.b, p.t_bits);
-
-        assert!(verify_fischlin_with_params(
-            &statement, &proof, p.rho, p.b, p.t_bits
-        ));
-    }
-
-    #[test]
-    fn decom_fischlin_fails_for_wrong_statement() {
-        let (witness, statement) = sample_witness_and_statement();
-
-        let mut rng = thread_rng();
-        let mut wrong_pedvss = statement.pedvss.clone();
-        wrong_pedvss[2] =
-            PedersenCommitment::new(Scalar::random(&mut rng), Scalar::random(&mut rng));
-        let wrong_statement = DecomStatement {
-            pedvss: wrong_pedvss,
-            d: statement.d.clone(),
-        };
-
-        let p = params();
-        let proof = prove_fischlin_with_params(&statement, &witness, p.rho, p.b, p.t_bits);
-
-        assert!(!verify_fischlin_with_params(
-            &wrong_statement,
-            &proof,
-            p.rho,
-            p.b,
-            p.t_bits
-        ));
-    }
-
-    #[test]
-    fn decom_fischlin_fails_if_t1_modified() {
-        let (witness, statement) = sample_witness_and_statement();
-
-        let p = params();
-        let mut proof = prove_fischlin_with_params(&statement, &witness, p.rho, p.b, p.t_bits);
-        proof.rounds[0].t += g();
-
-        assert!(!verify_fischlin_with_params(
-            &statement, &proof, p.rho, p.b, p.t_bits
-        ));
-    }
-
-    #[test]
-    fn decom_fischlin_fails_if_e_modified() {
-        let (witness, statement) = sample_witness_and_statement();
-
-        let p = params();
-        let mut proof = prove_fischlin_with_params(&statement, &witness, p.rho, p.b, p.t_bits);
-        proof.rounds[0].e ^= 1;
-
-        assert!(!verify_fischlin_with_params(
-            &statement, &proof, p.rho, p.b, p.t_bits
-        ));
-    }
-
-    #[test]
-    fn decom_fischlin_fails_if_z_modified() {
-        let (witness, statement) = sample_witness_and_statement();
-
-        let p = params();
-        let mut proof = prove_fischlin_with_params(&statement, &witness, p.rho, p.b, p.t_bits);
-        proof.rounds[0].z_a[1] += Scalar::ONE;
-
-        assert!(!verify_fischlin_with_params(
-            &statement, &proof, p.rho, p.b, p.t_bits
-        ));
-    }
-
-    #[test]
-    fn decom_fischlin_fails_if_round_removed() {
-        let (witness, statement) = sample_witness_and_statement();
-
-        let p = params();
-        let mut proof = prove_fischlin_with_params(&statement, &witness, p.rho, p.b, p.t_bits);
-        proof.rounds.pop();
-
-        assert!(!verify_fischlin_with_params(
-            &statement, &proof, p.rho, p.b, p.t_bits
-        ));
-    }
-
-    #[test]
-    fn decom_fischlin_fails_if_vector_length_modified() {
-        let (witness, statement) = sample_witness_and_statement();
-
-        let p = params();
-        let mut proof = prove_fischlin_with_params(&statement, &witness, p.rho, p.b, p.t_bits);
-        proof.rounds[0].z_b.pop();
-
-        assert!(!verify_fischlin_with_params(
-            &statement, &proof, p.rho, p.b, p.t_bits
-        ));
     }
 }

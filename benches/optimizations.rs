@@ -18,7 +18,7 @@ use janus::one_round_proofs::{
 use janus::party::{Parties, PartyState, collect_public_parties, make_party_state};
 use janus::two_round::{dkg_round1_initiate, dkg_round2_finalize, dkg_round2_finalize_parallel};
 use janus::two_round_proofs::{SchnorrDecomProof, SchnorrDecomProofParams};
-use rand::thread_rng;
+use rand::rng;
 
 const FISCHLIN_SMALL: (usize, usize, usize) = (16, 8, 13); // rho, b, t_bits
 
@@ -59,7 +59,7 @@ where
     S::Params: Sync,
     S::Proof: Clone + std::fmt::Debug + serde::Serialize + Send + Sync,
 {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let states: Vec<PartyState> = (1..=dkg.n).map(|i| make_party_state(&mut rng, i)).collect();
     let parties = collect_public_parties(&states);
     let mut broadcasts = Vec::with_capacity(dkg.n);
@@ -93,6 +93,7 @@ where
             x_points: d.clone(),
             commitments: m.pedvss.clone(),
             f0_commitment: m.f0_commitment,
+            degree: dkg.t,
         })
         .collect()
 }
@@ -267,7 +268,7 @@ fn bench_two_round_finalize(c: &mut Criterion) {
 
     for p in large_sets() {
         let dkg = DkgParams { t: p.t, n: p.n };
-        let mut rng = thread_rng();
+        let mut rng = rng();
         let states: Vec<PartyState> = (1..=dkg.n).map(|i| make_party_state(&mut rng, i)).collect();
         let parties = collect_public_parties(&states);
         let mut r1 = Vec::with_capacity(dkg.n);

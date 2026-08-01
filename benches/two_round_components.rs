@@ -21,7 +21,7 @@ use janus::{
 
 use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
-use rand::thread_rng;
+use rand::rng;
 
 const T: usize = 32;
 const N: usize = 64;
@@ -33,7 +33,7 @@ const FISCHLIN: FischlinDecomProofParams = FischlinDecomProofParams {
 };
 
 fn random_decom_statement_and_witness() -> (DecomStatement, DecomWitness) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let a: Vec<Scalar> = (0..=T).map(|_| Scalar::random(&mut rng)).collect();
     let b: Vec<Scalar> = (0..=T).map(|_| Scalar::random(&mut rng)).collect();
     let omega = Scalar::random(&mut rng);
@@ -72,7 +72,7 @@ fn n_fischlin_proofs() -> Vec<(
 }
 
 fn random_pk_statement_and_witness() -> (PkStatement, PkWitness) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let a = Scalar::random(&mut rng);
     let b = Scalar::random(&mut rng);
     let stmt = PkStatement {
@@ -84,7 +84,7 @@ fn random_pk_statement_and_witness() -> (PkStatement, PkWitness) {
 }
 
 fn random_comeq_statement_and_witness() -> (ComEqStatement, ComEqWitness) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let s = Scalar::random(&mut rng);
     let s_prime = Scalar::random(&mut rng);
     let omega = Scalar::random(&mut rng);
@@ -136,7 +136,7 @@ fn bench_initiate_decom_prove(c: &mut Criterion) {
 }
 
 fn bench_initiate_pk_prove(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let (stmt, wit) = random_pk_statement_and_witness();
     c.bench_function("initiate/pk_prove", |b| {
         b.iter(|| {
@@ -147,7 +147,7 @@ fn bench_initiate_pk_prove(c: &mut Criterion) {
 }
 
 fn bench_initiate_encrypt_shares(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let enc_pks: Vec<RistrettoPoint> = (0..N - 1).map(|_| keygen().1).collect();
     let c0 = Scalar::random(&mut rng);
     let f: Vec<Scalar> = sample_random_polynomial_with_constant(&mut rng, T, c0);
@@ -206,7 +206,7 @@ fn bench_finalize_decom_verify_batch(c: &mut Criterion) {
 }
 
 fn bench_finalize_decrypt_batch(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let (sk, pk) = keygen();
     let my_idx = 1usize;
     let batches: Vec<_> = (0..N - 1)
@@ -230,7 +230,7 @@ fn bench_finalize_decrypt_batch(c: &mut Criterion) {
 }
 
 fn bench_finalize_pedvss_eval_check_batch(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     // N-1 pedvss sets (one per remote party), each with t+1 commitments
     let pedvss_sets: Vec<Vec<PedersenCommitment>> = (0..N - 1)
         .map(|_| {
@@ -267,7 +267,7 @@ fn bench_finalize_pedvss_eval_check_batch(c: &mut Criterion) {
 }
 
 fn bench_finalize_cstar_build(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let all_pedvss: Vec<Vec<PedersenCommitment>> = (0..N)
         .map(|_| {
             (0..=T)
@@ -286,7 +286,7 @@ fn bench_finalize_cstar_build(c: &mut Criterion) {
 }
 
 fn bench_finalize_comeq_prove(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let (stmt, wit) = random_comeq_statement_and_witness();
     c.bench_function("finalize/comeq_prove", |b| {
         b.iter(|| {
@@ -297,7 +297,7 @@ fn bench_finalize_comeq_prove(c: &mut Criterion) {
 }
 
 fn bench_finalize_signature_verify_batch(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let dkg_params = DkgParams { t: T, n: N };
 
     let mut party_states = Vec::with_capacity(N);
@@ -332,7 +332,7 @@ fn bench_finalize_signature_verify_batch(c: &mut Criterion) {
 }
 
 fn bench_output_pk_verify_batch(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let pk_pairs: Vec<(PkStatement, PkProof)> = (0..N)
         .map(|_| {
             let (stmt, wit) = random_pk_statement_and_witness();
@@ -351,7 +351,7 @@ fn bench_output_pk_verify_batch(c: &mut Criterion) {
 }
 
 fn bench_output_comeq_verify_batch(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let comeq_pairs: Vec<(ComEqStatement, ComEqProof)> = (0..N)
         .map(|_| {
             let (stmt, wit) = random_comeq_statement_and_witness();

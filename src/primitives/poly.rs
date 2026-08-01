@@ -1,5 +1,5 @@
 use curve25519_dalek::scalar::Scalar;
-use rand_core::{CryptoRng, RngCore};
+use rand_core::CryptoRng;
 
 pub fn eval_poly_at(coeffs: &[Scalar], x: Scalar) -> Scalar {
     coeffs.iter().rev().fold(Scalar::ZERO, |acc, a| acc * x + a)
@@ -13,7 +13,7 @@ pub fn eval_poly_on_1_to_n(coeffs: &[Scalar], n: usize) -> Vec<Scalar> {
     out
 }
 
-pub fn sample_random_polynomial_with_constant<R: RngCore + CryptoRng>(
+pub fn sample_random_polynomial_with_constant<R: CryptoRng>(
     rng: &mut R,
     degree: usize,
     constant: Scalar,

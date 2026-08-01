@@ -2,7 +2,7 @@ use crate::group::g_mul_scalar;
 use curve25519_dalek::ristretto::RistrettoPoint;
 use curve25519_dalek::scalar::Scalar;
 use ed25519_dalek::{SigningKey, VerifyingKey};
-use rand_core::{CryptoRng, RngCore};
+use rand_core::CryptoRng;
 use zeroize::ZeroizeOnDrop;
 
 #[derive(Clone, Debug, ZeroizeOnDrop)]
@@ -50,7 +50,7 @@ impl Parties {
     }
 }
 
-pub fn make_party_state<R: RngCore + CryptoRng>(rng: &mut R, dealer_idx: usize) -> PartyState {
+pub fn make_party_state<R: CryptoRng>(rng: &mut R, dealer_idx: usize) -> PartyState {
     let enc_sk = Scalar::random(rng);
     let enc_pk = g_mul_scalar(enc_sk);
 

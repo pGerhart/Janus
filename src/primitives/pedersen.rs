@@ -1,7 +1,7 @@
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use serde::{Deserialize, Serialize};
 
-use crate::group::{g, h};
+use crate::group::{g_mul_scalar, h_mul_scalar};
 
 #[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
 pub struct PedersenCommitment {
@@ -10,7 +10,7 @@ pub struct PedersenCommitment {
 
 impl PedersenCommitment {
     pub fn new(message: Scalar, blinding: Scalar) -> Self {
-        let point = g() * message + h() * blinding;
+        let point = g_mul_scalar(message) + h_mul_scalar(blinding);
         Self { point }
     }
 

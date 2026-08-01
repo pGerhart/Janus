@@ -16,7 +16,7 @@ use janus::{
 
 use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
-use rand::thread_rng;
+use rand::rng;
 
 const T: usize = 32;
 const N: usize = 64;
@@ -32,7 +32,7 @@ fn domain() -> Vec<Scalar> {
 }
 
 fn random_poly_statement_and_witness() -> (PolyWellFormedStatement, PolyWellFormedWitness) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let c0 = Scalar::random(&mut rng);
     let coeffs = sample_random_polynomial_with_constant(&mut rng, T, c0);
     let blindings: Vec<Scalar> = (0..N).map(|_| Scalar::random(&mut rng)).collect();
@@ -48,6 +48,7 @@ fn random_poly_statement_and_witness() -> (PolyWellFormedStatement, PolyWellForm
         x_points: domain(),
         commitments,
         f0_commitment,
+        degree: coeffs.len() - 1,
     };
     let wit = PolyWellFormedWitness { coeffs, blindings };
     (stmt, wit)
@@ -85,7 +86,7 @@ fn bench_initiate_poly_prove(c: &mut Criterion) {
 }
 
 fn bench_initiate_encrypt_shares(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let enc_pks: Vec<RistrettoPoint> = (0..N - 1).map(|_| keygen().1).collect();
     let c0 = Scalar::random(&mut rng);
     let coeffs = sample_random_polynomial_with_constant(&mut rng, T, c0);
@@ -140,7 +141,7 @@ fn bench_output_poly_verify_batch(c: &mut Criterion) {
 }
 
 fn bench_output_decrypt_batch(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let (sk, pk) = keygen();
     let my_idx = 1usize;
     let batches: Vec<_> = (0..N - 1)
@@ -164,7 +165,7 @@ fn bench_output_decrypt_batch(c: &mut Criterion) {
 }
 
 fn bench_output_pedvss_opening_check_batch(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let commitments: Vec<PedersenCommitment> = (0..N - 1)
         .map(|_| PedersenCommitment::new(Scalar::random(&mut rng), Scalar::random(&mut rng)))
         .collect();
@@ -183,7 +184,7 @@ fn bench_output_pedvss_opening_check_batch(c: &mut Criterion) {
 }
 
 fn bench_output_vk_aggregation(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let all_pedvss: Vec<Vec<RistrettoPoint>> = (0..N)
         .map(|_| {
             (0..N)
@@ -212,7 +213,7 @@ fn bench_output_vk_aggregation(c: &mut Criterion) {
 }
 
 fn bench_output_signature_verify_batch(c: &mut Criterion) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let dkg_params = DkgParams { t: T, n: N };
 
     let mut party_states = Vec::with_capacity(N);
@@ -242,6 +243,35 @@ fn bench_output_signature_verify_batch(c: &mut Criterion) {
                 let ok = msg.verify(black_box(parties.sig_pk(msg.dealer_idx)));
                 black_box(ok);
             }
+        });
+    });
+
+    // The channel-facing path: authenticate the received bytes, then decode once.
+    // Split so the signature check and the decoding are attributable separately.
+    let wire: Vec<Vec<u8>> = msgs.iter().map(|m| m.to_wire()).collect();
+
+    c.bench_function("output/wire_verify_batch_n64", |b| {
+        b.iter(|| {
+            for (i, w) in wire.iter().enumerate() {
+                let (payload, sig) = janus::wire::split(w).expect("well-formed");
+                let ok = janus::wire::verify_payload(
+                    janus::one_round::DKG_INIT_DOMAIN,
+                    payload,
+                    &sig,
+                    black_box(parties.sig_pk(i + 1)),
+                );
+                black_box(ok.is_ok());
+            }
+        });
+    });
+
+    c.bench_function("output/wire_decode_batch_n64", |b| {
+        b.iter(|| {
+            let decoded = janus::one_round::decode_broadcasts::<
+                <FischlinPolyProof as PolyProofScheme>::Proof,
+            >(black_box(&wire), &parties)
+            .expect("decodes");
+            black_box(decoded.len());
         });
     });
 }

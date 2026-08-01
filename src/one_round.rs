@@ -1,7 +1,9 @@
 use super::{DkgOutput, DkgParams};
 use crate::abort::{AbortReport, AbortVerdict, verify_report_core};
-use crate::encryption::proofs::{DecryptionProof, prove_decryption};
+use crate::encryption::proofs::prove_decryption;
 use crate::encryption::{BatchEncryptedShares, decrypt_my_shares, encrypt_batch};
+pub use crate::error::DkgOutputError;
+use crate::error::WireError;
 use crate::group::g_mul_scalar;
 use crate::one_round_proofs::{PolyProofScheme, PolyWellFormedStatement, PolyWellFormedWitness};
 use crate::party::{Parties, PartyState};
@@ -12,7 +14,7 @@ use zeroize::{ZeroizeOnDrop, Zeroizing};
 use curve25519_dalek::ristretto::RistrettoPoint;
 use curve25519_dalek::scalar::Scalar;
 use ed25519_dalek::{Signature, Signer, SigningKey, VerifyingKey};
-use rand_core::{CryptoRng, RngCore};
+use rand_core::CryptoRng;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -37,28 +39,6 @@ pub struct DkgInitResult<P> {
     pub local: DkgInitLocalState,
 }
 
-#[derive(Clone, Debug)]
-pub enum DkgOutputError {
-    InvalidParameters,
-    InvalidBatchProof,
-    MissingCiphertext {
-        dealer_idx: usize,
-        receiver_idx: usize,
-    },
-    InvalidEncryptionProof {
-        dealer_idx: usize,
-    },
-    InvalidDecryptionOpening {
-        dealer_idx: usize,
-        receiver_idx: usize,
-        s_ji: Scalar,
-        r_ji: Scalar,
-        pi_i: Box<(RistrettoPoint, DecryptionProof)>,
-    },
-    InvalidSignature {
-        dealer_idx: usize,
-    },
-}
 impl<P: Clone + Serialize> DkgInitBroadcast<P> {
     pub fn new(
         dealer_idx: usize,
@@ -80,10 +60,19 @@ impl<P: Clone + Serialize> DkgInitBroadcast<P> {
         msg
     }
 
+    // Serializes the signed fields by reference, so verification does not clone
+    // and re-serialize the whole broadcast.
     pub fn signing_bytes(&self) -> Vec<u8> {
-        let mut tmp = self.clone();
-        tmp.signature = Signature::from_bytes(&[0u8; 64]);
-        crate::wire::signing_bytes(&tmp)
+        crate::wire::signing_bytes(
+            DKG_INIT_DOMAIN,
+            &(
+                &self.dealer_idx,
+                &self.pedvss,
+                &self.f0_commitment,
+                &self.proof,
+                &self.encrypted_shares,
+            ),
+        )
     }
 
     pub fn sign(&mut self, sk: &SigningKey) {
@@ -93,6 +82,58 @@ impl<P: Clone + Serialize> DkgInitBroadcast<P> {
     pub fn verify(&self, pk: &VerifyingKey) -> bool {
         pk.verify_strict(&self.signing_bytes(), &self.signature)
             .is_ok()
+    }
+
+    /// Encodes the broadcast as it travels over the channel.
+    pub fn to_wire(&self) -> Vec<u8> {
+        crate::wire::seal(
+            &(
+                &self.dealer_idx,
+                &self.pedvss,
+                &self.f0_commitment,
+                &self.proof,
+                &self.encrypted_shares,
+            ),
+            &self.signature,
+        )
+    }
+}
+
+/// Domain tag on the signed bytes of an init broadcast.
+pub const DKG_INIT_DOMAIN: &[u8] = b"janus1-init-broadcast";
+
+type DkgInitFields<P> = (
+    usize,
+    Vec<PedersenCommitment>,
+    RistrettoPoint,
+    P,
+    BatchEncryptedShares,
+);
+
+impl<P: Clone + Serialize + serde::de::DeserializeOwned> DkgInitBroadcast<P> {
+    /// Decodes a received message and authenticates it against the claimed
+    /// sender's key. The signature is checked over the bytes as received, so
+    /// attribution does not depend on reproducing the sender's encoding.
+    pub fn from_wire(wire: &[u8], parties: &Parties) -> Result<Self, WireError> {
+        let (fields, payload, signature) = crate::wire::open_unverified::<DkgInitFields<P>>(wire)?;
+        let (dealer_idx, pedvss, f0_commitment, proof, encrypted_shares) = fields;
+        if dealer_idx == 0 || dealer_idx > parties.len() {
+            return Err(WireError::MalformedMessage);
+        }
+        crate::wire::verify_payload(
+            DKG_INIT_DOMAIN,
+            payload,
+            &signature,
+            parties.sig_pk(dealer_idx),
+        )?;
+        Ok(Self {
+            dealer_idx,
+            pedvss,
+            f0_commitment,
+            proof,
+            encrypted_shares,
+            signature,
+        })
     }
 }
 #[inline]
@@ -152,13 +193,16 @@ where
         x_points: domain_points_1_to_n(dkg_params.n),
         commitments: Vec::with_capacity(dkg_params.n),
         f0_commitment: RistrettoPoint::default(),
+        degree: dkg_params.t,
     };
     for msg in broadcasts {
         stmt.commitments.clear();
         stmt.commitments.extend_from_slice(&msg.pedvss);
         stmt.f0_commitment = msg.f0_commitment;
         if !S::verify(proof_params, &stmt, &msg.proof) {
-            return Err(DkgOutputError::InvalidBatchProof);
+            return Err(DkgOutputError::InvalidBatchProof {
+                dealer_idx: msg.dealer_idx,
+            });
         }
     }
     Ok(())
@@ -240,7 +284,7 @@ pub fn dkg_initiate<R, S>(
     parties: &Parties,
 ) -> DkgInitResult<S::Proof>
 where
-    R: RngCore + CryptoRng,
+    R: CryptoRng,
     S: PolyProofScheme,
     S::Proof: Clone + std::fmt::Debug + Serialize,
 {
@@ -274,6 +318,7 @@ where
             x_points: domain_points_1_to_n(dkg_params.n),
             commitments: pedvss.clone(),
             f0_commitment,
+            degree: dkg_params.t,
         },
         &PolyWellFormedWitness {
             coeffs: coeffs.to_vec(),
@@ -341,6 +386,81 @@ where
     })
 }
 
+/// Output phase driven from the channel: each message is authenticated over the
+/// bytes as received and decoded once. This is the path a networked party runs.
+pub fn dkg_output_key_generation_from_wire<S>(
+    dkg_params: &DkgParams,
+    proof_params: &S::Params,
+    state: &PartyState,
+    local: &DkgInitLocalState,
+    wire_msgs: &[Vec<u8>],
+    parties: &Parties,
+) -> Result<DkgOutput, DkgOutputError>
+where
+    S: PolyProofScheme,
+    S::Proof: Clone + std::fmt::Debug + Serialize + serde::de::DeserializeOwned,
+{
+    let broadcasts = decode_broadcasts::<S::Proof>(wire_msgs, parties)?;
+    validate_decoded(dkg_params.n, state.dealer_idx, &broadcasts)?;
+    verify_poly_proofs::<S>(dkg_params, proof_params, &broadcasts)?;
+
+    let (s_i, s_i_blind) =
+        decrypt_and_accumulate(state, &broadcasts, (local.my_share, local.my_blinding))?;
+
+    let (public_key, partial_verification_keys) =
+        aggregate_public_outputs(dkg_params.n, &broadcasts);
+
+    Ok(DkgOutput {
+        idx: state.dealer_idx,
+        secret_share: s_i,
+        blinding_share: s_i_blind,
+        public_key,
+        partial_verification_keys,
+    })
+}
+
+/// Authenticates and decodes every received message.
+pub fn decode_broadcasts<P>(
+    wire_msgs: &[Vec<u8>],
+    parties: &Parties,
+) -> Result<Vec<DkgInitBroadcast<P>>, DkgOutputError>
+where
+    P: Clone + Serialize + serde::de::DeserializeOwned,
+{
+    wire_msgs
+        .iter()
+        .map(|w| {
+            DkgInitBroadcast::<P>::from_wire(w, parties).map_err(|_| DkgOutputError::InvalidWire)
+        })
+        .collect()
+}
+
+// Structural checks only, the signatures were already checked while decoding.
+fn validate_decoded<P>(
+    n: usize,
+    my_idx: usize,
+    broadcasts: &[DkgInitBroadcast<P>],
+) -> Result<(), DkgOutputError> {
+    if n == 0 || my_idx == 0 || my_idx > n {
+        return Err(DkgOutputError::InvalidParameters);
+    }
+    let mut seen = vec![false; n];
+    for msg in broadcasts {
+        if msg.dealer_idx == 0 || msg.dealer_idx > n || msg.pedvss.len() != n {
+            return Err(DkgOutputError::InvalidParameters);
+        }
+        let slot = idx1_to_vec(msg.dealer_idx);
+        if seen[slot] {
+            return Err(DkgOutputError::InvalidParameters);
+        }
+        seen[slot] = true;
+    }
+    if seen.iter().any(|b| !*b) {
+        return Err(DkgOutputError::InvalidParameters);
+    }
+    Ok(())
+}
+
 fn validate_broadcasts_parallel<P: Clone + Serialize + Sync>(
     n: usize,
     my_idx: usize,
@@ -386,18 +506,20 @@ where
     S::Params: Sync,
 {
     let domain = domain_points_1_to_n(dkg_params.n);
-    let ok = broadcasts.par_iter().all(|msg| {
+    let bad = broadcasts.par_iter().find_any(|msg| {
         let stmt = PolyWellFormedStatement {
             x_points: domain.clone(),
             commitments: msg.pedvss.clone(),
             f0_commitment: msg.f0_commitment,
+            degree: dkg_params.t,
         };
-        S::verify(proof_params, &stmt, &msg.proof)
+        !S::verify(proof_params, &stmt, &msg.proof)
     });
-    if ok {
-        Ok(())
-    } else {
-        Err(DkgOutputError::InvalidBatchProof)
+    match bad {
+        None => Ok(()),
+        Some(msg) => Err(DkgOutputError::InvalidBatchProof {
+            dealer_idx: msg.dealer_idx,
+        }),
     }
 }
 

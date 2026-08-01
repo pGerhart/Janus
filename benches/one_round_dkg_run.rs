@@ -1,19 +1,15 @@
 use janus::one_round::{
     DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation,
 };
-use janus::one_round_proofs::polyproof_bulletproof::{
-    PolyWellFormedBulletproof, make_bulletproof_params,
-};
 
 use criterion::{BenchmarkId, Criterion, black_box, criterion_group, criterion_main};
-use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
+use curve25519_dalek::scalar::Scalar;
 use janus::DkgParams;
 use janus::one_round_proofs::{
-    BulletproofPolyProof, FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
+    FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
 };
 use janus::party::{Parties, PartyState, collect_public_parties, make_party_state};
-use janus::pedersen::PedersenCommitment;
-use rand::thread_rng;
+use rand::rng;
 
 #[derive(Clone, Copy, Debug)]
 struct FischlinProfile {
@@ -65,15 +61,15 @@ fn parameter_sets() -> Vec<BaseParams> {
     ]
 }
 
-// Bulletproofs and the large Fischlin profile are the two proof systems not
-// recommended for large committees, so they are only benchmarked up to n < 256.
-// Schnorr and the small Fischlin profile cover the full range.
+// The large Fischlin profile is not recommended for large committees, so it is
+// only benchmarked up to n < 256. Schnorr and the small Fischlin profile cover
+// the full range.
 fn parameter_sets_bounded() -> Vec<BaseParams> {
     parameter_sets().into_iter().filter(|p| p.n < 256).collect()
 }
 
 fn setup_parties(n: usize) -> (Vec<PartyState>, Parties) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
 
     let mut party_states = Vec::with_capacity(n);
     for dealer_idx in 1..=n {
@@ -98,7 +94,7 @@ where
     S::Params: Sync,
     S::Proof: Clone + std::fmt::Debug + serde::Serialize + Send + Sync,
 {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let (party_states, parties) = setup_parties(dkg_params.n);
 
     let dealer_secrets: Vec<Scalar> = (0..dkg_params.n)
@@ -147,13 +143,13 @@ fn format_bytes_verbose(bytes: u64) -> String {
 }
 
 fn proof_size_bytes<P: serde::Serialize>(msg: &DkgInitBroadcast<P>) -> u64 {
-    bincode::serialize(&msg.proof)
+    postcard::to_allocvec(&msg.proof)
         .expect("proof serialization failed")
         .len() as u64
 }
 
 fn broadcast_size_bytes<P: serde::Serialize>(msg: &DkgInitBroadcast<P>) -> u64 {
-    bincode::serialize(msg)
+    postcard::to_allocvec(msg)
         .expect("broadcast serialization failed")
         .len() as u64
 }
@@ -169,67 +165,6 @@ fn received_bytes_for_party<P: serde::Serialize>(
         .sum()
 }
 
-fn linear_proof_size_from_m(m: usize) -> usize {
-    assert!(m.is_power_of_two());
-    let log_m = m.trailing_zeros() as usize;
-    (2 * log_m * 32) + (2 * 32)
-}
-
-fn bulletproof_proof_size_from_params(coeff_len: usize, blind_len: usize) -> usize {
-    let coeff_m = coeff_len.next_power_of_two();
-    let blind_m = blind_len.next_power_of_two();
-
-    let coeff_size = linear_proof_size_from_m(coeff_m);
-    let blind_size = linear_proof_size_from_m(blind_m);
-
-    let points = 4 * 32; // coeff_cf, coeff_output, blind_cf, blind_output
-    points + coeff_size + blind_size
-}
-
-#[derive(serde::Serialize)]
-struct BroadcastWithoutProof<'a> {
-    dealer_idx: usize,
-    pedvss: &'a Vec<PedersenCommitment>,
-    f0_commitment: &'a RistrettoPoint,
-    encrypted_shares: &'a janus::encryption::BatchEncryptedShares,
-    signature: &'a ed25519_dalek::Signature,
-}
-
-fn bulletproof_broadcast_size_bytes(
-    msg: &DkgInitBroadcast<PolyWellFormedBulletproof>,
-    t: usize,
-    n: usize,
-) -> u64 {
-    let without_proof = BroadcastWithoutProof {
-        dealer_idx: msg.dealer_idx,
-        pedvss: &msg.pedvss,
-        f0_commitment: &msg.f0_commitment,
-        encrypted_shares: &msg.encrypted_shares,
-        signature: &msg.signature,
-    };
-
-    let base = bincode::serialize(&without_proof)
-        .expect("bulletproof broadcast base serialization failed")
-        .len() as u64;
-
-    let proof = bulletproof_proof_size_from_params(t + 1, n) as u64;
-
-    base + proof
-}
-
-fn bulletproof_received_bytes_for_party(
-    broadcasts: &[DkgInitBroadcast<PolyWellFormedBulletproof>],
-    receiver_idx: usize, // 1-based
-    t: usize,
-    n: usize,
-) -> u64 {
-    broadcasts
-        .iter()
-        .filter(|msg| msg.dealer_idx != receiver_idx)
-        .map(|msg| bulletproof_broadcast_size_bytes(msg, t, n))
-        .sum()
-}
-
 fn bench_one_party_initiate_schnorr(c: &mut Criterion) {
     let mut group = c.benchmark_group("one_round_initiate_schnorr");
     group.sample_size(10);
@@ -241,7 +176,7 @@ fn bench_one_party_initiate_schnorr(c: &mut Criterion) {
         let dealer_idx = 1usize;
         let share = Scalar::from(42u64);
 
-        let mut setup_rng = thread_rng();
+        let mut setup_rng = rng();
         let sample = dkg_initiate::<_, SchnorrPolyProof>(
             &mut setup_rng,
             &dkg_params,
@@ -263,7 +198,7 @@ fn bench_one_party_initiate_schnorr(c: &mut Criterion) {
 
         group.bench_with_input(BenchmarkId::new("initiate", p.label()), &p, |b, _| {
             b.iter(|| {
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 let res = dkg_initiate::<_, SchnorrPolyProof>(
                     &mut rng,
                     black_box(&dkg_params),
@@ -334,7 +269,7 @@ fn bench_one_party_initiate_fischlin_small(c: &mut Criterion) {
         let dealer_idx = 1usize;
         let share = Scalar::from(42u64);
 
-        let mut setup_rng = thread_rng();
+        let mut setup_rng = rng();
         let sample = dkg_initiate::<_, FischlinPolyProof>(
             &mut setup_rng,
             &dkg_params,
@@ -356,7 +291,7 @@ fn bench_one_party_initiate_fischlin_small(c: &mut Criterion) {
 
         group.bench_with_input(BenchmarkId::new("initiate", p.label()), &p, |b, _| {
             b.iter(|| {
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 let res = dkg_initiate::<_, FischlinPolyProof>(
                     &mut rng,
                     black_box(&dkg_params),
@@ -431,7 +366,7 @@ fn bench_one_party_initiate_fischlin_large(c: &mut Criterion) {
         let dealer_idx = 1usize;
         let share = Scalar::from(42u64);
 
-        let mut setup_rng = thread_rng();
+        let mut setup_rng = rng();
         let sample = dkg_initiate::<_, FischlinPolyProof>(
             &mut setup_rng,
             &dkg_params,
@@ -453,7 +388,7 @@ fn bench_one_party_initiate_fischlin_large(c: &mut Criterion) {
 
         group.bench_with_input(BenchmarkId::new("initiate", p.label()), &p, |b, _| {
             b.iter(|| {
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 let res = dkg_initiate::<_, FischlinPolyProof>(
                     &mut rng,
                     black_box(&dkg_params),
@@ -513,101 +448,6 @@ fn bench_one_party_output_fischlin_large(c: &mut Criterion) {
     group.finish();
 }
 
-fn bench_one_party_initiate_bulletproof(c: &mut Criterion) {
-    let mut group = c.benchmark_group("one_round_initiate_bulletproof");
-    group.sample_size(20);
-
-    for p in parameter_sets_bounded() {
-        let dkg_params = p.to_dkg_params();
-        let proof_params = make_bulletproof_params(dkg_params.t + 1, dkg_params.n);
-        let (party_states, parties) = setup_parties(dkg_params.n);
-        let dealer_idx = 1usize;
-        let share = Scalar::from(42u64);
-
-        let mut setup_rng = thread_rng();
-        let sample = dkg_initiate::<_, BulletproofPolyProof>(
-            &mut setup_rng,
-            &dkg_params,
-            &proof_params,
-            &party_states[dealer_idx - 1],
-            share,
-            &parties,
-        );
-
-        let proof_bytes = bulletproof_proof_size_from_params(dkg_params.t + 1, dkg_params.n) as u64;
-        let broadcast_bytes =
-            bulletproof_broadcast_size_bytes(&sample.broadcast, dkg_params.t, dkg_params.n);
-
-        eprintln!(
-            "[bulletproof initiate {}] proof={}, broadcast={}",
-            p.label(),
-            format_bytes_verbose(proof_bytes),
-            format_bytes_verbose(broadcast_bytes),
-        );
-
-        group.bench_with_input(BenchmarkId::new("initiate", p.label()), &p, |b, _| {
-            b.iter(|| {
-                let mut rng = thread_rng();
-                let res = dkg_initiate::<_, BulletproofPolyProof>(
-                    &mut rng,
-                    black_box(&dkg_params),
-                    black_box(&proof_params),
-                    black_box(&party_states[dealer_idx - 1]),
-                    black_box(share),
-                    black_box(&parties),
-                );
-                black_box(res);
-            });
-        });
-    }
-
-    group.finish();
-}
-
-fn bench_one_party_output_bulletproof(c: &mut Criterion) {
-    let mut group = c.benchmark_group("one_round_output_bulletproof");
-    group.sample_size(20);
-
-    for p in parameter_sets_bounded() {
-        let dkg_params = p.to_dkg_params();
-        let proof_params = make_bulletproof_params(dkg_params.t + 1, dkg_params.n);
-        let (party_states, parties, broadcasts, locals) =
-            setup_broadcasts_for_output::<BulletproofPolyProof>(&dkg_params, &proof_params);
-
-        let receiver_idx = 1usize;
-        let received_bytes = bulletproof_received_bytes_for_party(
-            &broadcasts,
-            receiver_idx,
-            dkg_params.t,
-            dkg_params.n,
-        );
-
-        eprintln!(
-            "[bulletproof output {}] received={}",
-            p.label(),
-            format_bytes_verbose(received_bytes),
-        );
-
-        group.bench_with_input(BenchmarkId::new("output", p.label()), &p, |b, _| {
-            b.iter(|| {
-                let out = dkg_output_key_generation::<BulletproofPolyProof>(
-                    black_box(&dkg_params),
-                    black_box(&proof_params),
-                    black_box(&party_states[receiver_idx - 1]),
-                    black_box(&locals[receiver_idx - 1]),
-                    black_box(&broadcasts),
-                    black_box(&parties),
-                )
-                .expect("valid bulletproof output");
-
-                black_box(out);
-            });
-        });
-    }
-
-    group.finish();
-}
-
 criterion_group!(
     benches,
     bench_one_party_initiate_schnorr,
@@ -616,8 +456,6 @@ criterion_group!(
     bench_one_party_output_fischlin_small,
     bench_one_party_initiate_fischlin_large,
     bench_one_party_output_fischlin_large,
-    bench_one_party_initiate_bulletproof,
-    bench_one_party_output_bulletproof,
 );
 
 criterion_main!(benches);

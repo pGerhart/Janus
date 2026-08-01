@@ -3,9 +3,8 @@
 use janus::one_round::{
     DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation,
 };
-use janus::one_round_proofs::polyproof_bulletproof::make_bulletproof_params;
 use janus::one_round_proofs::{
-    BulletproofPolyProof, FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
+    FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
 };
 use janus::party::{Parties, PartyState, collect_public_parties, make_party_state};
 
@@ -40,11 +39,6 @@ fn main_one_round(dkg_params: &DkgParams) {
     println!();
 
     run_case::<SchnorrPolyProof>("Schnorr", dkg_params, &());
-    run_case::<BulletproofPolyProof>(
-        "Bulletproof",
-        dkg_params,
-        &make_bulletproof_params(dkg_params.t + 1, dkg_params.n),
-    );
     run_case::<FischlinPolyProof>(
         "Fischlin small proof / high prover work",
         dkg_params,
@@ -173,7 +167,7 @@ fn print_success<P: serde::Serialize>(
 
     let sizes: Vec<usize> = broadcasts
         .iter()
-        .map(|b| bincode::serialize(b).expect("serialize broadcast").len())
+        .map(|b| postcard::to_allocvec(b).expect("serialize broadcast").len())
         .collect();
 
     let n = broadcasts.len();
@@ -206,7 +200,7 @@ fn print_two_round_success<P: serde::Serialize>(
     let round1_sizes: Vec<usize> = round1_broadcasts
         .iter()
         .map(|b| {
-            bincode::serialize(b)
+            postcard::to_allocvec(b)
                 .expect("serialize round1 broadcast")
                 .len()
         })
@@ -215,7 +209,7 @@ fn print_two_round_success<P: serde::Serialize>(
     let round2_sizes: Vec<usize> = round2_broadcasts
         .iter()
         .map(|b| {
-            bincode::serialize(b)
+            postcard::to_allocvec(b)
                 .expect("serialize round2 broadcast")
                 .len()
         })
@@ -275,7 +269,7 @@ where
         return Err("require t < n".to_string());
     }
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     let mut party_states: Vec<PartyState> = Vec::with_capacity(n);
     for dealer_idx in 1..=n {
@@ -288,7 +282,7 @@ where
     let round1_results: Vec<(Round1Broadcast<S::Proof>, Round1LocalState)> = (1..=n)
         .into_par_iter()
         .map(|i| {
-            let mut local_rng = rand::thread_rng();
+            let mut local_rng = rand::rng();
             dkg_round1_initiate::<_, S>(
                 &mut local_rng,
                 dkg_params,
@@ -366,7 +360,7 @@ where
         return Err("require t < n".to_string());
     }
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
 
     let mut party_states: Vec<PartyState> = Vec::with_capacity(n);
     for dealer_idx in 1..=n {
@@ -379,7 +373,7 @@ where
     let init_results: Vec<_> = (1..=n)
         .into_par_iter()
         .map(|i| {
-            let mut local_rng = rand::thread_rng();
+            let mut local_rng = rand::rng();
             dkg_initiate::<_, S>(
                 &mut local_rng,
                 dkg_params,

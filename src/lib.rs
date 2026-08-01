@@ -2,10 +2,13 @@
 
 // Protocol code.
 pub mod abort;
+pub mod error;
 pub mod one_round;
 pub mod party;
 pub mod two_round;
 pub mod wire;
+
+pub use error::{DkgOutputError, TwoRoundDkgError, WireError};
 
 // Cryptographic modules.
 pub mod encryption;

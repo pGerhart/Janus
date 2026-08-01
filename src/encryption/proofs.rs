@@ -1,8 +1,9 @@
-use crate::group::g;
+use crate::group::g_mul_scalar;
 use crate::transcript::*;
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use merlin::Transcript;
-use rand::rngs::OsRng;
+use rand::rngs::SysRng;
+use rand_core::UnwrapErr;
 use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -33,12 +34,12 @@ pub fn prove_decryption(
     pk: &RistrettoPoint,
     u: &RistrettoPoint,
 ) -> (RistrettoPoint, DecryptionProof) {
-    let mut rng = OsRng;
+    let mut rng = UnwrapErr(SysRng);
 
     let shared = u * *sk;
     let r = Scalar::random(&mut rng);
 
-    let a1 = g() * r;
+    let a1 = g_mul_scalar(r);
     let a2 = *u * r;
 
     let c = decryption_challenge(pk, u, &shared, &a1, &a2);
@@ -55,7 +56,7 @@ pub fn verify_decryption(
 ) -> bool {
     let c = decryption_challenge(pk, u, shared, &proof.a1, &proof.a2);
 
-    let lhs1 = g() * proof.z;
+    let lhs1 = g_mul_scalar(proof.z);
     let rhs1 = proof.a1 + *pk * c;
 
     let lhs2 = *u * proof.z;
@@ -66,13 +67,13 @@ pub fn verify_decryption(
 
 #[test]
 fn test_decryption_proof() {
-    let mut rng = OsRng;
+    let mut rng = UnwrapErr(SysRng);
 
     let sk = Scalar::random(&mut rng);
-    let pk = g() * sk;
+    let pk = g_mul_scalar(sk);
 
     let alpha = Scalar::random(&mut rng);
-    let u = g() * alpha;
+    let u = g_mul_scalar(alpha);
 
     let (shared, proof) = prove_decryption(&sk, &pk, &u);
 

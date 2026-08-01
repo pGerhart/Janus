@@ -61,10 +61,20 @@ impl AbortReport {
         report
     }
 
+    // Serializes the signed fields by reference, so verification does not clone
+    // and re-serialize the whole report.
     fn signing_bytes(&self) -> Vec<u8> {
-        let mut tmp = self.clone();
-        tmp.signature = Signature::from_bytes(&[0u8; 64]);
-        crate::wire::signing_bytes(&tmp)
+        crate::wire::signing_bytes(
+            b"janus-abort-report",
+            &(
+                &self.reporter_idx,
+                &self.accused_idx,
+                &self.s_ji,
+                &self.r_ji,
+                &self.shared,
+                &self.proof,
+            ),
+        )
     }
 
     pub fn sign(&mut self, sk: &SigningKey) {
@@ -77,7 +87,7 @@ impl AbortReport {
     }
 
     pub fn serialized_len(&self) -> usize {
-        bincode::serialize(self)
+        postcard::to_allocvec(self)
             .expect("abort report serialization failed")
             .len()
     }

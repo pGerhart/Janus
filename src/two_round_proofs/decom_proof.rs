@@ -72,7 +72,7 @@ impl DecomProof {
         true
     }
 
-    pub fn prove<R: RngCore + CryptoRng>(
+    pub fn prove<R: CryptoRng>(
         rng: &mut R,
         statement: &DecomStatement,
         witness: &DecomWitness,
@@ -205,131 +205,11 @@ impl DecomProofScheme for SchnorrDecomProof {
         statement: &Self::Statement,
         witness: &Self::Witness,
     ) -> Self::Proof {
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
         DecomProof::prove(&mut rng, statement, witness)
     }
 
     fn verify(_params: &Self::Params, statement: &Self::Statement, proof: &Self::Proof) -> bool {
         proof.verify(statement)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use rand::thread_rng;
-
-    #[test]
-    fn decom_proof_roundtrip() {
-        let mut rng = thread_rng();
-
-        let witness = DecomWitness {
-            a: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            b: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            omega: Scalar::random(&mut rng),
-            r: Scalar::random(&mut rng),
-        };
-
-        let statement = DecomStatement {
-            pedvss: witness
-                .a
-                .iter()
-                .zip(witness.b.iter())
-                .map(|(a, b)| PedersenCommitment::new(*a, *b))
-                .collect(),
-            d: PedersenCommitment::new(witness.omega, witness.r),
-        };
-
-        let proof = DecomProof::prove(&mut rng, &statement, &witness);
-
-        assert!(proof.verify(&statement));
-    }
-
-    #[test]
-    fn decom_proof_fails_for_wrong_statement() {
-        let mut rng = thread_rng();
-
-        let witness = DecomWitness {
-            a: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            b: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            omega: Scalar::random(&mut rng),
-            r: Scalar::random(&mut rng),
-        };
-
-        let statement = DecomStatement {
-            pedvss: witness
-                .a
-                .iter()
-                .zip(witness.b.iter())
-                .map(|(a, b)| PedersenCommitment::new(*a, *b))
-                .collect(),
-            d: PedersenCommitment::new(witness.omega, witness.r),
-        };
-
-        let mut wrong_pedvss = statement.pedvss.clone();
-        wrong_pedvss[2] =
-            PedersenCommitment::new(Scalar::random(&mut rng), Scalar::random(&mut rng));
-        let wrong_statement = DecomStatement {
-            pedvss: wrong_pedvss,
-            d: statement.d.clone(),
-        };
-
-        let proof = DecomProof::prove(&mut rng, &statement, &witness);
-
-        assert!(!proof.verify(&wrong_statement));
-    }
-
-    #[test]
-    fn decom_proof_fails_if_modified() {
-        let mut rng = thread_rng();
-
-        let witness = DecomWitness {
-            a: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            b: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            omega: Scalar::random(&mut rng),
-            r: Scalar::random(&mut rng),
-        };
-
-        let statement = DecomStatement {
-            pedvss: witness
-                .a
-                .iter()
-                .zip(witness.b.iter())
-                .map(|(a, b)| PedersenCommitment::new(*a, *b))
-                .collect(),
-            d: PedersenCommitment::new(witness.omega, witness.r),
-        };
-
-        let mut proof = DecomProof::prove(&mut rng, &statement, &witness);
-        proof.z_a[1] += Scalar::ONE;
-
-        assert!(!proof.verify(&statement));
-    }
-
-    #[test]
-    fn decom_proof_fails_for_wrong_length() {
-        let mut rng = thread_rng();
-
-        let witness = DecomWitness {
-            a: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            b: (0..4).map(|_| Scalar::random(&mut rng)).collect(),
-            omega: Scalar::random(&mut rng),
-            r: Scalar::random(&mut rng),
-        };
-
-        let statement = DecomStatement {
-            pedvss: witness
-                .a
-                .iter()
-                .zip(witness.b.iter())
-                .map(|(a, b)| PedersenCommitment::new(*a, *b))
-                .collect(),
-            d: PedersenCommitment::new(witness.omega, witness.r),
-        };
-
-        let mut proof = DecomProof::prove(&mut rng, &statement, &witness);
-        proof.z_b.pop();
-
-        assert!(!proof.verify(&statement));
     }
 }

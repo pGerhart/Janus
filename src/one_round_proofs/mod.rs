@@ -1,20 +1,17 @@
-use crate::group::{g, h};
+use crate::group::{g_mul_scalar, h_mul_scalar};
 use crate::transcript::*;
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
-use helpers::*;
 use merlin::Transcript;
+use utils::*;
 
-use rand::rngs::OsRng;
+use rand::rngs::SysRng;
+use rand_core::UnwrapErr;
 use serde::{Deserialize, Serialize};
 
-pub mod helpers;
-pub mod polyproof_bulletproof;
 pub mod polyproof_fischlin;
 pub mod polyproof_schnorr;
+pub(crate) mod utils;
 
-pub use polyproof_bulletproof::{
-    BulletproofPolyProof, PolyWellFormedBulletproofParams as BulletproofProofParams,
-};
 pub use polyproof_fischlin::{FischlinPolyProof, FischlinProofParams};
 pub use polyproof_schnorr::SchnorrPolyProof;
 pub use polyproof_schnorr::{PolyWellFormedStatement, PolyWellFormedWitness};

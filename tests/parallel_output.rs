@@ -10,13 +10,13 @@ use janus::two_round::{
     dkg_round2_finalize_parallel,
 };
 use janus::two_round_proofs::{SchnorrDecomProof, SchnorrDecomProofParams};
-use rand::thread_rng;
+use rand::rng;
 
 const PARAMS: DkgParams = DkgParams { t: 8, n: 20 };
 
 #[test]
 fn parallel_output_matches_sequential() {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let states: Vec<_> = (1..=PARAMS.n)
         .map(|i| make_party_state(&mut rng, i))
         .collect();
@@ -111,7 +111,7 @@ fn parallel_output_matches_sequential() {
 
 #[test]
 fn parallel_two_round_matches_sequential() {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let states: Vec<_> = (1..=PARAMS.n)
         .map(|i| make_party_state(&mut rng, i))
         .collect();

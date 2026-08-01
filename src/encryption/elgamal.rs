@@ -1,10 +1,11 @@
-use crate::group::g;
+use crate::group::{g, g_mul_scalar};
 use curve25519_dalek::{
     ristretto::RistrettoPoint,
     scalar::Scalar,
     traits::{Identity, VartimeMultiscalarMul},
 };
-use rand::rngs::OsRng;
+use rand::rngs::SysRng;
+use rand_core::UnwrapErr;
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha512};
 use std::collections::BTreeMap;
@@ -65,9 +66,9 @@ fn schnorr_challenge(u: &RistrettoPoint, r_pt: &RistrettoPoint) -> Scalar {
 }
 
 fn prove_dlog(u: &RistrettoPoint, alpha: Scalar) -> SchnorrDLogProof {
-    let mut rng = OsRng;
+    let mut rng = UnwrapErr(SysRng);
     let r = Scalar::random(&mut rng);
-    let r_pt = g() * r;
+    let r_pt = g_mul_scalar(r);
     let c = schnorr_challenge(u, &r_pt);
     SchnorrDLogProof {
         r_pt,
@@ -125,9 +126,9 @@ pub fn verify_dlog(u: &RistrettoPoint, pok: &SchnorrDLogProof) -> bool {
 }
 
 pub fn keygen() -> (Scalar, RistrettoPoint) {
-    let mut rng = OsRng;
+    let mut rng = UnwrapErr(SysRng);
     let sk = Scalar::random(&mut rng);
-    let pk = g() * sk;
+    let pk = g_mul_scalar(sk);
     (sk, pk)
 }
 
@@ -136,9 +137,9 @@ pub fn encrypt_two_scalars(
     m1: Scalar,
     m2: Scalar,
 ) -> HashedElgamalCiphertext2 {
-    let mut rng = OsRng;
+    let mut rng = UnwrapErr(SysRng);
     let alpha = Scalar::random(&mut rng);
-    let u = g() * alpha;
+    let u = g_mul_scalar(alpha);
     let shared = pk * alpha;
     let (k1, k2) = hash_to_two_scalars(&shared);
     HashedElgamalCiphertext2 {

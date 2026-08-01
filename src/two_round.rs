@@ -1,8 +1,9 @@
 use super::{DkgOutput, DkgParams};
 use crate::abort::{AbortReport, AbortVerdict, verify_report_core};
-use crate::encryption::proofs::{DecryptionProof, prove_decryption};
+use crate::encryption::proofs::prove_decryption;
 use crate::encryption::{BatchEncryptedShares, decrypt_my_shares, encrypt_batch};
-use crate::group::g;
+pub use crate::error::TwoRoundDkgError;
+use crate::group::g_mul_scalar;
 use crate::party::{Parties, PartyState};
 use crate::pedersen::PedersenCommitment;
 use crate::poly::{eval_poly_at, sample_random_polynomial_with_constant};
@@ -15,7 +16,7 @@ use crate::two_round_proofs::{
 
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use ed25519_dalek::{Signature, Signer, SigningKey, VerifyingKey};
-use rand_core::{CryptoRng, RngCore};
+use rand_core::CryptoRng;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
 use zeroize::{ZeroizeOnDrop, Zeroizing};
@@ -71,42 +72,6 @@ pub struct Round2LocalState {
     pub verified_round1: VerifiedRound1Cache,
 }
 
-#[derive(Clone, Debug)]
-pub enum TwoRoundDkgError {
-    InvalidParameters,
-    InvalidSignature {
-        dealer_idx: usize,
-    },
-    MissingCiphertext {
-        dealer_idx: usize,
-        receiver_idx: usize,
-    },
-    InvalidDecryptionOpening {
-        dealer_idx: usize,
-        receiver_idx: usize,
-        s_ji: Scalar,
-        sprime_ji: Scalar,
-        pi_i: Box<(RistrettoPoint, DecryptionProof)>,
-    },
-    InvalidEncryptionProof {
-        dealer_idx: usize,
-    },
-    InvalidDecomProof {
-        dealer_idx: usize,
-    },
-    InvalidPkProof {
-        dealer_idx: usize,
-    },
-    InvalidComEqProof {
-        dealer_idx: usize,
-    },
-    InvalidPedVssLength {
-        dealer_idx: usize,
-    },
-    MissingRound2Message {
-        dealer_idx: usize,
-    },
-}
 impl<P: Clone + Serialize> Round1Broadcast<P> {
     pub fn new(
         dealer_idx: usize,
@@ -128,10 +93,19 @@ impl<P: Clone + Serialize> Round1Broadcast<P> {
         msg
     }
 
+    // Serializes the signed fields by reference, so verification does not clone
+    // and re-serialize the whole broadcast.
     fn signing_bytes(&self) -> Vec<u8> {
-        let mut tmp = self.clone();
-        tmp.signature = Signature::from_bytes(&[0u8; 64]);
-        crate::wire::signing_bytes(&tmp)
+        crate::wire::signing_bytes(
+            b"janus2-round1-broadcast",
+            &(
+                &self.dealer_idx,
+                &self.pedvss,
+                &self.d_commitment,
+                &self.decom_proof,
+                &self.encrypted_shares,
+            ),
+        )
     }
 
     pub fn sign(&mut self, sk: &SigningKey) {
@@ -164,10 +138,19 @@ impl Round2Broadcast {
         msg
     }
 
+    // Serializes the signed fields by reference, so verification does not clone
+    // and re-serialize the whole broadcast.
     fn signing_bytes(&self) -> Vec<u8> {
-        let mut tmp = self.clone();
-        tmp.signature = Signature::from_bytes(&[0u8; 64]);
-        crate::wire::signing_bytes(&tmp)
+        crate::wire::signing_bytes(
+            b"janus2-round2-broadcast",
+            &(
+                &self.dealer_idx,
+                &self.pk,
+                &self.pk_proof,
+                &self.vk_i,
+                &self.comeq_proof,
+            ),
+        )
     }
 
     pub fn sign(&mut self, sk: &SigningKey) {
@@ -344,7 +327,7 @@ fn decrypt_and_accumulate<P: Clone + Serialize>(
     accumulate_decrypted_shares(state, &other_msgs, &decrypted, init)
 }
 
-fn build_round2_output<R: RngCore + CryptoRng>(
+fn build_round2_output<R: CryptoRng>(
     rng: &mut R,
     state: &PartyState,
     local: &Round1LocalState,
@@ -445,7 +428,7 @@ pub fn dkg_round1_initiate<R, S>(
     parties: &Parties,
 ) -> (Round1Broadcast<S::Proof>, Round1LocalState)
 where
-    R: RngCore + CryptoRng,
+    R: CryptoRng,
     S: DecomProofScheme<Statement = DecomStatement, Witness = DecomWitness>,
     S::Proof: Clone + std::fmt::Debug + Serialize,
 {
@@ -484,7 +467,7 @@ where
         },
     );
 
-    let pk = g() * a0;
+    let pk = g_mul_scalar(a0);
     let pk_proof = PkProof::prove(
         rng,
         &PkStatement {
@@ -549,7 +532,7 @@ where
 
     let verified_round1 = build_verified_round1_cache(params, &valid_round1);
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     Ok(build_round2_output(
         &mut rng,
         state,
@@ -829,7 +812,7 @@ where
 
     let verified_round1 = build_verified_round1_cache_parallel(params, &valid_round1);
 
-    let mut rng = rand::thread_rng();
+    let mut rng = rand::rng();
     Ok(build_round2_output(
         &mut rng,
         state,

@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::pedersen::PedersenCommitment;
 use merlin::Transcript;
-use rand_core::{CryptoRng, RngCore};
+use rand_core::CryptoRng;
 
 pub mod comeq_proof;
 pub mod decom_proof;

@@ -14,12 +14,12 @@ use janus::two_round::{
     dkg_round2_finalize, verify_abort_report as verify_two_round_report,
 };
 use janus::two_round_proofs::{DecomProofScheme, SchnorrDecomProof, SchnorrDecomProofParams};
-use rand::thread_rng;
+use rand::rng;
 
 const PARAMS: DkgParams = DkgParams { t: 2, n: 5 };
 
 fn setup(n: usize) -> (Vec<PartyState>, Parties) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let states: Vec<PartyState> = (1..=n).map(|i| make_party_state(&mut rng, i)).collect();
     let parties = collect_public_parties(&states);
     (states, parties)
@@ -34,7 +34,7 @@ fn one_round_broadcasts(
     Vec<DkgInitBroadcast<<SchnorrPolyProof as PolyProofScheme>::Proof>>,
     Vec<janus::one_round::DkgInitLocalState>,
 ) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let mut broadcasts = Vec::new();
     let mut locals = Vec::new();
     for i in 1..=PARAMS.n {
@@ -205,7 +205,7 @@ fn two_round_broadcasts(
     Vec<Round1Broadcast<<SchnorrDecomProof as DecomProofScheme>::Proof>>,
     Vec<janus::two_round::Round1LocalState>,
 ) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let mut broadcasts = Vec::new();
     let mut locals = Vec::new();
     for i in 1..=PARAMS.n {

@@ -17,7 +17,7 @@ use janus::two_round::{
     Round1Broadcast, dkg_round1_initiate, verify_abort_report as verify_two_round_report,
 };
 use janus::two_round_proofs::{DecomProofScheme, SchnorrDecomProof, SchnorrDecomProofParams};
-use rand::thread_rng;
+use rand::rng;
 
 const DEALER: usize = 1;
 const REPORTER: usize = 2;
@@ -54,7 +54,7 @@ fn parameter_sets() -> Vec<BaseParams> {
 }
 
 fn setup_parties(n: usize) -> Vec<PartyState> {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     (1..=n).map(|i| make_party_state(&mut rng, i)).collect()
 }
 
@@ -70,7 +70,7 @@ struct OneRoundCase {
 }
 
 fn make_one_round_case(p: BaseParams) -> OneRoundCase {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let dkg = p.to_dkg_params();
     let states = setup_parties(dkg.n);
     let parties = collect_public_parties(&states);
@@ -199,7 +199,7 @@ struct TwoRoundCase {
 }
 
 fn make_two_round_case(p: BaseParams) -> TwoRoundCase {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let dkg = p.to_dkg_params();
     let states = setup_parties(dkg.n);
     let parties = collect_public_parties(&states);
@@ -324,7 +324,7 @@ fn build_one_round_worstcase(
     DkgInitBroadcast<<SchnorrPolyProof as PolyProofScheme>::Proof>,
     Vec<AbortReport>,
 ) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let dkg = p.to_dkg_params();
     let states = setup_parties(dkg.n);
     let parties = collect_public_parties(&states);
@@ -380,7 +380,7 @@ fn build_two_round_worstcase(
     Round1Broadcast<<SchnorrDecomProof as DecomProofScheme>::Proof>,
     Vec<AbortReport>,
 ) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let dkg = p.to_dkg_params();
     let states = setup_parties(dkg.n);
     let parties = collect_public_parties(&states);

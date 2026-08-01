@@ -2,9 +2,8 @@ use curve25519_dalek::scalar::Scalar;
 use janus::one_round::{
     DkgInitBroadcast, DkgInitLocalState, dkg_initiate, dkg_output_key_generation,
 };
-use janus::one_round_proofs::polyproof_bulletproof::make_bulletproof_params;
 use janus::one_round_proofs::{
-    BulletproofPolyProof, FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
+    FischlinPolyProof, FischlinProofParams, PolyProofScheme, SchnorrPolyProof,
 };
 use janus::party::{Parties, PartyState, collect_public_parties, make_party_state};
 use janus::two_round::{
@@ -16,7 +15,7 @@ use janus::two_round_proofs::{
     SchnorrDecomProof, SchnorrDecomProofParams,
 };
 use janus::{DkgOutput, DkgParams};
-use rand::thread_rng;
+use rand::rng;
 
 // Small parameters: fast for tests, still exercise the full protocol
 const PARAMS_SMALL: DkgParams = DkgParams { t: 2, n: 5 };
@@ -25,7 +24,7 @@ const PARAMS_MID: DkgParams = DkgParams { t: 4, n: 9 };
 // helpers
 
 fn setup(n: usize) -> (Vec<PartyState>, Parties, Vec<Scalar>) {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let party_states: Vec<PartyState> = (1..=n).map(|i| make_party_state(&mut rng, i)).collect();
     let parties = collect_public_parties(&party_states);
     let secrets: Vec<Scalar> = (0..n).map(|_| Scalar::random(&mut rng)).collect();
@@ -79,7 +78,7 @@ where
 {
     let n = params.n;
     let (party_states, parties, secrets) = setup(n);
-    let mut rng = thread_rng();
+    let mut rng = rng();
 
     let init_results: Vec<_> = (1..=n)
         .map(|i| {
@@ -124,7 +123,7 @@ where
 {
     let n = params.n;
     let (party_states, parties, secrets) = setup(n);
-    let mut rng = thread_rng();
+    let mut rng = rng();
 
     let round1_results: Vec<(Round1Broadcast<S::Proof>, Round1LocalState)> = (1..=n)
         .map(|i| {
@@ -200,12 +199,6 @@ fn one_round_fischlin_small() {
         t_bits: 9,
     };
     run_one_round::<FischlinPolyProof>(&PARAMS_SMALL, &proof_params);
-}
-
-#[test]
-fn one_round_bulletproof_small() {
-    let proof_params = make_bulletproof_params(PARAMS_SMALL.t + 1, PARAMS_SMALL.n);
-    run_one_round::<BulletproofPolyProof>(&PARAMS_SMALL, &proof_params);
 }
 
 // two-round tests
