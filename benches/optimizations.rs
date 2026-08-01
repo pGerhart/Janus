@@ -19,6 +19,7 @@ use janus::party::{Parties, PartyState, collect_public_parties, make_party_state
 use janus::two_round::{dkg_round1_initiate, dkg_round2_finalize, dkg_round2_finalize_parallel};
 use janus::two_round_proofs::{SchnorrDecomProof, SchnorrDecomProofParams};
 use rand::rng;
+use rayon::prelude::*;
 
 const FISCHLIN_SMALL: (usize, usize, usize) = (16, 8, 13); // rho, b, t_bits
 
@@ -62,20 +63,21 @@ where
     let mut rng = rng();
     let states: Vec<PartyState> = (1..=dkg.n).map(|i| make_party_state(&mut rng, i)).collect();
     let parties = collect_public_parties(&states);
-    let mut broadcasts = Vec::with_capacity(dkg.n);
-    let mut locals = Vec::with_capacity(dkg.n);
-    for i in 1..=dkg.n {
-        let res = dkg_initiate::<_, S>(
-            &mut rng,
-            dkg,
-            proof_params,
-            &states[i - 1],
-            Scalar::from((i + 1) as u64),
-            &parties,
-        );
-        broadcasts.push(res.broadcast);
-        locals.push(res.local);
-    }
+    // Setup only, never measured, so run the dealers in parallel.
+    let (broadcasts, locals): (Vec<_>, Vec<_>) = (1..=dkg.n)
+        .into_par_iter()
+        .map(|i| {
+            let res = dkg_initiate::<_, S>(
+                &mut rand::rng(),
+                dkg,
+                proof_params,
+                &states[i - 1],
+                Scalar::from((i + 1) as u64),
+                &parties,
+            );
+            (res.broadcast, res.local)
+        })
+        .unzip();
     (states, parties, broadcasts, locals)
 }
 

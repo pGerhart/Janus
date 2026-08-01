@@ -12,6 +12,7 @@ use janus::two_round_proofs::{
     SchnorrDecomProof, SchnorrDecomProofParams,
 };
 use rand::rng;
+use rayon::prelude::*;
 
 #[derive(Clone, Copy, Debug)]
 struct FischlinProfile {
@@ -162,21 +163,21 @@ where
         .map(|_| Scalar::random(&mut rng))
         .collect();
 
-    let mut round1_broadcasts = Vec::with_capacity(dkg_params.n);
-    let mut round1_locals = Vec::with_capacity(dkg_params.n);
-
-    for i in 1..=dkg_params.n {
-        let res = dkg_round1_initiate::<_, S>(
-            &mut rng,
-            dkg_params,
-            decom_params,
-            &party_states[i - 1],
-            dealer_secrets[i - 1],
-            &parties,
-        );
-        round1_broadcasts.push(res.0);
-        round1_locals.push(res.1);
-    }
+    // Setup only, never measured, so run the parties in parallel. ThreadRng is
+    // per-thread already, which is why each closure can take its own.
+    let (round1_broadcasts, round1_locals): (Vec<_>, Vec<_>) = (1..=dkg_params.n)
+        .into_par_iter()
+        .map(|i| {
+            dkg_round1_initiate::<_, S>(
+                &mut rand::rng(),
+                dkg_params,
+                decom_params,
+                &party_states[i - 1],
+                dealer_secrets[i - 1],
+                &parties,
+            )
+        })
+        .unzip();
 
     (party_states, parties, round1_broadcasts, round1_locals)
 }
@@ -200,22 +201,22 @@ where
     let (party_states, parties, round1_broadcasts, round1_locals) =
         setup_round1_outputs::<S>(dkg_params, decom_params);
 
-    let mut round2_broadcasts = Vec::with_capacity(dkg_params.n);
-    let mut round2_locals = Vec::with_capacity(dkg_params.n);
-
-    for i in 1..=dkg_params.n {
-        let res = dkg_round2_finalize::<S>(
-            dkg_params,
-            decom_params,
-            &party_states[i - 1],
-            &round1_locals[i - 1],
-            &round1_broadcasts,
-            &parties,
-        )
-        .expect("valid round2 finalize");
-        round2_broadcasts.push(res.0);
-        round2_locals.push(res.1);
-    }
+    // Setup only, never measured. Finalizing for every party costs minutes at the
+    // large parameter sets, so run the parties in parallel to keep it out of the way.
+    let (round2_broadcasts, round2_locals): (Vec<_>, Vec<_>) = (1..=dkg_params.n)
+        .into_par_iter()
+        .map(|i| {
+            dkg_round2_finalize::<S>(
+                dkg_params,
+                decom_params,
+                &party_states[i - 1],
+                &round1_locals[i - 1],
+                &round1_broadcasts,
+                &parties,
+            )
+            .expect("valid round2 finalize")
+        })
+        .unzip();
 
     (
         party_states,
