@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/pGerhart/Janus/actions/workflows/ci.yml/badge.svg)](https://github.com/pGerhart/Janus/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![MSRV](https://img.shields.io/badge/MSRV-1.85-blue.svg)](Cargo.toml)
+[![MSRV](https://img.shields.io/badge/MSRV-1.89-blue.svg)](Cargo.toml)
 [![unsafe forbidden](https://img.shields.io/badge/unsafe-forbidden-success.svg)](https://github.com/rust-secure-code/safety-dance/)
 
 This is a research prototype of **Janus**, a family of distributed key generation (DKG) protocols for discrete-logarithm-based threshold cryptosystems, based on the work:
@@ -12,8 +12,11 @@ This is a research prototype of **Janus**, a family of distributed key generatio
 
 Janus achieves full adaptive security in the dishonest-majority setting ($t_c < t \leq n$) and provides identifiable aborts and proactive key refresh. The construction is designed to serve as the foundational setup layer for DLog-based threshold signing schemes such as FROST and threshold BLS.
 
-⚠️ **Prototype Warning**
-This implementation is **only a proof-of-concept**. It has **not** undergone any security audits, is **not** hardened against side-channel attacks, and **must not** be used in production environments. Run it only in controlled, research, or testing settings.
+> [!CAUTION]
+> **Research prototype, not for production.**
+> This implementation is a proof of concept. It has **not** undergone any security
+> audit, it is **not** hardened against side-channel attacks, and it **must not** be
+> used in production. Run it only in controlled research or testing settings.
 
 # Protocols
 
@@ -67,6 +70,7 @@ Tests live in `tests/`, split by purpose:
 | `dkg_full_run.rs` | End-to-end runs for every combination of protocol variant and proof system |
 | `one_round_proofs.rs` | Well-formedness proofs, including forgeries that commitments off a low-degree polynomial must not pass |
 | `two_round_proofs.rs` | Decomposition, equality, and public key proofs |
+| `error_paths.rs` | Every error variant of both protocols, each asserting that the party it names is the one that misbehaved |
 | `abort.rs` | A malicious dealer is convicted, while a false complaint and a malformed proof fall back on the reporter |
 | `wire_path.rs` | The channel path agrees with the in-memory one, and re-labelled, tampered, or truncated messages are rejected |
 | `parallel_output.rs` | The parallel output matches the sequential one |
@@ -112,9 +116,9 @@ The pinned results, together with the machine they were measured on, are in [`be
 
 The paper's numbers come from a single run on a dedicated cloud machine, so that no other load interferes and the parameter sets up to $(t=256, n=512)$ have enough memory. The procedure below is the whole of it.
 
-**Machine.** An AWS `c7i.4xlarge` (16 vCPU, 32 GB, x86-64). Three properties matter:
+**Machine.** An AWS `c7i.4xlarge` (16 vCPU, 32 GB, x86-64, Sapphire Rapids). Three properties matter:
 
-- `curve25519-dalek` selects its arithmetic backend in its build script from the target architecture, and detects the CPU features at run time. On x86-64 with a Rust toolchain of 1.89 or newer it uses the AVX-512 backend, on 64-bit ARM the serial one. The architecture therefore changes the results.
+- `curve25519-dalek` selects its arithmetic backend in its build script from the **compile-time** target features. It builds the AVX-512 backend only when `avx512ifma` and `avx512vl` are enabled and the toolchain is 1.89 or newer, and otherwise falls back to AVX2. Neither feature is in the x86-64 baseline, so `scripts/run_bench.sh` sets `RUSTFLAGS=-C target-cpu=native` to enable them. Without that flag the same machine measures the AVX2 path instead. On 64-bit ARM only the serial backend exists, so numbers from a Graviton instance are not comparable.
 - Burstable instance families such as `t3` and `t4g` throttle once their CPU credits run out, which corrupts a run of this length. Use a fixed-performance family.
 - The largest parameter set holds all $n$ broadcasts decompressed in memory, which needs well over 16 GB at $(t=256, n=512)$.
 

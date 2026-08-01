@@ -6,13 +6,15 @@
 # Usage:  ./scripts/run_bench.sh
 # The (256,512) points take several minutes each, so run this under tmux.
 #
-# No RUSTFLAGS needed: curve25519-dalek picks its backend in build.rs from the
-# target architecture (x86_64 gets avx512 on rustc 1.89 or newer) and detects
-# the CPU features at run time. The architecture and toolchain are recorded
-# below because they, not RUSTFLAGS, decide which backend runs.
+# target-cpu=native is set on purpose. curve25519-dalek decides its backend in
+# build.rs from the compile-time target features: without avx512ifma and
+# avx512vl it falls back to the AVX2 path, and only with them does it build the
+# AVX-512 backend. Export RUSTFLAGS yourself to override this.
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
+
+export RUSTFLAGS="${RUSTFLAGS:--C target-cpu=native}"
 
 OUT=bench_raw
 mkdir -p "$OUT"
@@ -28,7 +30,12 @@ mkdir -p "$OUT"
     echo "nproc=$(nproc 2>/dev/null || sysctl -n hw.ncpu)"
     if command -v lscpu >/dev/null; then
         echo "cpu=$(lscpu | sed -n 's/^Model name: *//p' | head -1)"
-        echo "flags_avx512=$(lscpu | grep -c avx512 || true)"
+        # These two decide whether the AVX-512 backend is reachable at all.
+        if lscpu | grep -q avx512ifma && lscpu | grep -q avx512vl; then
+            echo "avx512ifma=yes"
+        else
+            echo "avx512ifma=no"
+        fi
     else
         echo "cpu=$(sysctl -n machdep.cpu.brand_string 2>/dev/null || echo unknown)"
     fi
