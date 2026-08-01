@@ -30,7 +30,7 @@ Both protocols produce a joint public key $\mathsf{pk} = g^{\mathsf{sk}}$ and pe
 
 # Proof Systems
 
-The NIZKs for polynomial well-formedness (Janus-1) and decomposition consistency (Janus-2) can be instantiated with multiple proof systems:
+The NIZKs for polynomial well-formedness (Janus-1) and decomposition consistency (Janus-2) are instantiated with two proof systems, one for each security notion:
 
 | Proof system | Security | Proof size | Prover cost | Verifier cost |
 |---|---|---|---|---|
@@ -60,7 +60,7 @@ The Fischlin transform is parameterized by the number of repetitions $\rho$, the
 | `src/party.rs` | Party state and EdDSA channel keys |
 | `src/error.rs` | Protocol and wire error types |
 | `src/wire.rs` | Canonical byte encodings and the signed-message envelope |
-| `src/main.rs` | Runs both protocols across all proof systems |
+| `src/main.rs` | Runs both protocols under both proof systems |
 | `scripts/` | Benchmark runner and the results-file generator |
 
 Tests live in `tests/`, split by purpose:
@@ -73,11 +73,14 @@ Tests live in `tests/`, split by purpose:
 | `error_paths.rs` | Every error variant of both protocols, each asserting that the party it names is the one that misbehaved |
 | `abort.rs` | A malicious dealer is convicted, while a false complaint and a malformed proof fall back on the reporter |
 | `wire_path.rs` | The channel path agrees with the in-memory one, and re-labelled, tampered, or truncated messages are rejected |
+| `key_refresh.rs` | Contributing zero re-randomizes every share and leaves the public key untouched |
 | `parallel_output.rs` | The parallel output matches the sequential one |
 
 # Usage
 
-**Run the protocol** (both variants, all proof systems, parameters defined in `main.rs`):
+The shared value each party contributes is an argument of the initiate procedure. Passing a fresh secret generates a key, passing zero refreshes an existing one, since a sharing of zero re-randomizes the shares and leaves the public key where it was. `tests/key_refresh.rs` pins that property.
+
+**Run the protocol** (both variants, both proof systems, parameters defined in `main.rs`):
 
 ```
 cargo run --release

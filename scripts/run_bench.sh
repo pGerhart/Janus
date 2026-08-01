@@ -55,6 +55,26 @@ cat "$OUT/machine.txt"
 # The whole gate battery first: numbers from a failing tree are worthless.
 echo "== verifying the tree =="
 cargo build --release --all-targets --locked
+
+# Which arithmetic backend was actually compiled, straight from the library's
+# own build script. lscpu only says what the CPU could do, this says what runs.
+# Selecting avx512 also emits simd as a fallback, so rank rather than take the
+# last line: avx512 beats simd beats serial.
+cfgs=$(grep -h 'curve25519_dalek_backend' target/release/build/curve25519-dalek-*/output 2>/dev/null)
+if echo "$cfgs" | grep -q 'avx512'; then
+    backend=avx512
+elif echo "$cfgs" | grep -q 'simd'; then
+    backend=simd
+elif echo "$cfgs" | grep -q 'serial'; then
+    backend=serial
+else
+    backend=unknown
+fi
+echo "dalek_backend=${backend:-unknown}" >> "$OUT/machine.txt"
+echo "== dalek backend: ${backend:-unknown} =="
+if [ "$backend" != "avx512" ]; then
+    echo "   note: not the AVX-512 path. Expected on ARM or without the target-cpu flag."
+fi
 cargo test --release --locked
 cargo fmt --all --check
 cargo clippy --all-targets --locked -- -D warnings \

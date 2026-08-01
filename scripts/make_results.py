@@ -123,15 +123,17 @@ def main():
     parts.append(f"| Architecture | {info.get('arch', '?')} |")
     if "avx512ifma" in info:
         parts.append(f"| AVX-512 IFMA | {info['avx512ifma']} |")
+    if "dalek_backend" in info:
+        parts.append(f"| Curve backend | `{info['dalek_backend']}` |")
     parts.append(f"| OS | {info.get('uname', '?')} |")
     parts.append(f"| Rust | {info.get('rustc', '?')} |")
     parts.append(f"| RUSTFLAGS | `{info.get('rustflags', '<unset>')}` |")
     parts.append(f"| Date | {info.get('date', '?')} |\n")
     parts.append(
-        "`curve25519-dalek` picks its backend from the compile-time target "
-        "features. With `avx512ifma` and `avx512vl` present it builds the AVX-512 "
-        "backend, otherwise it falls back to AVX2, so the RUSTFLAGS row above and "
-        "the CPU decide which arithmetic these numbers measure.\n"
+        "The curve backend row is what `curve25519-dalek` actually compiled, read "
+        "from its build script rather than inferred from the CPU. `avx512` is the "
+        "IFMA path, `simd` is AVX2, and `serial` is the portable fallback, so that "
+        "row states which arithmetic these numbers measure.\n"
     )
     parts.append(
         "`(t, n)` = (threshold, parties). Initiate and output are the phases each "
