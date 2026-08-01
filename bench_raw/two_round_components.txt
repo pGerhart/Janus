@@ -1,0 +1,123 @@
+   Compiling janus v0.1.0 (/home/ubuntu/Janus)
+    Finished `bench` profile [optimized] target(s) in 1.05s
+     Running benches/two_round_components.rs (target/release/deps/two_round_components-95b08da4fbd96cb5)
+Gnuplot not found, using plotters backend
+Benchmarking initiate/decom_prove_fischlin
+Benchmarking initiate/decom_prove_fischlin: Warming up for 3.0000 s
+Benchmarking initiate/decom_prove_fischlin: Collecting 100 samples in estimated 7.2392 s (300 iterations)
+Benchmarking initiate/decom_prove_fischlin: Analyzing
+initiate/decom_prove_fischlin
+                        time:   [23.008 ms 23.584 ms 24.161 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+Benchmarking initiate/pk_prove
+Benchmarking initiate/pk_prove: Warming up for 3.0000 s
+Benchmarking initiate/pk_prove: Collecting 100 samples in estimated 5.4774 s (56k iterations)
+Benchmarking initiate/pk_prove: Analyzing
+initiate/pk_prove       time:   [98.395 µs 98.415 µs 98.435 µs]
+Found 5 outliers among 100 measurements (5.00%)
+  1 (1.00%) low severe
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+
+Benchmarking initiate/encrypt_shares_batch
+Benchmarking initiate/encrypt_shares_batch: Warming up for 3.0000 s
+Benchmarking initiate/encrypt_shares_batch: Collecting 100 samples in estimated 5.0282 s (2400 iterations)
+Benchmarking initiate/encrypt_shares_batch: Analyzing
+initiate/encrypt_shares_batch
+                        time:   [2.1303 ms 2.1313 ms 2.1323 ms]
+                        change: [+67.064% +67.142% +67.225%] (p = 0.00 < 0.05)
+                        Performance has regressed.
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+Benchmarking finalize/decom_verify_fischlin_single
+Benchmarking finalize/decom_verify_fischlin_single: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.0s, enable flat sampling, or reduce sample count to 50.
+Benchmarking finalize/decom_verify_fischlin_single: Collecting 100 samples in estimated 7.0150 s (5050 iterations)
+Benchmarking finalize/decom_verify_fischlin_single: Analyzing
+finalize/decom_verify_fischlin_single
+                        time:   [1.3981 ms 1.3984 ms 1.3988 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) low mild
+  1 (1.00%) high mild
+  1 (1.00%) high severe
+
+Benchmarking finalize/decom_verify_fischlin_batch_n64
+Benchmarking finalize/decom_verify_fischlin_batch_n64: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 8.9s, or reduce sample count to 50.
+Benchmarking finalize/decom_verify_fischlin_batch_n64: Collecting 100 samples in estimated 8.8536 s (100 iterations)
+Benchmarking finalize/decom_verify_fischlin_batch_n64: Analyzing
+finalize/decom_verify_fischlin_batch_n64
+                        time:   [89.800 ms 89.818 ms 89.836 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+Benchmarking finalize/decrypt_batch_n63
+Benchmarking finalize/decrypt_batch_n63: Warming up for 3.0000 s
+Benchmarking finalize/decrypt_batch_n63: Collecting 100 samples in estimated 5.2011 s (1400 iterations)
+Benchmarking finalize/decrypt_batch_n63: Analyzing
+finalize/decrypt_batch_n63
+                        time:   [3.7052 ms 3.7062 ms 3.7072 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+Benchmarking finalize/pedvss_eval_check_batch_n63
+Benchmarking finalize/pedvss_eval_check_batch_n63: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.7s, or reduce sample count to 80.
+Benchmarking finalize/pedvss_eval_check_batch_n63: Collecting 100 samples in estimated 5.7444 s (100 iterations)
+Benchmarking finalize/pedvss_eval_check_batch_n63: Analyzing
+finalize/pedvss_eval_check_batch_n63
+                        time:   [57.401 ms 57.411 ms 57.421 ms]
+
+Benchmarking finalize/cstar_aggregate_and_eval_n64
+Benchmarking finalize/cstar_aggregate_and_eval_n64: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 5.7s, or reduce sample count to 80.
+Benchmarking finalize/cstar_aggregate_and_eval_n64: Collecting 100 samples in estimated 5.7111 s (100 iterations)
+Benchmarking finalize/cstar_aggregate_and_eval_n64: Analyzing
+finalize/cstar_aggregate_and_eval_n64
+                        time:   [57.585 ms 57.595 ms 57.605 ms]
+
+Benchmarking finalize/comeq_prove
+Benchmarking finalize/comeq_prove: Warming up for 3.0000 s
+Benchmarking finalize/comeq_prove: Collecting 100 samples in estimated 5.1714 s (25k iterations)
+Benchmarking finalize/comeq_prove: Analyzing
+finalize/comeq_prove    time:   [197.04 µs 197.08 µs 197.12 µs]
+Found 7 outliers among 100 measurements (7.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+  4 (4.00%) high severe
+
+Benchmarking finalize/signature_verify_batch_n64
+Benchmarking finalize/signature_verify_batch_n64: Warming up for 3.0000 s
+Benchmarking finalize/signature_verify_batch_n64: Collecting 100 samples in estimated 5.9958 s (300 iterations)
+Benchmarking finalize/signature_verify_batch_n64: Analyzing
+finalize/signature_verify_batch_n64
+                        time:   [19.955 ms 19.962 ms 19.968 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+Benchmarking output/pk_verify_batch_n64
+Benchmarking output/pk_verify_batch_n64: Warming up for 3.0000 s
+Benchmarking output/pk_verify_batch_n64: Collecting 100 samples in estimated 5.1212 s (900 iterations)
+Benchmarking output/pk_verify_batch_n64: Analyzing
+output/pk_verify_batch_n64
+                        time:   [5.8962 ms 5.8973 ms 5.8985 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  3 (3.00%) high mild
+
+Benchmarking output/comeq_verify_batch_n64
+Benchmarking output/comeq_verify_batch_n64: Warming up for 3.0000 s
+Benchmarking output/comeq_verify_batch_n64: Collecting 100 samples in estimated 5.7375 s (600 iterations)
+Benchmarking output/comeq_verify_batch_n64: Analyzing
+output/comeq_verify_batch_n64
+                        time:   [9.4844 ms 9.4852 ms 9.4859 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+

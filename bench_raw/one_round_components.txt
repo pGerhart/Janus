@@ -1,0 +1,109 @@
+    Finished `bench` profile [optimized] target(s) in 0.06s
+     Running benches/one_round_components.rs (target/release/deps/one_round_components-de4008783ed4b4aa)
+Gnuplot not found, using plotters backend
+Benchmarking initiate/poly_prove_fischlin
+Benchmarking initiate/poly_prove_fischlin: Warming up for 3.0000 s
+Benchmarking initiate/poly_prove_fischlin: Collecting 100 samples in estimated 5.1535 s (500 iterations)
+Benchmarking initiate/poly_prove_fischlin: Analyzing
+initiate/poly_prove_fischlin
+                        time:   [9.9808 ms 10.195 ms 10.423 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+
+Benchmarking initiate/encrypt_shares_batch
+Benchmarking initiate/encrypt_shares_batch: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.4s, enable flat sampling, or reduce sample count to 60.
+Benchmarking initiate/encrypt_shares_batch: Collecting 100 samples in estimated 6.3933 s (5050 iterations)
+Benchmarking initiate/encrypt_shares_batch: Analyzing
+initiate/encrypt_shares_batch
+                        time:   [1.2749 ms 1.2751 ms 1.2752 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+
+Benchmarking output/poly_verify_fischlin_single
+Benchmarking output/poly_verify_fischlin_single: Warming up for 3.0000 s
+Benchmarking output/poly_verify_fischlin_single: Collecting 100 samples in estimated 5.2913 s (700 iterations)
+Benchmarking output/poly_verify_fischlin_single: Analyzing
+output/poly_verify_fischlin_single
+                        time:   [7.5647 ms 7.5683 ms 7.5721 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+Benchmarking output/poly_verify_fischlin_batch_n64
+Benchmarking output/poly_verify_fischlin_batch_n64: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 48.6s, or reduce sample count to 10.
+Benchmarking output/poly_verify_fischlin_batch_n64: Collecting 100 samples in estimated 48.596 s (100 iterations)
+Benchmarking output/poly_verify_fischlin_batch_n64: Analyzing
+output/poly_verify_fischlin_batch_n64
+                        time:   [485.57 ms 485.66 ms 485.75 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
+
+Benchmarking output/decrypt_batch_n63
+Benchmarking output/decrypt_batch_n63: Warming up for 3.0000 s
+Benchmarking output/decrypt_batch_n63: Collecting 100 samples in estimated 5.2173 s (2000 iterations)
+Benchmarking output/decrypt_batch_n63: Analyzing
+output/decrypt_batch_n63
+                        time:   [2.6063 ms 2.6066 ms 2.6069 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+Benchmarking output/pedvss_opening_check_batch_n63
+Benchmarking output/pedvss_opening_check_batch_n63: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.0s, enable flat sampling, or reduce sample count to 60.
+Benchmarking output/pedvss_opening_check_batch_n63: Collecting 100 samples in estimated 5.9914 s (5050 iterations)
+Benchmarking output/pedvss_opening_check_batch_n63: Analyzing
+output/pedvss_opening_check_batch_n63
+                        time:   [1.1882 ms 1.1894 ms 1.1906 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  3 (3.00%) low mild
+  2 (2.00%) high mild
+  2 (2.00%) high severe
+
+Benchmarking output/vk_aggregation_n64
+Benchmarking output/vk_aggregation_n64: Warming up for 3.0000 s
+Benchmarking output/vk_aggregation_n64: Collecting 100 samples in estimated 5.8099 s (10k iterations)
+Benchmarking output/vk_aggregation_n64: Analyzing
+output/vk_aggregation_n64
+                        time:   [577.92 µs 578.06 µs 578.20 µs]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) high mild
+  2 (2.00%) high severe
+
+Benchmarking output/signature_verify_batch_n64
+Benchmarking output/signature_verify_batch_n64: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 27.3s, or reduce sample count to 10.
+Benchmarking output/signature_verify_batch_n64: Collecting 100 samples in estimated 27.324 s (100 iterations)
+Benchmarking output/signature_verify_batch_n64: Analyzing
+output/signature_verify_batch_n64
+                        time:   [274.14 ms 274.17 ms 274.19 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) low mild
+  1 (1.00%) high mild
+
+Benchmarking output/wire_verify_batch_n64
+Benchmarking output/wire_verify_batch_n64: Warming up for 3.0000 s
+Benchmarking output/wire_verify_batch_n64: Collecting 100 samples in estimated 5.7057 s (600 iterations)
+Benchmarking output/wire_verify_batch_n64: Analyzing
+output/wire_verify_batch_n64
+                        time:   [9.5077 ms 9.5096 ms 9.5115 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
+
+Benchmarking output/wire_decode_batch_n64
+Benchmarking output/wire_decode_batch_n64: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 29.1s, or reduce sample count to 10.
+Benchmarking output/wire_decode_batch_n64: Collecting 100 samples in estimated 29.057 s (100 iterations)
+Benchmarking output/wire_decode_batch_n64: Analyzing
+output/wire_decode_batch_n64
+                        time:   [289.50 ms 289.54 ms 289.58 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
