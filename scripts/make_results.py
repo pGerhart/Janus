@@ -118,7 +118,15 @@ def main():
     parts.append(f"| Machine | {info.get('cpu', '?')} |")
     if "instance" in info:
         parts.append(f"| Instance | {info['instance']} |")
-    parts.append(f"| Cores | {info.get('nproc', '?')} |")
+    cores = info.get("nproc", "?")
+    sockets = info.get("sockets")
+    per_socket = info.get("cores_per_socket")
+    per_core = info.get("threads_per_core")
+    if sockets and per_socket and per_core:
+        physical = int(sockets) * int(per_socket)
+        smt = " with SMT" if int(per_core) > 1 else ", no SMT"
+        cores = f"{cores} logical on {physical} physical{smt}"
+    parts.append(f"| Cores | {cores} |")
     parts.append(f"| Memory | {info.get('mem', '?')} |")
     parts.append(f"| Architecture | {info.get('arch', '?')} |")
     if "avx512ifma" in info:
@@ -134,6 +142,11 @@ def main():
         "from its build script rather than inferred from the CPU. `avx512` is the "
         "IFMA path, `simd` is AVX2, and `serial` is the portable fallback, so that "
         "row states which arithmetic these numbers measure.\n"
+    )
+    parts.append(
+        "The parallel rows are wall-clock times of the same work spread over all "
+        "cores, so read their speedup against the physical core count above, not "
+        "the logical one.\n"
     )
     parts.append(
         "`(t, n)` = (threshold, parties). Initiate and output are the phases each "

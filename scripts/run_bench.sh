@@ -30,6 +30,11 @@ mkdir -p "$OUT"
     echo "nproc=$(nproc 2>/dev/null || sysctl -n hw.ncpu)"
     if command -v lscpu >/dev/null; then
         echo "cpu=$(lscpu | sed -n 's/^Model name: *//p' | head -1)"
+        # Physical cores and threads per core, because a parallel speedup read
+        # against vCPUs alone is misleading on an SMT machine.
+        echo "sockets=$(lscpu | sed -n 's/^Socket(s): *//p' | head -1)"
+        echo "cores_per_socket=$(lscpu | sed -n 's/^Core(s) per socket: *//p' | head -1)"
+        echo "threads_per_core=$(lscpu | sed -n 's/^Thread(s) per core: *//p' | head -1)"
         # These two decide whether the AVX-512 backend is reachable at all.
         if lscpu | grep -q avx512ifma && lscpu | grep -q avx512vl; then
             echo "avx512ifma=yes"
