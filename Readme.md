@@ -61,7 +61,7 @@ The Fischlin transform is parameterized by the number of repetitions $\rho$, the
 | `src/error.rs` | Protocol and wire error types |
 | `src/wire.rs` | Canonical byte encodings and the signed-message envelope |
 | `src/main.rs` | Runs both protocols under both proof systems |
-| `scripts/` | Benchmark runner and the results-file generator |
+| `eval/` | Benchmark sources, the runner, and the generated results file |
 
 Tests live in `tests/`, split by purpose:
 
@@ -96,16 +96,17 @@ The tests exercise full protocol runs for both variants and verify that all part
 
 # Benchmarks
 
-The repository includes [Criterion](https://github.com/bheisler/criterion.rs) benchmarks across six suites:
+The repository includes [Criterion](https://github.com/bheisler/criterion.rs) benchmarks across seven suites:
 
 | Suite | File | What is measured |
 |---|---|---|
-| Janus-1 DKG | `benches/one_round_dkg_run.rs` | Initiation (proof generation) and output (verification + share aggregation) per party |
-| Janus-1 components | `benches/one_round_components.rs` | Individual operations (proving, encryption, decryption, VSS checks, message authentication and decoding) in isolation at Fischlin small with $(t=32, n=64)$ |
-| Janus-2 DKG | `benches/two_round_dkg_run.rs` | Round 1 (initiate), round 2 (finalize), and output per party |
-| Janus-2 components | `benches/two_round_components.rs` | Individual operations in isolation at Fischlin small with $(t=32, n=64)$ |
-| Identifiable abort | `benches/abort_path.rs` | Building and verifying a complaint, and the worst case where every other party complains |
-| Optimizations | `benches/optimizations.rs` | Batch proof verification and a multi-threaded output phase at large committees |
+| Janus-1 DKG | `eval/benches/one_round_dkg_run.rs` | Initiation (proof generation) and output (verification + share aggregation) per party |
+| Janus-1 components | `eval/benches/one_round_components.rs` | Individual operations (proving, encryption, decryption, VSS checks, message authentication and decoding) in isolation at Fischlin small with $(t=32, n=64)$ |
+| Janus-2 DKG | `eval/benches/two_round_dkg_run.rs` | Round 1 (initiate), round 2 (finalize), and output per party |
+| Janus-2 components | `eval/benches/two_round_components.rs` | Individual operations in isolation at Fischlin small with $(t=32, n=64)$ |
+| Identifiable abort | `eval/benches/abort_path.rs` | Building and verifying a complaint, and the worst case where every other party complains |
+| Optimizations | `eval/benches/optimizations.rs` | Batch proof verification and a multi-threaded output phase at large committees |
+| End-to-end run | `eval/benches/full_run.rs` | One party's whole run with messages encoded and decoded as they are on a channel, plus the bytes it sends and receives |
 
 All DKG benchmarks run over seven parameter sets: **(t=4, n=16)**, **(t=8, n=32)**, **(t=16, n=64)**, **(t=32, n=64)**, **(t=64, n=128)**, **(t=128, n=256)**, **(t=256, n=512)** at 128-bit security on Ristretto (Curve25519). The large Fischlin profile is benchmarked up to $n < 256$; Schnorr and the small Fischlin profile cover the full range.
 
@@ -113,30 +114,21 @@ All DKG benchmarks run over seven parameter sets: **(t=4, n=16)**, **(t=8, n=32)
 cargo bench
 ```
 
-The pinned results, together with the machine they were measured on, are in [`benches/bench_results.md`](benches/bench_results.md).
+The pinned results, together with the machine they were measured on, are in [`eval/eval_results.md`](eval/eval_results.md).
 
 # Reproducing the Published Numbers
 
-The paper's numbers come from a single run on a dedicated cloud machine, so that no other load interferes and the parameter sets up to $(t=256, n=512)$ have enough memory. The procedure below is the whole of it.
-
-**Machine.** An AWS `c7i.4xlarge` (16 vCPU, 32 GB, x86-64, Sapphire Rapids). Three properties matter:
-
-- `curve25519-dalek` selects its arithmetic backend in its build script from the **compile-time** target features. It builds the AVX-512 backend only when `avx512ifma` and `avx512vl` are enabled and the toolchain is 1.89 or newer, and otherwise falls back to AVX2. Neither feature is in the x86-64 baseline, so `scripts/run_bench.sh` sets `RUSTFLAGS=-C target-cpu=native` to enable them. Without that flag the same machine measures the AVX2 path instead. On 64-bit ARM only the serial backend exists, so numbers from a Graviton instance are not comparable.
-- Burstable instance families such as `t3` and `t4g` throttle once their CPU credits run out, which corrupts a run of this length. Use a fixed-performance family.
-- The largest parameter set holds all $n$ broadcasts decompressed in memory, which needs well over 16 GB at $(t=256, n=512)$.
-
-
-**Run.** The full benchmarks takes over an hour, and the largest points take several minutes each.
+The paper's numbers were measured on an AWS `c8i.4xlarge` (16 vCPU on 8 physical cores, 30 GB, x86-64, Granite Rapids). 
+The full benchmarks takes over an hour, and the largest points take several minutes each.
 All benchmarks can be run with the script
 
 ```
-./scripts/run_bench.sh
+./eval/scripts/run_bench.sh
 ```
 
-`scripts/run_bench.sh` first records the machine, OS, toolchain, architecture, core count and date, then runs the whole gate battery (build, test, fmt, clippy) and stops on any failure. It then runs all six suites into `bench_raw/`.
-
-**Collect.**
-We built a script that writes the raw benches into `benches/bench_results.md`.
+This script first records the machine, OS, toolchain, architecture, core count and date, then runs the whole gate battery (build, test, fmt, clippy) and stops on any failure. It then runs all seven suites into `eval/bench_raw/`.
+To convert these raw numbers in a useable format, call 
 ```
-python3 scripts/make_results.py
+python3 eval/scripts/build_results.py
 ```
+ which writes a cleaned version to `eval/eval_results.md`.
