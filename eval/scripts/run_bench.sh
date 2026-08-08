@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Runs every benchmark suite and records the machine context alongside the raw
-# Criterion output. Produces bench_raw/, which make_results.py turns into
-# benches/bench_results.md.
+# Criterion output. Produces eval/bench_raw/, which make_results.py turns into
+# eval/eval_results.md.
 #
 # Usage:  ./scripts/run_bench.sh
 # The (256,512) points take several minutes each, so run this under tmux.
@@ -12,11 +12,11 @@
 # AVX-512 backend. Export RUSTFLAGS yourself to override this.
 
 set -euo pipefail
-cd "$(dirname "$0")/.."
+cd "$(dirname "$0")/../.."
 
 export RUSTFLAGS="${RUSTFLAGS:--C target-cpu=native}"
 
-OUT=bench_raw
+OUT=eval/bench_raw
 mkdir -p "$OUT"
 
 # Record what the numbers depend on. Without this the run is not reproducible.
@@ -88,11 +88,11 @@ cargo clippy --all-targets --locked -- -D warnings \
     -A clippy::type_complexity
 
 for suite in one_round_dkg_run one_round_components two_round_dkg_run \
-             two_round_components abort_path optimizations; do
+             two_round_components abort_path optimizations full_run; do
     echo "== $suite =="
     cargo bench --bench "$suite" --locked 2>&1 | tee "$OUT/$suite.txt"
 done
 
 echo
-echo "done. now run:  python3 scripts/make_results.py"
-echo "then bring back benches/bench_results.md"
+echo "done. now run:  python3 eval/scripts/make_results.py"
+echo "then bring back eval/eval_results.md"

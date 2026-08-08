@@ -33,28 +33,40 @@ rayon = "1.10"
 
 
 [dev-dependencies]
+sha2 = "0.11"
 criterion = "0.5"
 
 [[bench]]
+name = "full_run"
+path = "eval/benches/full_run.rs"
+harness = false
+
+[[bench]]
 name = "one_round_dkg_run"
+path = "eval/benches/one_round_dkg_run.rs"
 harness = false
 
 [[bench]]
 name = "two_round_dkg_run"
+path = "eval/benches/two_round_dkg_run.rs"
 harness = false
 
 [[bench]]
 name = "two_round_components"
+path = "eval/benches/two_round_components.rs"
 harness = false
 
 [[bench]]
 name = "one_round_components"
+path = "eval/benches/one_round_components.rs"
 harness = false
 
 [[bench]]
 name = "abort_path"
+path = "eval/benches/abort_path.rs"
 harness = false
 
 [[bench]]
 name = "optimizations"
+path = "eval/benches/optimizations.rs"
 harness = false

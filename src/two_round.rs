@@ -3,6 +3,7 @@ use crate::abort::{AbortReport, AbortVerdict, verify_report_core};
 use crate::encryption::proofs::prove_decryption;
 use crate::encryption::{BatchEncryptedShares, decrypt_my_shares, encrypt_batch};
 pub use crate::error::TwoRoundDkgError;
+use crate::error::WireError;
 use crate::group::g_mul_scalar;
 use crate::party::{Parties, PartyState};
 use crate::pedersen::PedersenCommitment;
@@ -97,7 +98,7 @@ impl<P: Clone + Serialize> Round1Broadcast<P> {
     // and re-serialize the whole broadcast.
     fn signing_bytes(&self) -> Vec<u8> {
         crate::wire::signing_bytes(
-            b"janus2-round1-broadcast",
+            ROUND1_DOMAIN,
             &(
                 &self.dealer_idx,
                 &self.pedvss,
@@ -116,7 +117,56 @@ impl<P: Clone + Serialize> Round1Broadcast<P> {
         pk.verify_strict(&self.signing_bytes(), &self.signature)
             .is_ok()
     }
+
+    /// Encodes the broadcast as it travels over the channel.
+    pub fn to_wire(&self) -> Vec<u8> {
+        crate::wire::seal(
+            &(
+                &self.dealer_idx,
+                &self.pedvss,
+                &self.d_commitment,
+                &self.decom_proof,
+                &self.encrypted_shares,
+            ),
+            &self.signature,
+        )
+    }
 }
+
+type Round1Fields<P> = (
+    usize,
+    Vec<PedersenCommitment>,
+    PedersenCommitment,
+    P,
+    BatchEncryptedShares,
+);
+
+impl<P: Clone + Serialize + serde::de::DeserializeOwned> Round1Broadcast<P> {
+    /// Decodes a received message and authenticates it against the claimed
+    /// sender's key, over the bytes as received.
+    pub fn from_wire(wire: &[u8], parties: &Parties) -> Result<Self, WireError> {
+        let (fields, payload, signature) = crate::wire::open_unverified::<Round1Fields<P>>(wire)?;
+        let (dealer_idx, pedvss, d_commitment, decom_proof, encrypted_shares) = fields;
+        if dealer_idx == 0 || dealer_idx > parties.len() {
+            return Err(WireError::MalformedMessage);
+        }
+        crate::wire::verify_payload(
+            ROUND1_DOMAIN,
+            payload,
+            &signature,
+            parties.sig_pk(dealer_idx),
+        )?;
+        Ok(Self {
+            dealer_idx,
+            pedvss,
+            d_commitment,
+            decom_proof,
+            encrypted_shares,
+            signature,
+        })
+    }
+}
+
 impl Round2Broadcast {
     pub fn new(
         dealer_idx: usize,
@@ -142,7 +192,7 @@ impl Round2Broadcast {
     // and re-serialize the whole broadcast.
     fn signing_bytes(&self) -> Vec<u8> {
         crate::wire::signing_bytes(
-            b"janus2-round2-broadcast",
+            ROUND2_DOMAIN,
             &(
                 &self.dealer_idx,
                 &self.pk,
@@ -161,7 +211,57 @@ impl Round2Broadcast {
         pk.verify_strict(&self.signing_bytes(), &self.signature)
             .is_ok()
     }
+
+    /// Encodes the broadcast as it travels over the channel.
+    pub fn to_wire(&self) -> Vec<u8> {
+        crate::wire::seal(
+            &(
+                &self.dealer_idx,
+                &self.pk,
+                &self.pk_proof,
+                &self.vk_i,
+                &self.comeq_proof,
+            ),
+            &self.signature,
+        )
+    }
+
+    /// Decodes a received message and authenticates it against the claimed sender.
+    pub fn from_wire(wire: &[u8], parties: &Parties) -> Result<Self, WireError> {
+        let (fields, payload, signature) = crate::wire::open_unverified::<Round2Fields>(wire)?;
+        let (dealer_idx, pk, pk_proof, vk_i, comeq_proof) = fields;
+        if dealer_idx == 0 || dealer_idx > parties.len() {
+            return Err(WireError::MalformedMessage);
+        }
+        crate::wire::verify_payload(
+            ROUND2_DOMAIN,
+            payload,
+            &signature,
+            parties.sig_pk(dealer_idx),
+        )?;
+        Ok(Self {
+            dealer_idx,
+            pk,
+            pk_proof,
+            vk_i,
+            comeq_proof,
+            signature,
+        })
+    }
 }
+
+type Round2Fields = (
+    usize,
+    RistrettoPoint,
+    PkProof,
+    PedersenCommitment,
+    ComEqProof,
+);
+
+/// Domain tags on the signed bytes of the two round-message types.
+pub const ROUND1_DOMAIN: &[u8] = b"janus2-round1-broadcast";
+pub const ROUND2_DOMAIN: &[u8] = b"janus2-round2-broadcast";
+
 #[inline]
 fn x_of(i: usize) -> Scalar {
     Scalar::from(i as u64)

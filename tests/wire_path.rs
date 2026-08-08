@@ -1,6 +1,5 @@
-// The channel-facing path: messages are authenticated over the bytes as received
-// and decoded once. Attribution in the abort case rests on those bytes, so these
-// tests pin both the agreement with the in-memory path and the rejection cases.
+// Attribution in the abort case rests on the bytes as received, so these pin
+// both agreement with the in-memory path and the rejection cases.
 
 use curve25519_dalek::scalar::Scalar;
 use janus::DkgParams;

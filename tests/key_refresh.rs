@@ -1,7 +1,5 @@
-// Key refresh is the same protocol with a different shared value: every party
-// contributes zero instead of a fresh secret, which re-randomizes the shares and
-// leaves the public key where it was. These tests pin that property, since it is
-// the only thing that separates the two modes.
+// Refresh is the same protocol with zero as the shared value, which is the only
+// thing separating the two modes, so these pin what that changes.
 
 use curve25519_dalek::ristretto::RistrettoPoint;
 use curve25519_dalek::scalar::Scalar;

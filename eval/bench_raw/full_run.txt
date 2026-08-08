@@ -1,0 +1,49 @@
+    Finished `bench` profile [optimized] target(s) in 0.05s
+     Running eval/benches/full_run.rs (target/release/deps/full_run-f0a4aa50adca6375)
+Gnuplot not found, using plotters backend
+[janus1 schnorr t4_n16] sent=42.61 KB received=42.61 KB peak_rss=n/a
+Benchmarking full_run_janus1_schnorr/critical_path/t4_n16
+Benchmarking full_run_janus1_schnorr/critical_path/t4_n16: Warming up for 3.0000 s
+Benchmarking full_run_janus1_schnorr/critical_path/t4_n16: Collecting 10 samples in estimated 5.3668 s (550 iterations)
+Benchmarking full_run_janus1_schnorr/critical_path/t4_n16: Analyzing
+full_run_janus1_schnorr/critical_path/t4_n16
+                        time:   [9.4801 ms 9.8903 ms 10.327 ms]
+                        change: [-6.0044% -3.8694% -0.6434%] (p = 0.01 < 0.05)
+                        Change within noise threshold.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking full_run_janus1_schnorr/echo_digest/t4_n16
+Benchmarking full_run_janus1_schnorr/echo_digest/t4_n16: Warming up for 3.0000 s
+Benchmarking full_run_janus1_schnorr/echo_digest/t4_n16: Collecting 10 samples in estimated 5.0002 s (280k iterations)
+Benchmarking full_run_janus1_schnorr/echo_digest/t4_n16: Analyzing
+full_run_janus1_schnorr/echo_digest/t4_n16
+                        time:   [17.830 µs 18.334 µs 18.865 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking full_run_janus1_schnorr/echo_digest_sha512/t4_n16
+Benchmarking full_run_janus1_schnorr/echo_digest_sha512/t4_n16: Warming up for 3.0000 s
+Benchmarking full_run_janus1_schnorr/echo_digest_sha512/t4_n16: Collecting 10 samples in estimated 5.0006 s (185k iterations)
+Benchmarking full_run_janus1_schnorr/echo_digest_sha512/t4_n16: Analyzing
+full_run_janus1_schnorr/echo_digest_sha512/t4_n16
+                        time:   [26.213 µs 26.362 µs 26.631 µs]
+
+[janus1 fischlin_small t4_n16] sent=310.84 KB received=310.85 KB peak_rss=n/a
+Benchmarking full_run_janus1_fischlin_small/critical_path/t4_n16
+Benchmarking full_run_janus1_fischlin_small/critical_path/t4_n16: Warming up for 3.0000 s
+Benchmarking full_run_janus1_fischlin_small/critical_path/t4_n16: Collecting 10 samples in estimated 6.0771 s (110 iterations)
+Benchmarking full_run_janus1_fischlin_small/critical_path/t4_n16: Analyzing
+full_run_janus1_fischlin_small/critical_path/t4_n16
+                        time:   [55.197 ms 55.868 ms 56.619 ms]
+                        change: [-0.0316% +1.1403% +2.1695%] (p = 0.07 > 0.05)
+                        No change in performance detected.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+Benchmarking full_run_janus1_fischlin_small/echo_digest/t4_n16
+Benchmarking full_run_janus1_fischlin_small/echo_digest/t4_n16: Warming up for 3.0000 s
+Benchmarking full_run_janus1_fischlin_small/echo_digest/t4_n16: Collecting 10 samples in estimated 5.0018 s (38k iterations)
+Benchmarking full_run_janus1_fischlin_small/echo_digest/t4_n16: Analyzing
+full_run_janus1_fischlin_small/echo_digest/t4_n16
+                        time:   [130.01 µs 131.43 µs 132.37 µs]
+Benchmarking full_run_janus1_fischlin_small/echo_digest_sha512/t4_n16
+Benchmarking full_run_janus1_fischlin_small/echo_digest_sha512/t4_n16: Warming up for 3.0000 s
+Benchmarking full_run_janus1_fischlin_small/echo_digest_sha512/t4_n16: Collecting 10 samples in estimated 5.0057 s (25k iterations)

@@ -144,7 +144,7 @@ mod comeq_proof {
 
     #[test]
     fn comeq_proof_soundness_unlinked_s() {
-        // Constructs a cheating proof for c=g^s1*h^{s'}, vk=g^s2*h^omega with s1≠s2.
+        // Constructs a cheating proof for c=g^s1*h^{s'}, vk=g^s2*h^omega with s1 != s2.
         // The old summed verifier accepted such proofs; the fixed per-equation verifier must reject.
         let mut rng = rng();
         let g_point = g();
@@ -543,7 +543,7 @@ mod pk_proof {
 
     #[test]
     fn pk_proof_soundness_unlinked_discrete_logs() {
-        // Constructs a cheating proof for (pk=g^a1, commitment=g^a2*h^b) with a1≠a2.
+        // Constructs a cheating proof for (pk=g^a1, commitment=g^a2*h^b) with a1 != a2.
         // The old summed verifier accepted such proofs; the fixed per-equation verifier must reject.
         let mut rng = rng();
         let g_point = g();

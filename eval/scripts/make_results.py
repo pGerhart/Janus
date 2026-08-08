@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Turns bench_raw/ into benches/bench_results.md.
+"""Turns eval/bench_raw/ into eval/eval_results.md.
 
-Run after scripts/run_bench.sh. Parses the Criterion medians and the size lines
+Run after eval/scripts/run_bench.sh. Parses the Criterion medians and the size lines
 the benches print, and emits one table per variant.
 """
 
@@ -9,14 +9,30 @@ import os
 import re
 import sys
 
-RAW = "bench_raw"
-OUT = "benches/bench_results.md"
+# Paths are anchored at the repository root so the script runs from anywhere.
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+RAW = os.path.join(ROOT, "eval", "bench_raw")
+OUT = os.path.join(ROOT, "eval", "eval_results.md")
 
 TIME = re.compile(
     r"time:\s*\[\s*[\d.]+\s*(?:ns|µs|ms|s)\s+([\d.]+)\s*(ns|µs|ms|s)"
 )
 BENCH_ID = re.compile(r"^([A-Za-z0-9_]+(?:/[A-Za-z0-9_.=]+)+)$")
 SIZE_LINE = re.compile(r"^\[(.+?)\]\s+(.*)$")
+
+# Link profiles for the end-to-end composition. The parties of a threshold
+# deployment are servers on wired links, so these are datacentre and inter-region
+# figures rather than consumer or mobile ones.
+PROFILES = [
+    ("One region", 1.0, 10_000.0),
+    ("Cross-region", 25.0, 1_000.0),
+    ("Intercontinental", 150.0, 1_000.0),
+]
+
+RUN_LINE = re.compile(
+    r"^\[(janus[12]) (\w+) (t\d+_n\d+)\]\s+sent=([\d.]+) (\w+)\s+received=([\d.]+) (\w+)"
+)
+UNIT = {"B": 1.0, "KB": 1024.0, "MB": 1024.0**2, "GB": 1024.0**3}
 
 SETS = ["t4_n16", "t8_n32", "t16_n64", "t32_n64", "t64_n128", "t128_n256", "t256_n512"]
 PRETTY = {
@@ -32,6 +48,13 @@ PRETTY = {
 
 def to_ms(value, unit):
     return {"s": value * 1000, "ms": value, "µs": value / 1000, "ns": value / 1e6}[unit]
+
+
+def bytes_pretty(b):
+    for unit, size in (("GB", 1024**3), ("MB", 1024**2), ("KB", 1024)):
+        if b >= size:
+            return f"{b / size:.1f} {unit}"
+    return f"{int(b)} B"
 
 
 def fmt(ms):
@@ -65,6 +88,27 @@ def parse(path):
     return timings, sizes
 
 
+def parse_run_sizes(path):
+    """Per-party sent and received bytes printed by the full-run benchmark."""
+    out = {}
+    if not os.path.exists(path):
+        return out
+    for line in open(path):
+        m = RUN_LINE.match(line.strip())
+        if m:
+            proto, scheme, param, sent, su, recv, ru = m.groups()
+            out[(proto, scheme, param)] = (
+                float(sent) * UNIT[su],
+                float(recv) * UNIT[ru],
+            )
+    return out
+
+
+def transfer_ms(byte_count, mbit_per_s):
+    """Time to move byte_count over a link, in milliseconds."""
+    return byte_count * 8.0 / (mbit_per_s * 1e6) * 1000.0
+
+
 def machine():
     info = {}
     path = f"{RAW}/machine.txt"
@@ -96,7 +140,7 @@ def table(timings, groups, columns):
 
 def main():
     if not os.path.isdir(RAW):
-        sys.exit(f"{RAW}/ not found, run scripts/run_bench.sh first")
+        sys.exit(f"{RAW} not found, run eval/scripts/run_bench.sh first")
 
     one_run, one_sizes = parse(f"{RAW}/one_round_dkg_run.txt")
     one_comp, _ = parse(f"{RAW}/one_round_components.txt")
@@ -104,14 +148,16 @@ def main():
     two_comp, _ = parse(f"{RAW}/two_round_components.txt")
     abort, abort_sizes = parse(f"{RAW}/abort_path.txt")
     opt, _ = parse(f"{RAW}/optimizations.txt")
+    run, _ = parse(f"{RAW}/full_run.txt")
+    run_sizes = parse_run_sizes(f"{RAW}/full_run.txt")
 
     info = machine()
     parts = []
     parts.append("# Janus benchmark results\n")
     parts.append(
         "Median runtimes per party, measured with `cargo bench` (Criterion). "
-        "Regenerate with `scripts/run_bench.sh` followed by "
-        "`scripts/make_results.py`.\n"
+        "Regenerate with `eval/scripts/run_bench.sh` followed by "
+        "`eval/scripts/make_results.py`.\n"
     )
     parts.append("| | |")
     parts.append("|---|---|")
@@ -252,6 +298,60 @@ def main():
         "elements, which dominates because every point needs a decompression.\n"
     )
 
+    if run_sizes:
+        parts.append("## End-to-end run\n")
+        parts.append(
+            "One party's whole run, from building its own message to holding the "
+            "output key. Every message is encoded on the way out and decoded on "
+            "the way in, which the phase tables above skip.\n"
+        )
+        parts.append(
+            "Compute is measured, the link columns are attributed as "
+            "`max(compute, transfer) + rounds * RTT`. A party reaches that bound "
+            "by verifying each message as it arrives; one that waits for the whole "
+            "round pays the sum instead. Broadcast is counted as point-to-point "
+            "fan-out on a full-duplex link, so a party uploads once per peer.\n"
+        )
+        parts.append(
+            "The rounds include one echo round on top of the protocol, since the "
+            "protocol rounds only disseminate: every party sends a digest of what "
+            "it received, which catches a dealer that told two parties different "
+            "things. That gives broadcast with abort, which suits a protocol that "
+            "already identifies the party at fault. Naming the culprit needs "
+            "per-dealer hashes and is counted with the abort path.\n"
+        )
+        header = "| (t, n) | Compute | Received | " + " | ".join(
+            f"{name} ({int(rtt)} ms, {int(bw / 1000)} Gbit/s)" for name, rtt, bw in PROFILES
+        ) + " |"
+        # The protocol rounds disseminate, they do not agree. One echo round on
+        # top turns that into broadcast with abort: every party digests the round
+        # it received and sends that digest to the others, so an equivocating
+        # dealer is caught. Localizing which dealer equivocated needs per-dealer
+        # hashes, which is dispute traffic and belongs to the abort path.
+        ECHO_BYTES = 32
+        for proto, rounds, label in [("janus1", 2, "Janus-1"), ("janus2", 3, "Janus-2")]:
+            for scheme, sname in [("schnorr", "Schnorr"), ("fischlin_small", "Fischlin small")]:
+                rows = []
+                for param in SETS:
+                    key = (proto, scheme, param)
+                    compute = run.get(f"full_run_{proto}_{scheme}/critical_path/{param}")
+                    if compute is None or key not in run_sizes:
+                        continue
+                    _sent, received = run_sizes[key]
+                    n = int(param.split("_n")[1])
+                    received += ECHO_BYTES * (n - 1)
+                    cells = [PRETTY[param], fmt(compute), bytes_pretty(received)]
+                    for _n, rtt, bw in PROFILES:
+                        t = transfer_ms(received, bw)
+                        cells.append(fmt(max(compute, t) + rounds * rtt))
+                    rows.append("| " + " | ".join(cells) + " |")
+                if rows:
+                    parts.append(f"### {label}, {sname}\n")
+                    parts.append(header)
+                    parts.append("|:---|" + "---:|" * (2 + len(PROFILES)))
+                    parts.extend(rows)
+                    parts.append("")
+
     parts.append("## Communication\n")
     parts.append("```")
     parts.extend(one_sizes)
@@ -259,7 +359,7 @@ def main():
     parts.extend(abort_sizes)
     parts.append("```")
 
-    os.makedirs("benches", exist_ok=True)
+    os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w") as handle:
         handle.write("\n".join(parts) + "\n")
     print(f"wrote {OUT}")

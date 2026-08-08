@@ -1,6 +1,5 @@
-// Every error variant a party can return on malformed or adversarial input.
-// The variants that name a dealer are what the abort path acts on, so each test
-// also checks that the reported index is the one that actually misbehaved.
+// Every error variant, and for those that name a dealer, that the index they
+// report is the party that actually misbehaved.
 
 use curve25519_dalek::scalar::Scalar;
 use janus::one_round::{

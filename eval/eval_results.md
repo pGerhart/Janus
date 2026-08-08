@@ -140,6 +140,42 @@ The parallel rows are wall-clock times of the same work spread over all cores, s
 
 > Message authentication checks the signature over the bytes as received. Message decoding is the one-time cost of parsing those bytes into group elements, which dominates because every point needs a decompression.
 
+## End-to-end run
+
+One party's whole run, from building its own message to holding the output key. Every message is encoded on the way out and decoded on the way in, which the phase tables above skip.
+
+Compute is measured, the link columns are attributed as `max(compute, transfer) + rounds * RTT`. A party reaches that bound by verifying each message as it arrives; one that waits for the whole round pays the sum instead. Broadcast is counted as point-to-point fan-out on a full-duplex link, so a party uploads once per peer.
+
+The rounds include one echo round on top of the protocol, since the protocol rounds only disseminate: every party sends a digest of what it received, which catches a dealer that told two parties different things. That gives broadcast with abort, which suits a protocol that already identifies the party at fault. Naming the culprit needs per-dealer hashes and is counted with the abort path.
+
+### Janus-1, Schnorr
+
+| (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
+|:---|---:|---:|---:|---:|---:|
+| (4, 16) | 10.1 ms | 43.1 KB | 12.1 ms | 60.1 ms | 310.1 ms |
+| (8, 32) | 31.1 ms | 170.9 KB | 33.1 ms | 81.1 ms | 331.1 ms |
+
+### Janus-1, Fischlin small
+
+| (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
+|:---|---:|---:|---:|---:|---:|
+| (4, 16) | 55.0 ms | 311.3 KB | 57.0 ms | 105.0 ms | 355.0 ms |
+| (8, 32) | 189.9 ms | 1.2 MB | 191.9 ms | 239.9 ms | 489.9 ms |
+
+### Janus-2, Schnorr
+
+| (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
+|:---|---:|---:|---:|---:|---:|
+| (4, 16) | 13.7 ms | 33.4 KB | 16.7 ms | 88.7 ms | 463.7 ms |
+| (8, 32) | 35.0 ms | 112.0 KB | 38.0 ms | 110.0 ms | 485.0 ms |
+
+### Janus-2, Fischlin small
+
+| (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
+|:---|---:|---:|---:|---:|---:|
+| (4, 16) | 29.0 ms | 125.6 KB | 32.0 ms | 104.0 ms | 479.0 ms |
+| (8, 32) | 68.8 ms | 418.9 KB | 71.8 ms | 143.8 ms | 518.8 ms |
+
 ## Communication
 
 ```
