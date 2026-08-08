@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Runs every benchmark suite and records the machine context alongside the raw
-# Criterion output. Produces eval/bench_raw/, which make_results.py turns into
+# Criterion output. Produces eval/bench_raw/, which build_results.py turns into
 # eval/eval_results.md.
 #
 # Usage:  ./scripts/run_bench.sh
@@ -94,5 +94,5 @@ for suite in one_round_dkg_run one_round_components two_round_dkg_run \
 done
 
 echo
-echo "done. now run:  python3 eval/scripts/make_results.py"
+echo "done. now run:  python3 eval/scripts/build_results.py"
 echo "then bring back eval/eval_results.md"

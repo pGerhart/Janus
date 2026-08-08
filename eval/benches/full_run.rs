@@ -1,6 +1,6 @@
 //! End-to-end cost of one run from a single party's view. Unlike the phase
 //! benchmarks, every message is encoded on the way out and decoded on the way
-//! in, and the printed byte counts feed the link model in `make_results.py`.
+//! in, and the printed byte counts feed the link model in `build_results.py`.
 
 use janus::one_round::{DkgInitLocalState, dkg_initiate, dkg_output_key_generation_from_wire};
 use janus::one_round_proofs::{

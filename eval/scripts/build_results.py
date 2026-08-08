@@ -32,6 +32,7 @@ PROFILES = [
 RUN_LINE = re.compile(
     r"^\[(janus[12]) (\w+) (t\d+_n\d+)\]\s+sent=([\d.]+) (\w+)\s+received=([\d.]+) (\w+)"
 )
+ECHO_BYTES = 32
 UNIT = {"B": 1.0, "KB": 1024.0, "MB": 1024.0**2, "GB": 1024.0**3}
 
 SETS = ["t4_n16", "t8_n32", "t16_n64", "t32_n64", "t64_n128", "t128_n256", "t256_n512"]
@@ -157,7 +158,7 @@ def main():
     parts.append(
         "Median runtimes per party, measured with `cargo bench` (Criterion). "
         "Regenerate with `eval/scripts/run_bench.sh` followed by "
-        "`eval/scripts/make_results.py`.\n"
+        "`eval/scripts/build_results.py`.\n"
     )
     parts.append("| | |")
     parts.append("|---|---|")
@@ -328,7 +329,6 @@ def main():
         # it received and sends that digest to the others, so an equivocating
         # dealer is caught. Localizing which dealer equivocated needs per-dealer
         # hashes, which is dispute traffic and belongs to the abort path.
-        ECHO_BYTES = 32
         for proto, rounds, label in [("janus1", 2, "Janus-1"), ("janus2", 3, "Janus-2")]:
             for scheme, sname in [("schnorr", "Schnorr"), ("fischlin_small", "Fischlin small")]:
                 rows = []
@@ -351,6 +351,28 @@ def main():
                     parts.append("|:---|" + "---:|" * (2 + len(PROFILES)))
                     parts.extend(rows)
                     parts.append("")
+
+    if run_sizes:
+        ns = sorted({int(p.split("_n")[1]) for p in SETS})
+        parts.append("### What the echo round costs\n")
+        parts.append(
+            "The tables above include it. It is the same for both protocols and "
+            "both proof systems, one round-trip plus a digest to every peer, so "
+            "subtract a row here to read a protocol without agreement.\n"
+        )
+        parts.append(
+            "| n | Extra bytes | "
+            + " | ".join(name for name, _r, _b in PROFILES)
+            + " |"
+        )
+        parts.append("|:---|---:|" + "---:|" * len(PROFILES))
+        for n in ns:
+            extra = ECHO_BYTES * (n - 1)
+            cells = [str(n), bytes_pretty(extra)]
+            for _name, rtt, bw in PROFILES:
+                cells.append(fmt(rtt + transfer_ms(extra, bw)))
+            parts.append("| " + " | ".join(cells) + " |")
+        parts.append("")
 
     parts.append("## Communication\n")
     parts.append("```")
