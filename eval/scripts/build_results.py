@@ -35,6 +35,7 @@ PROFILES = [
 RUN_LINE = re.compile(
     r"^\[(janus[12]) (\w+) (t\d+_n\d+)\]\s+sent=([\d.]+) (\w+)\s+received=([\d.]+) (\w+)"
 )
+RSS = re.compile(r"peak_rss=([\d.]+) (\w+)")
 ENC_SIZE = re.compile(r"^\[(t\d+_n\d+)\] verbose=(\d+) B compact=(\d+) B")
 ECHO_BYTES = 32
 UNIT = {"B": 1.0, "KB": 1024.0, "MB": 1024.0**2, "GB": 1024.0**3}
@@ -168,6 +169,13 @@ def main():
             m = ENC_SIZE.match(line.strip())
             if m:
                 enc_sizes[m.group(1)] = (int(m.group(2)), int(m.group(3)))
+    peak = 0.0
+    run_path = f"{RAW}/full_run.txt"
+    if os.path.exists(run_path):
+        for line in open(run_path):
+            m = RSS.search(line)
+            if m:
+                peak = max(peak, float(m.group(1)) * UNIT.get(m.group(2), 0.0))
     run_sizes = parse_run_sizes(f"{RAW}/full_run.txt")
 
     info = machine()
@@ -331,6 +339,12 @@ def main():
             "round pays the sum instead. Broadcast is counted as point-to-point "
             "fan-out on a full-duplex link, so a party uploads once per peer.\n"
         )
+        if peak:
+            parts.append(
+                f"The benchmark process peaked at {bytes_pretty(peak)} resident "
+                "while holding every party of the largest setting at once, which "
+                "bounds what one party needs to keep a round in memory.\n"
+            )
         parts.append(
             "The rounds include one echo round on top of the protocol, since the "
             "protocol rounds only disseminate: every party sends a digest of what "

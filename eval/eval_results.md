@@ -146,6 +146,8 @@ One party's whole run, from building its own message to holding the output key. 
 
 Compute is measured, the link columns are attributed as `max(compute, transfer) + rounds * RTT`. A party reaches that bound by verifying each message as it arrives; one that waits for the whole round pays the sum instead. Broadcast is counted as point-to-point fan-out on a full-duplex link, so a party uploads once per peer.
 
+The benchmark process peaked at 1.3 GB resident while holding every party of the largest setting at once, which bounds what one party needs to keep a round in memory.
+
 The rounds include one echo round on top of the protocol, since the protocol rounds only disseminate: every party sends a digest of what it received, which catches a dealer that told two parties different things. That gives broadcast with abort, which suits a protocol that already identifies the party at fault. Naming the culprit needs per-dealer hashes and is counted with the abort path.
 
 ### Janus-1, Schnorr
