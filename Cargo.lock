@@ -153,6 +153,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "compact-encoding"
+version = "0.1.0"
+dependencies = [
+ "criterion",
+ "curve25519-dalek",
+ "janus",
+ "postcard",
+ "rand",
+ "serde",
+]
+
+[[package]]
 name = "const-oid"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"

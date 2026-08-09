@@ -73,7 +73,12 @@ fn statement_common_h_prefix(statement: &PolyWellFormedStatement) -> Sha512 {
 
 // Binds the statement and every round's first-round commitments. Takes them
 // already compressed, so each point is compressed once per verify.
-fn common_h(statement: &PolyWellFormedStatement, per_round: &[&[CompressedRistretto]]) -> [u8; 64] {
+/// Hash binding the statement and every round's first-round commitments.
+/// Public so an alternative encoding can reproduce the transcript exactly.
+pub fn common_h(
+    statement: &PolyWellFormedStatement,
+    per_round: &[&[CompressedRistretto]],
+) -> [u8; 64] {
     let mut h = statement_common_h_prefix(statement);
     h.update((per_round.len() as u64).to_le_bytes());
     for tc in per_round {
@@ -89,7 +94,8 @@ fn common_h(statement: &PolyWellFormedStatement, per_round: &[&[CompressedRistre
 }
 
 #[inline]
-fn score_hasher_prefix(
+/// Per-round prefix of the score hash. Public for the same reason as `common_h`.
+pub fn score_hasher_prefix(
     common_h: &[u8; 64],
     round_index: usize,
     t_commitments: &[CompressedRistretto],
@@ -118,7 +124,8 @@ pub fn fischlin_score_u32(
 }
 
 #[inline]
-fn fischlin_score_u32_from_prefix(
+/// Score of one round given its prefix. Public for the same reason as `common_h`.
+pub fn fischlin_score_u32_from_prefix(
     base: &Sha512,
     e: u16,
     z_coeffs: &[Scalar],

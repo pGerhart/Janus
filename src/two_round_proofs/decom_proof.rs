@@ -118,7 +118,7 @@ impl DecomProof {
         transcript.append_point(b"T", &t);
         let e = transcript.challenge_scalar(b"e");
 
-        // Individual responses — one per witness scalar, extraction works component-wise.
+        // One response per witness scalar, so extraction works component-wise.
         let z_a = alpha_a
             .iter()
             .zip(witness.a.iter())

@@ -59,7 +59,7 @@ cat "$OUT/machine.txt"
 
 # The whole gate battery first: numbers from a failing tree are worthless.
 echo "== verifying the tree =="
-cargo build --release --all-targets --locked
+cargo build --release --workspace --all-targets --locked
 
 # Which arithmetic backend was actually compiled, straight from the library's
 # own build script. lscpu only says what the CPU could do, this says what runs.
@@ -80,9 +80,9 @@ echo "== dalek backend: ${backend:-unknown} =="
 if [ "$backend" != "avx512" ]; then
     echo "   note: not the AVX-512 path. Expected on ARM or without the target-cpu flag."
 fi
-cargo test --release --locked
+cargo test --release --workspace --locked
 cargo fmt --all --check
-cargo clippy --all-targets --locked -- -D warnings \
+cargo clippy --workspace --all-targets --locked -- -D warnings \
     -A clippy::needless_range_loop \
     -A clippy::too_many_arguments \
     -A clippy::type_complexity
@@ -93,6 +93,12 @@ for suite in one_round_dkg_run one_round_components two_round_dkg_run \
     cargo bench --bench "$suite" --locked 2>&1 | tee "$OUT/$suite.txt"
 done
 
+# The alternative encoding lives in its own crate, so it needs its own line.
+echo "== encoding_compare =="
+cargo bench -p compact-encoding --locked 2>&1 | tee "$OUT/encoding_compare.txt"
+
+echo "== results =="
+python3 eval/scripts/build_results.py
+
 echo
-echo "done. now run:  python3 eval/scripts/build_results.py"
-echo "then bring back eval/eval_results.md"
+echo "done. the results file is eval/eval_results.md"

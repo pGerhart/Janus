@@ -219,7 +219,7 @@ pub fn prove_fischlin_with_params(
     let h_point = h();
     let m = statement.pedvss.len();
 
-    // Derive lambdas once from the statement — same across all rounds.
+    // Derive lambdas once from the statement, they are the same in every round.
     let lambdas = derive_lambdas(statement);
 
     loop {

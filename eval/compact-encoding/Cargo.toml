@@ -1,0 +1,22 @@
+[package]
+name = "compact-encoding"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89"
+license = "Apache-2.0"
+publish = false
+description = "Measured alternative encoding for the Janus well-formedness proof, kept for the evaluation"
+
+[dependencies]
+janus = { path = "../.." }
+curve25519-dalek = { version = "5", features = ["digest", "serde", "rand_core", "zeroize"] }
+serde = { version = "1", features = ["derive"] }
+
+[dev-dependencies]
+criterion = "0.5"
+postcard = { version = "1", default-features = false, features = ["use-std"] }
+rand = "0.10"
+
+[[bench]]
+name = "encoding_compare"
+harness = false

@@ -49,7 +49,20 @@ impl BaseParams {
     }
 }
 
+// JANUS_BENCH_MAX_N caps the committee size, since Criterion filters measurements
+// but not the setup that precedes them.
 fn parameter_sets() -> Vec<BaseParams> {
+    let max_n = std::env::var("JANUS_BENCH_MAX_N")
+        .ok()
+        .and_then(|v| v.parse::<usize>().ok())
+        .unwrap_or(usize::MAX);
+    all_parameter_sets()
+        .into_iter()
+        .filter(|p| p.n <= max_n)
+        .collect()
+}
+
+fn all_parameter_sets() -> Vec<BaseParams> {
     vec![
         BaseParams { t: 4, n: 16 },
         BaseParams { t: 8, n: 32 },

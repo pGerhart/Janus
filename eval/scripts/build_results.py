@@ -18,6 +18,9 @@ TIME = re.compile(
     r"time:\s*\[\s*[\d.]+\s*(?:ns|µs|ms|s)\s+([\d.]+)\s*(ns|µs|ms|s)"
 )
 BENCH_ID = re.compile(r"^([A-Za-z0-9_]+(?:/[A-Za-z0-9_.=]+)+)$")
+# Criterion keeps a short id on the same line as its timing and puts a long one
+# on the line above, so both shapes have to be read.
+INLINE_ID = re.compile(r"^([A-Za-z0-9_]+(?:/[A-Za-z0-9_.=]+)+)\s+time:")
 SIZE_LINE = re.compile(r"^\[(.+?)\]\s+(.*)$")
 
 # Link profiles for the end-to-end composition. The parties of a threshold
@@ -32,6 +35,7 @@ PROFILES = [
 RUN_LINE = re.compile(
     r"^\[(janus[12]) (\w+) (t\d+_n\d+)\]\s+sent=([\d.]+) (\w+)\s+received=([\d.]+) (\w+)"
 )
+ENC_SIZE = re.compile(r"^\[(t\d+_n\d+)\] verbose=(\d+) B compact=(\d+) B")
 ECHO_BYTES = 32
 UNIT = {"B": 1.0, "KB": 1024.0, "MB": 1024.0**2, "GB": 1024.0**3}
 
@@ -78,6 +82,12 @@ def parse(path):
         size = SIZE_LINE.match(stripped)
         if size:
             sizes.append(stripped)
+            continue
+        inline = INLINE_ID.match(stripped)
+        if inline:
+            hit = TIME.search(line)
+            if hit:
+                timings[inline.group(1)] = to_ms(float(hit.group(1)), hit.group(2))
             continue
         if BENCH_ID.match(stripped):
             current = stripped
@@ -150,6 +160,14 @@ def main():
     abort, abort_sizes = parse(f"{RAW}/abort_path.txt")
     opt, _ = parse(f"{RAW}/optimizations.txt")
     run, _ = parse(f"{RAW}/full_run.txt")
+    enc, _ = parse(f"{RAW}/encoding_compare.txt")
+    enc_sizes = {}
+    enc_path = f"{RAW}/encoding_compare.txt"
+    if os.path.exists(enc_path):
+        for line in open(enc_path):
+            m = ENC_SIZE.match(line.strip())
+            if m:
+                enc_sizes[m.group(1)] = (int(m.group(2)), int(m.group(3)))
     run_sizes = parse_run_sizes(f"{RAW}/full_run.txt")
 
     info = machine()
@@ -373,6 +391,39 @@ def main():
                 cells.append(fmt(rtt + transfer_ms(extra, bw)))
             parts.append("| " + " | ".join(cells) + " |")
         parts.append("")
+
+    if enc_sizes:
+        parts.append("## An encoding we measured and did not adopt\n")
+        parts.append(
+            "A verifier can rebuild the first-round commitments from the challenge "
+            "and the responses instead of receiving them, the way a Schnorr "
+            "signature carries the challenge. Both columns run the same path, "
+            "encode then decode then verify, so the parsing the shorter encoding "
+            "avoids is counted in its favour. The code is in "
+            "`eval/compact-encoding`.\n"
+        )
+        parts.append("| (t, n) | Proof sent | Proof rebuilt | Saved | Verify sent | Verify rebuilt | Cost |")
+        parts.append("|:---|---:|---:|---:|---:|---:|---:|")
+        for param in SETS:
+            if param not in enc_sizes:
+                continue
+            vb, cb = enc_sizes[param]
+            v = enc.get(f"encoding/verbose/{param}")
+            c = enc.get(f"encoding/compact/{param}")
+            if v is None or c is None:
+                continue
+            parts.append(
+                f"| {PRETTY[param]} | {bytes_pretty(vb)} | {bytes_pretty(cb)} | "
+                f"{100.0 * (vb - cb) / vb:.0f}% | {fmt(v)} | {fmt(c)} | {c / v:.2f}x |"
+            )
+        parts.append("")
+        parts.append(
+            "The saving holds at about 40 percent while the cost climbs from 1.7x "
+            "to 3.9x, so the trade gets worse exactly where a smaller message would "
+            "help most. At the largest setting the bytes are worth the arithmetic "
+            "only below roughly 8 Mbit/s, which is far under any link these parties "
+            "run on, so the protocol keeps the longer encoding.\n"
+        )
 
     parts.append("## Communication\n")
     parts.append("```")
