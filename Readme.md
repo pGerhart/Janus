@@ -119,7 +119,7 @@ The pinned results, together with the machine they were measured on, are in [`ev
 # Reproducing the Published Numbers
 
 The paper's numbers were measured on an AWS `c8i.4xlarge` (16 vCPU on 8 physical cores, 30 GB, x86-64, Granite Rapids). 
-The full benchmarks takes over an hour, and the largest points take several minutes each.
+The full benchmarks take roughly two and a half hours, and the largest points take several minutes each. 
 All benchmarks can be run with the script
 
 ```
