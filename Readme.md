@@ -61,7 +61,7 @@ The Fischlin transform is parameterized by the number of repetitions $\rho$, the
 | `src/error.rs` | Protocol and wire error types |
 | `src/wire.rs` | Canonical byte encodings and the signed-message envelope |
 | `src/main.rs` | Runs both protocols under both proof systems |
-| `eval/` | Benchmark sources, the runner, and the generated results file |
+| `eval/` | Benchmark sources, the runner, the generated results file, and `compact-encoding`, an alternative proof encoding kept for the measurement in that file |
 
 Tests live in `tests/`, split by purpose:
 
@@ -126,9 +126,4 @@ All benchmarks can be run with the script
 ./eval/scripts/run_bench.sh
 ```
 
-This script first records the machine, OS, toolchain, architecture, core count and date, then runs the whole gate battery (build, test, fmt, clippy) and stops on any failure. It then runs all seven suites into `eval/bench_raw/`.
-To convert these raw numbers in a useable format, call 
-```
-python3 eval/scripts/build_results.py
-```
- which writes a cleaned version to `eval/eval_results.md`.
+This script runs all benchmarks. It records the machine, OS, toolchain, architecture, core count and date, runs the gate battery (build, test, fmt, clippy) over the workspace and stops on any failure, runs every benchmark suite plus the encoding comparison into `eval/bench_raw/`, and finally combines those raw logs into `eval/eval_results.md`.
