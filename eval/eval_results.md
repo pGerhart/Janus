@@ -276,6 +276,50 @@ The tables above include it. It is the same for both protocols and both proof sy
 | 256 | 8.0 KB | 1.0 ms | 25.1 ms | 150.1 ms |
 | 512 | 16.0 KB | 1.0 ms | 25.1 ms | 150.1 ms |
 
+## Threshold sweep at a fixed committee
+
+The main sweep moves the threshold and the committee together, so it cannot separate their effects. Here the committee is fixed at 256 and only the threshold moves. Same link model as above, one echo round included.
+
+### Janus-1, Schnorr
+
+| (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
+|:---|---:|---:|---:|---:|---:|
+| (16, 256) | 1.64 s | 10.2 MB | 1.64 s | 1.69 s | 1.94 s |
+| (32, 256) | 1.75 s | 10.4 MB | 1.76 s | 1.80 s | 2.05 s |
+| (64, 256) | 1.97 s | 10.6 MB | 1.97 s | 2.02 s | 2.27 s |
+| (128, 256) | 2.42 s | 11.1 MB | 2.42 s | 2.47 s | 2.72 s |
+| (192, 256) | 2.90 s | 11.6 MB | 2.90 s | 2.95 s | 3.20 s |
+
+### Janus-1, Fischlin small
+
+| (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
+|:---|---:|---:|---:|---:|---:|
+| (16, 256) | 11.70 s | 72.1 MB | 11.70 s | 11.75 s | 12.00 s |
+| (32, 256) | 11.87 s | 74.1 MB | 11.87 s | 11.92 s | 12.17 s |
+| (64, 256) | 12.16 s | 78.1 MB | 12.16 s | 12.21 s | 12.46 s |
+| (128, 256) | 12.72 s | 86.1 MB | 12.72 s | 12.77 s | 13.02 s |
+| (192, 256) | 13.37 s | 94.0 MB | 13.38 s | 13.42 s | 13.67 s |
+
+### Janus-2, Schnorr
+
+| (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
+|:---|---:|---:|---:|---:|---:|
+| (16, 256) | 349.1 ms | 4.7 MB | 352.1 ms | 424.1 ms | 799.1 ms |
+| (32, 256) | 545.1 ms | 5.0 MB | 548.1 ms | 620.1 ms | 995.1 ms |
+| (64, 256) | 936.2 ms | 5.8 MB | 939.2 ms | 1.01 s | 1.39 s |
+| (128, 256) | 1.73 s | 7.3 MB | 1.73 s | 1.80 s | 2.18 s |
+| (192, 256) | 2.48 s | 8.8 MB | 2.49 s | 2.56 s | 2.93 s |
+
+### Janus-2, Fischlin small
+
+| (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
+|:---|---:|---:|---:|---:|---:|
+| (16, 256) | 572.2 ms | 9.0 MB | 575.2 ms | 647.2 ms | 1.02 s |
+| (32, 256) | 837.8 ms | 13.1 MB | 840.8 ms | 912.8 ms | 1.29 s |
+| (64, 256) | 1.38 s | 21.3 MB | 1.38 s | 1.45 s | 1.83 s |
+| (128, 256) | 2.44 s | 37.8 MB | 2.44 s | 2.51 s | 2.89 s |
+| (192, 256) | 3.48 s | 54.2 MB | 3.48 s | 3.55 s | 3.93 s |
+
 ## An encoding we measured and did not adopt
 
 A verifier can rebuild the first-round commitments from the challenge and the responses instead of receiving them, the way a Schnorr signature carries the challenge. Both columns run the same path, encode then decode then verify, so the parsing the shorter encoding avoids is counted in its favour. The code is in `eval/compact-encoding`.
@@ -287,7 +331,7 @@ A verifier can rebuild the first-round commitments from the challenge and the re
 | (128, 256) | 321.1 KB | 192.6 KB | 40% | 48.6 ms | 157.2 ms | 3.24x |
 | (256, 512) | 641.1 KB | 384.6 KB | 40% | 104.0 ms | 426.1 ms | 4.10x |
 
-The saving holds at about 40 percent while the cost climbs from 1.7x to 3.9x, so the trade gets worse exactly where a smaller message would help most. At the largest setting the bytes are worth the arithmetic only below roughly 8 Mbit/s, which is far under any link these parties run on, so the protocol keeps the longer encoding.
+The saving holds at about 40 percent while the cost climbs with the committee size, so the trade gets worse exactly where a smaller message would help most. At the largest setting the bytes are worth the arithmetic only below roughly 8 Mbit/s, which is far under any link these parties run on, so the protocol keeps the longer encoding.
 
 ## Communication
 

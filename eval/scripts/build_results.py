@@ -473,6 +473,37 @@ def main():
             parts.append("| " + " | ".join(cells) + " |")
         parts.append("")
 
+    if run_sizes:
+        parts.append("## Threshold sweep at a fixed committee\n")
+        parts.append(
+            "The main sweep moves the threshold and the committee together, so it "
+            "cannot separate their effects. Here the committee is fixed at 256 and "
+            "only the threshold moves. Same link model as above, one echo round "
+            "included.\n"
+        )
+        for proto, rounds, label in [("janus1", 2, "Janus-1"), ("janus2", 3, "Janus-2")]:
+            for scheme, sname in [("schnorr", "Schnorr"), ("fischlin_small", "Fischlin small")]:
+                rows = []
+                for param in TSWEEP:
+                    key = (proto, f"{scheme}_tsweep", param)
+                    compute = run.get(f"full_run_{proto}_{scheme}_tsweep/critical_path/{param}")
+                    if compute is None or key not in run_sizes:
+                        continue
+                    _sent, received = run_sizes[key]
+                    n = int(param.split("_n")[1])
+                    received += ECHO_BYTES * (n - 1)
+                    cells = [PRETTY.get(param, param), fmt(compute), bytes_pretty(received)]
+                    for _n, rtt, bw in PROFILES:
+                        t = transfer_ms(received, bw)
+                        cells.append(fmt(max(compute, t) + rounds * rtt))
+                    rows.append("| " + " | ".join(cells) + " |")
+                if rows:
+                    parts.append(f"### {label}, {sname}\n")
+                    parts.append(header)
+                    parts.append("|:---|" + "---:|" * (2 + len(PROFILES)))
+                    parts.extend(rows)
+                    parts.append("")
+
     if enc_sizes:
         parts.append("## An encoding we measured and did not adopt\n")
         parts.append(
@@ -499,8 +530,8 @@ def main():
             )
         parts.append("")
         parts.append(
-            "The saving holds at about 40 percent while the cost climbs from 1.7x "
-            "to 3.9x, so the trade gets worse exactly where a smaller message would "
+            "The saving holds at about 40 percent while the cost climbs with the "
+            "committee size, so the trade gets worse exactly where a smaller message would "
             "help most. At the largest setting the bytes are worth the arithmetic "
             "only below roughly 8 Mbit/s, which is far under any link these parties "
             "run on, so the protocol keeps the longer encoding.\n"
