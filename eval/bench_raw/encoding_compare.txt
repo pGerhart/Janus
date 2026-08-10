@@ -7,126 +7,107 @@ test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
 
      Running benches/encoding_compare.rs (target/release/deps/encoding_compare-f06be170a0385293)
 Gnuplot not found, using plotters backend
-[t4_n16] verbose=19531 B compact=10808 B saved=44.7%
+[t4_n16] verbose=19532 B compact=10813 B saved=44.6%
 Benchmarking encoding/verbose/t4_n16
 Benchmarking encoding/verbose/t4_n16: Warming up for 3.0000 s
-Benchmarking encoding/verbose/t4_n16: Collecting 10 samples in estimated 5.0123 s (1595 iterations)
+Benchmarking encoding/verbose/t4_n16: Collecting 10 samples in estimated 5.0158 s (1595 iterations)
 Benchmarking encoding/verbose/t4_n16: Analyzing
-encoding/verbose/t4_n16 time:   [3.1424 ms 3.1436 ms 3.1447 ms]
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) low severe
+encoding/verbose/t4_n16 time:   [3.1383 ms 3.1393 ms 3.1403 ms]
 Benchmarking encoding/compact/t4_n16
 Benchmarking encoding/compact/t4_n16: Warming up for 3.0000 s
-Benchmarking encoding/compact/t4_n16: Collecting 10 samples in estimated 5.0288 s (770 iterations)
+Benchmarking encoding/compact/t4_n16: Collecting 10 samples in estimated 5.1680 s (770 iterations)
 Benchmarking encoding/compact/t4_n16: Analyzing
-encoding/compact/t4_n16 time:   [6.6385 ms 6.6408 ms 6.6441 ms]
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) high mild
-[t8_n32] verbose=37964 B compact=21052 B saved=44.5%
+encoding/compact/t4_n16 time:   [6.6368 ms 6.6582 ms 6.6681 ms]
+[t8_n32] verbose=37964 B compact=21050 B saved=44.6%
 Benchmarking encoding/verbose/t8_n32
 Benchmarking encoding/verbose/t8_n32: Warming up for 3.0000 s
-Benchmarking encoding/verbose/t8_n32: Collecting 10 samples in estimated 5.2170 s (880 iterations)
+Benchmarking encoding/verbose/t8_n32: Collecting 10 samples in estimated 5.1616 s (880 iterations)
 Benchmarking encoding/verbose/t8_n32: Analyzing
-encoding/verbose/t8_n32 time:   [5.9247 ms 5.9272 ms 5.9287 ms]
-Found 3 outliers among 10 measurements (30.00%)
-  2 (20.00%) low mild
-  1 (10.00%) high severe
+encoding/verbose/t8_n32 time:   [5.8635 ms 5.8663 ms 5.8689 ms]
 Benchmarking encoding/compact/t8_n32
 Benchmarking encoding/compact/t8_n32: Warming up for 3.0000 s
-Benchmarking encoding/compact/t8_n32: Collecting 10 samples in estimated 5.0761 s (385 iterations)
+Benchmarking encoding/compact/t8_n32: Collecting 10 samples in estimated 5.0801 s (385 iterations)
 Benchmarking encoding/compact/t8_n32: Analyzing
-encoding/compact/t8_n32 time:   [13.389 ms 13.392 ms 13.395 ms]
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) high mild
-[t16_n64] verbose=74826 B compact=41530 B saved=44.5%
+encoding/compact/t8_n32 time:   [13.039 ms 13.043 ms 13.049 ms]
+[t16_n64] verbose=74825 B compact=41533 B saved=44.5%
 Benchmarking encoding/verbose/t16_n64
 Benchmarking encoding/verbose/t16_n64: Warming up for 3.0000 s
-Benchmarking encoding/verbose/t16_n64: Collecting 10 samples in estimated 5.0504 s (440 iterations)
+Benchmarking encoding/verbose/t16_n64: Collecting 10 samples in estimated 5.6203 s (495 iterations)
 Benchmarking encoding/verbose/t16_n64: Analyzing
 encoding/verbose/t16_n64
-                        time:   [11.476 ms 11.478 ms 11.482 ms]
-Found 3 outliers among 10 measurements (30.00%)
-  1 (10.00%) low severe
-  1 (10.00%) low mild
-  1 (10.00%) high severe
+                        time:   [11.362 ms 11.366 ms 11.371 ms]
 Benchmarking encoding/compact/t16_n64
 Benchmarking encoding/compact/t16_n64: Warming up for 3.0000 s
-Benchmarking encoding/compact/t16_n64: Collecting 10 samples in estimated 5.9264 s (220 iterations)
+Benchmarking encoding/compact/t16_n64: Collecting 10 samples in estimated 6.0397 s (220 iterations)
 Benchmarking encoding/compact/t16_n64: Analyzing
 encoding/compact/t16_n64
-                        time:   [27.312 ms 27.320 ms 27.330 ms]
-Found 4 outliers among 10 measurements (40.00%)
-  2 (20.00%) low mild
-  1 (10.00%) high mild
+                        time:   [27.149 ms 27.155 ms 27.161 ms]
+Found 1 outliers among 10 measurements (10.00%)
   1 (10.00%) high severe
-[t32_n64] verbose=83019 B compact=49723 B saved=40.1%
+[t32_n64] verbose=83018 B compact=49722 B saved=40.1%
 Benchmarking encoding/verbose/t32_n64
 Benchmarking encoding/verbose/t32_n64: Warming up for 3.0000 s
-Benchmarking encoding/verbose/t32_n64: Collecting 10 samples in estimated 5.1076 s (440 iterations)
+Benchmarking encoding/verbose/t32_n64: Collecting 10 samples in estimated 5.1504 s (440 iterations)
 Benchmarking encoding/verbose/t32_n64: Analyzing
 encoding/verbose/t32_n64
-                        time:   [11.606 ms 11.614 ms 11.619 ms]
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) low mild
+                        time:   [11.701 ms 11.706 ms 11.711 ms]
 Benchmarking encoding/compact/t32_n64
 Benchmarking encoding/compact/t32_n64: Warming up for 3.0000 s
-Benchmarking encoding/compact/t32_n64: Collecting 10 samples in estimated 6.3432 s (220 iterations)
+Benchmarking encoding/compact/t32_n64: Collecting 10 samples in estimated 6.4183 s (220 iterations)
 Benchmarking encoding/compact/t32_n64: Analyzing
 encoding/compact/t32_n64
-                        time:   [29.215 ms 29.221 ms 29.225 ms]
-Found 2 outliers among 10 measurements (20.00%)
-  1 (10.00%) low severe
+                        time:   [28.921 ms 28.925 ms 28.929 ms]
+Found 1 outliers among 10 measurements (10.00%)
   1 (10.00%) low mild
-[t64_n128] verbose=164968 B compact=98891 B saved=40.1%
+[t64_n128] verbose=164972 B compact=98893 B saved=40.1%
 Benchmarking encoding/verbose/t64_n128
 Benchmarking encoding/verbose/t64_n128: Warming up for 3.0000 s
-Benchmarking encoding/verbose/t64_n128: Collecting 10 samples in estimated 5.2242 s (220 iterations)
+Benchmarking encoding/verbose/t64_n128: Collecting 10 samples in estimated 5.1706 s (220 iterations)
 Benchmarking encoding/verbose/t64_n128: Analyzing
 encoding/verbose/t64_n128
-                        time:   [23.715 ms 23.728 ms 23.740 ms]
+                        time:   [23.489 ms 23.495 ms 23.501 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) high mild
+  1 (10.00%) high severe
 Benchmarking encoding/compact/t64_n128
 Benchmarking encoding/compact/t64_n128: Warming up for 3.0000 s
-Benchmarking encoding/compact/t64_n128: Collecting 10 samples in estimated 7.0842 s (110 iterations)
+Benchmarking encoding/compact/t64_n128: Collecting 10 samples in estimated 7.1892 s (110 iterations)
 Benchmarking encoding/compact/t64_n128: Analyzing
 encoding/compact/t64_n128
-                        time:   [65.158 ms 65.170 ms 65.193 ms]
+                        time:   [64.887 ms 64.897 ms 64.906 ms]
 Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) high mild
-[t128_n256] verbose=328826 B compact=197209 B saved=40.0%
+  1 (10.00%) high severe
+[t128_n256] verbose=328831 B compact=197212 B saved=40.0%
 Benchmarking encoding/verbose/t128_n256
 Benchmarking encoding/verbose/t128_n256: Warming up for 3.0000 s
-Benchmarking encoding/verbose/t128_n256: Collecting 10 samples in estimated 5.3060 s (110 iterations)
+Benchmarking encoding/verbose/t128_n256: Collecting 10 samples in estimated 5.3462 s (110 iterations)
 Benchmarking encoding/verbose/t128_n256: Analyzing
 encoding/verbose/t128_n256
-                        time:   [48.204 ms 48.235 ms 48.269 ms]
-Found 1 outliers among 10 measurements (10.00%)
+                        time:   [48.564 ms 48.581 ms 48.602 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
   1 (10.00%) high mild
 Benchmarking encoding/compact/t128_n256
 Benchmarking encoding/compact/t128_n256: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 8.6s or enable flat sampling.
-Benchmarking encoding/compact/t128_n256: Collecting 10 samples in estimated 8.5872 s (55 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 8.7s or enable flat sampling.
+Benchmarking encoding/compact/t128_n256: Collecting 10 samples in estimated 8.6811 s (55 iterations)
 Benchmarking encoding/compact/t128_n256: Analyzing
 encoding/compact/t128_n256
-                        time:   [157.59 ms 157.61 ms 157.63 ms]
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) high severe
-[t256_n512] verbose=656505 B compact=393819 B saved=40.0%
+                        time:   [157.15 ms 157.19 ms 157.21 ms]
+[t256_n512] verbose=656506 B compact=393816 B saved=40.0%
 Benchmarking encoding/verbose/t256_n512
 Benchmarking encoding/verbose/t256_n512: Warming up for 3.0000 s
 
 Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 5.7s or enable flat sampling.
-Benchmarking encoding/verbose/t256_n512: Collecting 10 samples in estimated 5.6775 s (55 iterations)
+Benchmarking encoding/verbose/t256_n512: Collecting 10 samples in estimated 5.7151 s (55 iterations)
 Benchmarking encoding/verbose/t256_n512: Analyzing
 encoding/verbose/t256_n512
-                        time:   [103.15 ms 103.23 ms 103.30 ms]
-Found 2 outliers among 10 measurements (20.00%)
-  1 (10.00%) low mild
-  1 (10.00%) high mild
+                        time:   [103.93 ms 104.02 ms 104.14 ms]
 Benchmarking encoding/compact/t256_n512
 Benchmarking encoding/compact/t256_n512: Warming up for 3.0000 s
-Benchmarking encoding/compact/t256_n512: Collecting 10 samples in estimated 8.4587 s (20 iterations)
+Benchmarking encoding/compact/t256_n512: Collecting 10 samples in estimated 8.5161 s (20 iterations)
 Benchmarking encoding/compact/t256_n512: Analyzing
 encoding/compact/t256_n512
-                        time:   [425.83 ms 425.89 ms 425.95 ms]
+                        time:   [425.96 ms 426.08 ms 426.20 ms]
 

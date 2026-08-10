@@ -1,431 +1,294 @@
-    Finished `bench` profile [optimized] target(s) in 0.06s
+    Finished `bench` profile [optimized] target(s) in 0.05s
      Running eval/benches/one_round_dkg_run.rs (target/release/deps/one_round_dkg_run-f0e1d458da8dc89c)
 Gnuplot not found, using plotters backend
-[schnorr initiate t4_n16] proof=1219 (1.19 KB), broadcast=2902 (2.83 KB)
-Benchmarking one_round_initiate_schnorr/initiate/t4_n16
-Benchmarking one_round_initiate_schnorr/initiate/t4_n16: Warming up for 3.0000 s
-Benchmarking one_round_initiate_schnorr/initiate/t4_n16: Collecting 10 samples in estimated 5.0518 s (4015 iterations)
-Benchmarking one_round_initiate_schnorr/initiate/t4_n16: Analyzing
-one_round_initiate_schnorr/initiate/t4_n16
-                        time:   [1.2690 ms 1.2696 ms 1.2701 ms]
-                        change: [+0.7290% +0.7723% +0.8144%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 3 outliers among 10 measurements (30.00%)
+[schnorr initiate t8_n16] proof=1347 (1.32 KB), broadcast=3030 (2.96 KB)
+Benchmarking one_round_initiate_schnorr/initiate/t8_n16
+Benchmarking one_round_initiate_schnorr/initiate/t8_n16: Warming up for 3.0000 s
+Benchmarking one_round_initiate_schnorr/initiate/t8_n16: Collecting 10 samples in estimated 5.0742 s (3740 iterations)
+Benchmarking one_round_initiate_schnorr/initiate/t8_n16: Analyzing
+one_round_initiate_schnorr/initiate/t8_n16
+                        time:   [1.3666 ms 1.3670 ms 1.3673 ms]
+Found 2 outliers among 10 measurements (20.00%)
   1 (10.00%) low mild
   1 (10.00%) high mild
-  1 (10.00%) high severe
-[schnorr initiate t8_n32] proof=2371 (2.32 KB), broadcast=5606 (5.47 KB)
-Benchmarking one_round_initiate_schnorr/initiate/t8_n32
-Benchmarking one_round_initiate_schnorr/initiate/t8_n32: Warming up for 3.0000 s
-Benchmarking one_round_initiate_schnorr/initiate/t8_n32: Collecting 10 samples in estimated 5.0294 s (2035 iterations)
-Benchmarking one_round_initiate_schnorr/initiate/t8_n32: Analyzing
-one_round_initiate_schnorr/initiate/t8_n32
-                        time:   [2.4917 ms 2.4931 ms 2.4940 ms]
-                        change: [+0.4892% +0.5664% +0.6406%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-[schnorr initiate t16_n64] proof=4675 (4.57 KB), broadcast=11014 (10.76 KB)
-Benchmarking one_round_initiate_schnorr/initiate/t16_n64
-Benchmarking one_round_initiate_schnorr/initiate/t16_n64: Warming up for 3.0000 s
-Benchmarking one_round_initiate_schnorr/initiate/t16_n64: Collecting 10 samples in estimated 5.2217 s (1045 iterations)
-Benchmarking one_round_initiate_schnorr/initiate/t16_n64: Analyzing
-one_round_initiate_schnorr/initiate/t16_n64
-                        time:   [5.0358 ms 5.0368 ms 5.0381 ms]
-                        change: [+0.4859% +0.5336% +0.5833%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+[schnorr initiate t16_n32] proof=2627 (2.57 KB), broadcast=5862 (5.72 KB)
+Benchmarking one_round_initiate_schnorr/initiate/t16_n32
+Benchmarking one_round_initiate_schnorr/initiate/t16_n32: Warming up for 3.0000 s
+Benchmarking one_round_initiate_schnorr/initiate/t16_n32: Collecting 10 samples in estimated 5.0566 s (1870 iterations)
+Benchmarking one_round_initiate_schnorr/initiate/t16_n32: Analyzing
+one_round_initiate_schnorr/initiate/t16_n32
+                        time:   [2.7227 ms 2.7234 ms 2.7243 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
 [schnorr initiate t32_n64] proof=5187 (5.07 KB), broadcast=11526 (11.26 KB)
 Benchmarking one_round_initiate_schnorr/initiate/t32_n64
 Benchmarking one_round_initiate_schnorr/initiate/t32_n64: Warming up for 3.0000 s
-Benchmarking one_round_initiate_schnorr/initiate/t32_n64: Collecting 10 samples in estimated 5.1574 s (990 iterations)
+Benchmarking one_round_initiate_schnorr/initiate/t32_n64: Collecting 10 samples in estimated 5.1922 s (935 iterations)
 Benchmarking one_round_initiate_schnorr/initiate/t32_n64: Analyzing
 one_round_initiate_schnorr/initiate/t32_n64
-                        time:   [5.2489 ms 5.2512 ms 5.2536 ms]
-                        change: [+0.3365% +0.3995% +0.4591%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 1 outliers among 10 measurements (10.00%)
+                        time:   [5.5928 ms 5.5939 ms 5.5958 ms]
+Found 2 outliers among 10 measurements (20.00%)
   1 (10.00%) low mild
+  1 (10.00%) high mild
 [schnorr initiate t64_n128] proof=10309 (10.07 KB), broadcast=22858 (22.32 KB)
 Benchmarking one_round_initiate_schnorr/initiate/t64_n128
 Benchmarking one_round_initiate_schnorr/initiate/t64_n128: Warming up for 3.0000 s
-Benchmarking one_round_initiate_schnorr/initiate/t64_n128: Collecting 10 samples in estimated 5.5843 s (495 iterations)
+Benchmarking one_round_initiate_schnorr/initiate/t64_n128: Collecting 10 samples in estimated 5.2756 s (440 iterations)
 Benchmarking one_round_initiate_schnorr/initiate/t64_n128: Analyzing
 one_round_initiate_schnorr/initiate/t64_n128
-                        time:   [11.354 ms 11.355 ms 11.358 ms]
-                        change: [+0.7258% +0.7854% +0.8431%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 3 outliers among 10 measurements (30.00%)
-  1 (10.00%) low mild
-  2 (20.00%) high severe
+                        time:   [12.078 ms 12.081 ms 12.084 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
 [schnorr initiate t128_n256] proof=20550 (20.07 KB), broadcast=45644 (44.57 KB)
 Benchmarking one_round_initiate_schnorr/initiate/t128_n256
 Benchmarking one_round_initiate_schnorr/initiate/t128_n256: Warming up for 3.0000 s
-Benchmarking one_round_initiate_schnorr/initiate/t128_n256: Collecting 10 samples in estimated 5.6940 s (220 iterations)
+Benchmarking one_round_initiate_schnorr/initiate/t128_n256: Collecting 10 samples in estimated 6.0112 s (220 iterations)
 Benchmarking one_round_initiate_schnorr/initiate/t128_n256: Analyzing
 one_round_initiate_schnorr/initiate/t128_n256
-                        time:   [25.989 ms 25.997 ms 26.002 ms]
-                        change: [+0.1526% +0.2004% +0.2494%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+                        time:   [27.518 ms 27.524 ms 27.529 ms]
 [schnorr initiate t256_n512] proof=41030 (40.07 KB), broadcast=91212 (89.07 KB)
 Benchmarking one_round_initiate_schnorr/initiate/t256_n512
 Benchmarking one_round_initiate_schnorr/initiate/t256_n512: Warming up for 3.0000 s
-Benchmarking one_round_initiate_schnorr/initiate/t256_n512: Collecting 10 samples in estimated 7.2464 s (110 iterations)
+Benchmarking one_round_initiate_schnorr/initiate/t256_n512: Collecting 10 samples in estimated 7.5354 s (110 iterations)
 Benchmarking one_round_initiate_schnorr/initiate/t256_n512: Analyzing
 one_round_initiate_schnorr/initiate/t256_n512
-                        time:   [66.051 ms 66.058 ms 66.066 ms]
-                        change: [+0.6313% +0.6642% +0.6946%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-
-[schnorr output t4_n16] received=43530 (42.51 KB)
-Benchmarking one_round_output_schnorr/output/t4_n16
-Benchmarking one_round_output_schnorr/output/t4_n16: Warming up for 3.0000 s
-Benchmarking one_round_output_schnorr/output/t4_n16: Collecting 10 samples in estimated 5.0578 s (605 iterations)
-Benchmarking one_round_output_schnorr/output/t4_n16: Analyzing
-one_round_output_schnorr/output/t4_n16
-                        time:   [8.3544 ms 8.3560 ms 8.3574 ms]
-                        change: [+0.7726% +0.8063% +0.8381%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 3 outliers among 10 measurements (30.00%)
-  2 (20.00%) low severe
-  1 (10.00%) high mild
-[schnorr output t8_n32] received=173786 (169.71 KB)
-Benchmarking one_round_output_schnorr/output/t8_n32
-Benchmarking one_round_output_schnorr/output/t8_n32: Warming up for 3.0000 s
-Benchmarking one_round_output_schnorr/output/t8_n32: Collecting 10 samples in estimated 6.5620 s (220 iterations)
-Benchmarking one_round_output_schnorr/output/t8_n32: Analyzing
-one_round_output_schnorr/output/t8_n32
-                        time:   [29.825 ms 29.829 ms 29.833 ms]
-                        change: [+1.0578% +1.0869% +1.1231%] (p = 0.00 < 0.05)
-                        Performance has regressed.
+                        time:   [69.009 ms 69.037 ms 69.053 ms]
 Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) high severe
-[schnorr output t16_n64] received=693882 (677.62 KB)
-Benchmarking one_round_output_schnorr/output/t16_n64
-Benchmarking one_round_output_schnorr/output/t16_n64: Warming up for 3.0000 s
+  1 (10.00%) low mild
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 6.2s or enable flat sampling.
-Benchmarking one_round_output_schnorr/output/t16_n64: Collecting 10 samples in estimated 6.2366 s (55 iterations)
-Benchmarking one_round_output_schnorr/output/t16_n64: Analyzing
-one_round_output_schnorr/output/t16_n64
-                        time:   [113.47 ms 113.49 ms 113.50 ms]
-                        change: [+0.1813% +0.2236% +0.2692%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 3 outliers among 10 measurements (30.00%)
-  2 (20.00%) low mild
-  1 (10.00%) high mild
+[schnorr output t8_n16] received=45450 (44.38 KB)
+Benchmarking one_round_output_schnorr/output/t8_n16
+Benchmarking one_round_output_schnorr/output/t8_n16: Warming up for 3.0000 s
+Benchmarking one_round_output_schnorr/output/t8_n16: Collecting 10 samples in estimated 5.1196 s (605 iterations)
+Benchmarking one_round_output_schnorr/output/t8_n16: Analyzing
+one_round_output_schnorr/output/t8_n16
+                        time:   [8.5385 ms 8.5404 ms 8.5423 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low severe
+[schnorr output t16_n32] received=181722 (177.46 KB)
+Benchmarking one_round_output_schnorr/output/t16_n32
+Benchmarking one_round_output_schnorr/output/t16_n32: Warming up for 3.0000 s
+Benchmarking one_round_output_schnorr/output/t16_n32: Collecting 10 samples in estimated 5.0261 s (165 iterations)
+Benchmarking one_round_output_schnorr/output/t16_n32: Analyzing
+one_round_output_schnorr/output/t16_n32
+                        time:   [30.632 ms 30.636 ms 30.644 ms]
 [schnorr output t32_n64] received=726138 (709.12 KB)
 Benchmarking one_round_output_schnorr/output/t32_n64
 Benchmarking one_round_output_schnorr/output/t32_n64: Warming up for 3.0000 s
 
 Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 6.6s or enable flat sampling.
-Benchmarking one_round_output_schnorr/output/t32_n64: Collecting 10 samples in estimated 6.6467 s (55 iterations)
+Benchmarking one_round_output_schnorr/output/t32_n64: Collecting 10 samples in estimated 6.6309 s (55 iterations)
 Benchmarking one_round_output_schnorr/output/t32_n64: Analyzing
 one_round_output_schnorr/output/t32_n64
-                        time:   [120.97 ms 120.97 ms 120.98 ms]
-                        change: [+0.0600% +0.1134% +0.1566%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) low mild
+                        time:   [121.01 ms 121.04 ms 121.07 ms]
 [schnorr output t64_n128] received=2902966 (2.77 MB)
 Benchmarking one_round_output_schnorr/output/t64_n128
 Benchmarking one_round_output_schnorr/output/t64_n128: Warming up for 3.0000 s
-Benchmarking one_round_output_schnorr/output/t64_n128: Collecting 10 samples in estimated 9.9829 s (20 iterations)
+Benchmarking one_round_output_schnorr/output/t64_n128: Collecting 10 samples in estimated 9.9972 s (20 iterations)
 Benchmarking one_round_output_schnorr/output/t64_n128: Analyzing
 one_round_output_schnorr/output/t64_n128
-                        time:   [500.39 ms 500.44 ms 500.49 ms]
-                        change: [+0.3686% +0.3882% +0.4076%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+                        time:   [502.18 ms 502.24 ms 502.31 ms]
 [schnorr output t128_n256] received=11639220 (11.10 MB)
 Benchmarking one_round_output_schnorr/output/t128_n256
 Benchmarking one_round_output_schnorr/output/t128_n256: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 23.7s.
-Benchmarking one_round_output_schnorr/output/t128_n256: Collecting 10 samples in estimated 23.727 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 23.8s.
+Benchmarking one_round_output_schnorr/output/t128_n256: Collecting 10 samples in estimated 23.833 s (10 iterations)
 Benchmarking one_round_output_schnorr/output/t128_n256: Analyzing
 one_round_output_schnorr/output/t128_n256
-                        time:   [2.3819 s 2.3823 s 2.3828 s]
-                        change: [+0.4755% +0.5032% +0.5305%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+                        time:   [2.3967 s 2.3978 s 2.3991 s]
 [schnorr output t256_n512] received=46609332 (44.45 MB)
 Benchmarking one_round_output_schnorr/output/t256_n512
 Benchmarking one_round_output_schnorr/output/t256_n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 127.8s.
-Benchmarking one_round_output_schnorr/output/t256_n512: Collecting 10 samples in estimated 127.79 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 128.5s.
+Benchmarking one_round_output_schnorr/output/t256_n512: Collecting 10 samples in estimated 128.45 s (10 iterations)
 Benchmarking one_round_output_schnorr/output/t256_n512: Analyzing
 one_round_output_schnorr/output/t256_n512
-                        time:   [12.860 s 12.861 s 12.863 s]
-                        change: [+0.0683% +0.0846% +0.1032%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+                        time:   [12.966 s 12.968 s 12.969 s]
 Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) high severe
-
-[fischlin-small initiate t4_n16] proof=19534 (19.08 KB), broadcast=21217 (20.72 KB)
-Benchmarking one_round_initiate_fischlin_small/initiate/t4_n16
-Benchmarking one_round_initiate_fischlin_small/initiate/t4_n16: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_small/initiate/t4_n16: Collecting 10 samples in estimated 5.2394 s (1100 iterations)
-Benchmarking one_round_initiate_fischlin_small/initiate/t4_n16: Analyzing
-one_round_initiate_fischlin_small/initiate/t4_n16
-                        time:   [4.7305 ms 4.7700 ms 4.8096 ms]
-                        change: [-2.6039% -1.2751% +0.0007%] (p = 0.09 > 0.05)
-                        No change in performance detected.
-[fischlin-small initiate t8_n32] proof=37965 (37.08 KB), broadcast=41200 (40.23 KB)
-Benchmarking one_round_initiate_fischlin_small/initiate/t8_n32
-Benchmarking one_round_initiate_fischlin_small/initiate/t8_n32: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_small/initiate/t8_n32: Collecting 10 samples in estimated 5.1522 s (605 iterations)
-Benchmarking one_round_initiate_fischlin_small/initiate/t8_n32: Analyzing
-one_round_initiate_fischlin_small/initiate/t8_n32
-                        time:   [8.4386 ms 8.4603 ms 8.4969 ms]
-                        change: [-3.5027% -1.5319% +0.2755%] (p = 0.14 > 0.05)
-                        No change in performance detected.
-Found 3 outliers among 10 measurements (30.00%)
   1 (10.00%) low severe
-  2 (20.00%) high mild
-[fischlin-small initiate t16_n64] proof=74826 (73.07 KB), broadcast=81165 (79.26 KB)
-Benchmarking one_round_initiate_fischlin_small/initiate/t16_n64
-Benchmarking one_round_initiate_fischlin_small/initiate/t16_n64: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_small/initiate/t16_n64: Collecting 10 samples in estimated 5.3144 s (330 iterations)
-Benchmarking one_round_initiate_fischlin_small/initiate/t16_n64: Analyzing
-one_round_initiate_fischlin_small/initiate/t16_n64
-                        time:   [15.902 ms 16.178 ms 16.475 ms]
-                        change: [-3.1640% -0.9030% +1.7336%] (p = 0.50 > 0.05)
-                        No change in performance detected.
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) high mild
+
+[fischlin-small initiate t8_n16] proof=21578 (21.07 KB), broadcast=23261 (22.72 KB)
+Benchmarking one_round_initiate_fischlin_small/initiate/t8_n16
+Benchmarking one_round_initiate_fischlin_small/initiate/t8_n16: Warming up for 3.0000 s
+Benchmarking one_round_initiate_fischlin_small/initiate/t8_n16: Collecting 10 samples in estimated 5.0993 s (990 iterations)
+Benchmarking one_round_initiate_fischlin_small/initiate/t8_n16: Analyzing
+one_round_initiate_fischlin_small/initiate/t8_n16
+                        time:   [5.0341 ms 5.1189 ms 5.2027 ms]
+[fischlin-small initiate t16_n32] proof=42061 (41.08 KB), broadcast=45296 (44.23 KB)
+Benchmarking one_round_initiate_fischlin_small/initiate/t16_n32
+Benchmarking one_round_initiate_fischlin_small/initiate/t16_n32: Warming up for 3.0000 s
+Benchmarking one_round_initiate_fischlin_small/initiate/t16_n32: Collecting 10 samples in estimated 5.1216 s (550 iterations)
+Benchmarking one_round_initiate_fischlin_small/initiate/t16_n32: Analyzing
+one_round_initiate_fischlin_small/initiate/t16_n32
+                        time:   [9.2267 ms 9.2859 ms 9.3860 ms]
 [fischlin-small initiate t32_n64] proof=83019 (81.07 KB), broadcast=89358 (87.26 KB)
 Benchmarking one_round_initiate_fischlin_small/initiate/t32_n64
 Benchmarking one_round_initiate_fischlin_small/initiate/t32_n64: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_small/initiate/t32_n64: Collecting 10 samples in estimated 5.7861 s (330 iterations)
+Benchmarking one_round_initiate_fischlin_small/initiate/t32_n64: Collecting 10 samples in estimated 5.8166 s (330 iterations)
 Benchmarking one_round_initiate_fischlin_small/initiate/t32_n64: Analyzing
 one_round_initiate_fischlin_small/initiate/t32_n64
-                        time:   [17.391 ms 17.703 ms 17.953 ms]
-                        change: [-5.2476% -1.8798% +1.2245%] (p = 0.32 > 0.05)
-                        No change in performance detected.
+                        time:   [17.474 ms 17.797 ms 18.170 ms]
 [fischlin-small initiate t64_n128] proof=164970 (161.10 KB), broadcast=177519 (173.36 KB)
 Benchmarking one_round_initiate_fischlin_small/initiate/t64_n128
 Benchmarking one_round_initiate_fischlin_small/initiate/t64_n128: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_small/initiate/t64_n128: Collecting 10 samples in estimated 5.8513 s (165 iterations)
+Benchmarking one_round_initiate_fischlin_small/initiate/t64_n128: Collecting 10 samples in estimated 5.6626 s (165 iterations)
 Benchmarking one_round_initiate_fischlin_small/initiate/t64_n128: Analyzing
 one_round_initiate_fischlin_small/initiate/t64_n128
-                        time:   [34.709 ms 35.199 ms 35.990 ms]
-                        change: [-1.9497% +0.7861% +3.5691%] (p = 0.60 > 0.05)
-                        No change in performance detected.
-[fischlin-small initiate t128_n256] proof=328829 (321.12 KB), broadcast=353923 (345.63 KB)
+                        time:   [34.559 ms 35.087 ms 35.659 ms]
+[fischlin-small initiate t128_n256] proof=328826 (321.12 KB), broadcast=353920 (345.62 KB)
 Benchmarking one_round_initiate_fischlin_small/initiate/t128_n256
 Benchmarking one_round_initiate_fischlin_small/initiate/t128_n256: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_small/initiate/t128_n256: Collecting 10 samples in estimated 7.9863 s (110 iterations)
+Benchmarking one_round_initiate_fischlin_small/initiate/t128_n256: Collecting 10 samples in estimated 7.8450 s (110 iterations)
 Benchmarking one_round_initiate_fischlin_small/initiate/t128_n256: Analyzing
 one_round_initiate_fischlin_small/initiate/t128_n256
-                        time:   [70.944 ms 72.013 ms 73.029 ms]
-                        change: [-6.0769% -3.2196% +0.1485%] (p = 0.08 > 0.05)
-                        No change in performance detected.
+                        time:   [71.284 ms 72.280 ms 73.514 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high mild
 [fischlin-small initiate t256_n512] proof=656508 (641.12 KB), broadcast=706690 (690.13 KB)
 Benchmarking one_round_initiate_fischlin_small/initiate/t256_n512
 Benchmarking one_round_initiate_fischlin_small/initiate/t256_n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 8.7s or enable flat sampling.
-Benchmarking one_round_initiate_fischlin_small/initiate/t256_n512: Collecting 10 samples in estimated 8.7375 s (55 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 8.4s or enable flat sampling.
+Benchmarking one_round_initiate_fischlin_small/initiate/t256_n512: Collecting 10 samples in estimated 8.4459 s (55 iterations)
 Benchmarking one_round_initiate_fischlin_small/initiate/t256_n512: Analyzing
 one_round_initiate_fischlin_small/initiate/t256_n512
-                        time:   [159.59 ms 162.63 ms 164.48 ms]
-                        change: [-5.2790% -0.5971% +3.8990%] (p = 0.81 > 0.05)
-                        No change in performance detected.
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) low mild
+                        time:   [153.38 ms 158.67 ms 161.71 ms]
 
-[fischlin-small output t4_n16] received=318210 (310.75 KB)
-Benchmarking one_round_output_fischlin_small/output/t4_n16
-Benchmarking one_round_output_fischlin_small/output/t4_n16: Warming up for 3.0000 s
-Benchmarking one_round_output_fischlin_small/output/t4_n16: Collecting 10 samples in estimated 5.7859 s (110 iterations)
-Benchmarking one_round_output_fischlin_small/output/t4_n16: Analyzing
-one_round_output_fischlin_small/output/t4_n16
-                        time:   [52.438 ms 52.456 ms 52.475 ms]
-                        change: [-0.0557% -0.0112% +0.0438%] (p = 0.68 > 0.05)
-                        No change in performance detected.
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) high severe
-[fischlin-small output t8_n32] received=1277123 (1.22 MB)
-Benchmarking one_round_output_fischlin_small/output/t8_n32
-Benchmarking one_round_output_fischlin_small/output/t8_n32: Warming up for 3.0000 s
-Benchmarking one_round_output_fischlin_small/output/t8_n32: Collecting 10 samples in estimated 5.8716 s (30 iterations)
-Benchmarking one_round_output_fischlin_small/output/t8_n32: Analyzing
-one_round_output_fischlin_small/output/t8_n32
-                        time:   [195.49 ms 195.54 ms 195.59 ms]
-                        change: [-0.0389% -0.0068% +0.0249%] (p = 0.70 > 0.05)
-                        No change in performance detected.
-[fischlin-small output t16_n64] received=5113405 (4.88 MB)
-Benchmarking one_round_output_fischlin_small/output/t16_n64
-Benchmarking one_round_output_fischlin_small/output/t16_n64: Warming up for 3.0000 s
-
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 7.6s.
-Benchmarking one_round_output_fischlin_small/output/t16_n64: Collecting 10 samples in estimated 7.5811 s (10 iterations)
-Benchmarking one_round_output_fischlin_small/output/t16_n64: Analyzing
-one_round_output_fischlin_small/output/t16_n64
-                        time:   [758.19 ms 758.59 ms 758.99 ms]
-                        change: [+0.7505% +0.8093% +0.8672%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+[fischlin-small output t8_n16] received=348928 (340.75 KB)
+Benchmarking one_round_output_fischlin_small/output/t8_n16
+Benchmarking one_round_output_fischlin_small/output/t8_n16: Warming up for 3.0000 s
+Benchmarking one_round_output_fischlin_small/output/t8_n16: Collecting 10 samples in estimated 5.8705 s (110 iterations)
+Benchmarking one_round_output_fischlin_small/output/t8_n16: Analyzing
+one_round_output_fischlin_small/output/t8_n16
+                        time:   [53.443 ms 53.464 ms 53.483 ms]
 Found 1 outliers among 10 measurements (10.00%)
   1 (10.00%) high mild
-[fischlin-small output t32_n64] received=5629551 (5.37 MB)
+[fischlin-small output t16_n32] received=1404103 (1.34 MB)
+Benchmarking one_round_output_fischlin_small/output/t16_n32
+Benchmarking one_round_output_fischlin_small/output/t16_n32: Warming up for 3.0000 s
+Benchmarking one_round_output_fischlin_small/output/t16_n32: Collecting 10 samples in estimated 5.9422 s (30 iterations)
+Benchmarking one_round_output_fischlin_small/output/t16_n32: Analyzing
+one_round_output_fischlin_small/output/t16_n32
+                        time:   [198.16 ms 198.23 ms 198.30 ms]
+[fischlin-small output t32_n64] received=5629556 (5.37 MB)
 Benchmarking one_round_output_fischlin_small/output/t32_n64
 Benchmarking one_round_output_fischlin_small/output/t32_n64: Warming up for 3.0000 s
 
 Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 7.7s.
-Benchmarking one_round_output_fischlin_small/output/t32_n64: Collecting 10 samples in estimated 7.7261 s (10 iterations)
+Benchmarking one_round_output_fischlin_small/output/t32_n64: Collecting 10 samples in estimated 7.6518 s (10 iterations)
 Benchmarking one_round_output_fischlin_small/output/t32_n64: Analyzing
 one_round_output_fischlin_small/output/t32_n64
-                        time:   [772.12 ms 772.40 ms 772.63 ms]
-                        change: [+0.5138% +0.5597% +0.5952%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 2 outliers among 10 measurements (20.00%)
-  1 (10.00%) low severe
-  1 (10.00%) low mild
-[fischlin-small output t64_n128] received=22545024 (21.50 MB)
+                        time:   [765.29 ms 765.53 ms 765.78 ms]
+[fischlin-small output t64_n128] received=22545010 (21.50 MB)
 Benchmarking one_round_output_fischlin_small/output/t64_n128
 Benchmarking one_round_output_fischlin_small/output/t64_n128: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 30.4s.
-Benchmarking one_round_output_fischlin_small/output/t64_n128: Collecting 10 samples in estimated 30.383 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 30.6s.
+Benchmarking one_round_output_fischlin_small/output/t64_n128: Collecting 10 samples in estimated 30.639 s (10 iterations)
 Benchmarking one_round_output_fischlin_small/output/t64_n128: Analyzing
 one_round_output_fischlin_small/output/t64_n128
-                        time:   [3.0331 s 3.0341 s 3.0354 s]
-                        change: [-0.1614% -0.1212% -0.0799%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-[fischlin-small output t128_n256] received=90249781 (86.07 MB)
+                        time:   [3.0621 s 3.0625 s 3.0629 s]
+[fischlin-small output t128_n256] received=90249768 (86.07 MB)
 Benchmarking one_round_output_fischlin_small/output/t128_n256
 Benchmarking one_round_output_fischlin_small/output/t128_n256: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 125.1s.
-Benchmarking one_round_output_fischlin_small/output/t128_n256: Collecting 10 samples in estimated 125.13 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 124.1s.
+Benchmarking one_round_output_fischlin_small/output/t128_n256: Collecting 10 samples in estimated 124.08 s (10 iterations)
 Benchmarking one_round_output_fischlin_small/output/t128_n256: Analyzing
 one_round_output_fischlin_small/output/t128_n256
-                        time:   [12.495 s 12.498 s 12.502 s]
-                        change: [+0.4368% +0.4760% +0.5169%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+                        time:   [12.411 s 12.412 s 12.413 s]
 Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
   1 (10.00%) high mild
-  1 (10.00%) high severe
-[fischlin-small output t256_n512] received=361117975 (344.39 MB)
+[fischlin-small output t256_n512] received=361117941 (344.39 MB)
 Benchmarking one_round_output_fischlin_small/output/t256_n512
 Benchmarking one_round_output_fischlin_small/output/t256_n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 539.1s.
-Benchmarking one_round_output_fischlin_small/output/t256_n512: Collecting 10 samples in estimated 539.06 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 538.3s.
+Benchmarking one_round_output_fischlin_small/output/t256_n512: Collecting 10 samples in estimated 538.34 s (10 iterations)
 Benchmarking one_round_output_fischlin_small/output/t256_n512: Analyzing
 one_round_output_fischlin_small/output/t256_n512
-                        time:   [53.683 s 53.687 s 53.691 s]
-                        change: [-0.9317% -0.8916% -0.8499%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 1 outliers among 10 measurements (10.00%)
+                        time:   [53.847 s 53.850 s 53.852 s]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
   1 (10.00%) high mild
 
-[fischlin-large initiate t4_n16] proof=52461 (51.23 KB), broadcast=54144 (52.88 KB)
-Benchmarking one_round_initiate_fischlin_large/initiate/t4_n16
-Benchmarking one_round_initiate_fischlin_large/initiate/t4_n16: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_large/initiate/t4_n16: Collecting 20 samples in estimated 5.3993 s (840 iterations)
-Benchmarking one_round_initiate_fischlin_large/initiate/t4_n16: Analyzing
-one_round_initiate_fischlin_large/initiate/t4_n16
-                        time:   [6.4042 ms 6.4472 ms 6.4996 ms]
-                        change: [+1.3812% +1.8428% +2.3537%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 2 outliers among 20 measurements (10.00%)
-  1 (5.00%) low mild
+[fischlin-large initiate t8_n16] proof=57965 (56.61 KB), broadcast=59648 (58.25 KB)
+Benchmarking one_round_initiate_fischlin_large/initiate/t8_n16
+Benchmarking one_round_initiate_fischlin_large/initiate/t8_n16: Warming up for 3.0000 s
+Benchmarking one_round_initiate_fischlin_large/initiate/t8_n16: Collecting 20 samples in estimated 5.3732 s (840 iterations)
+Benchmarking one_round_initiate_fischlin_large/initiate/t8_n16: Analyzing
+one_round_initiate_fischlin_large/initiate/t8_n16
+                        time:   [6.3717 ms 6.3821 ms 6.3921 ms]
+Found 1 outliers among 20 measurements (5.00%)
   1 (5.00%) high mild
-[fischlin-large initiate t8_n32] proof=101997 (99.61 KB), broadcast=105232 (102.77 KB)
-Benchmarking one_round_initiate_fischlin_large/initiate/t8_n32
-Benchmarking one_round_initiate_fischlin_large/initiate/t8_n32: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_large/initiate/t8_n32: Collecting 20 samples in estimated 5.1013 s (420 iterations)
-Benchmarking one_round_initiate_fischlin_large/initiate/t8_n32: Analyzing
-one_round_initiate_fischlin_large/initiate/t8_n32
-                        time:   [12.067 ms 12.114 ms 12.167 ms]
-                        change: [+1.3147% +1.7401% +2.2529%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 2 outliers among 20 measurements (10.00%)
-  2 (10.00%) high mild
-[fischlin-large initiate t16_n64] proof=201069 (196.36 KB), broadcast=207408 (202.55 KB)
-Benchmarking one_round_initiate_fischlin_large/initiate/t16_n64
-Benchmarking one_round_initiate_fischlin_large/initiate/t16_n64: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_large/initiate/t16_n64: Collecting 20 samples in estimated 9.8642 s (420 iterations)
-Benchmarking one_round_initiate_fischlin_large/initiate/t16_n64: Analyzing
-one_round_initiate_fischlin_large/initiate/t16_n64
-                        time:   [23.388 ms 23.458 ms 23.513 ms]
-                        change: [+0.2150% +0.4761% +0.7850%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+[fischlin-large initiate t16_n32] proof=113005 (110.36 KB), broadcast=116240 (113.52 KB)
+Benchmarking one_round_initiate_fischlin_large/initiate/t16_n32
+Benchmarking one_round_initiate_fischlin_large/initiate/t16_n32: Warming up for 3.0000 s
+Benchmarking one_round_initiate_fischlin_large/initiate/t16_n32: Collecting 20 samples in estimated 5.1165 s (420 iterations)
+Benchmarking one_round_initiate_fischlin_large/initiate/t16_n32: Analyzing
+one_round_initiate_fischlin_large/initiate/t16_n32
+                        time:   [12.185 ms 12.197 ms 12.210 ms]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
 [fischlin-large initiate t32_n64] proof=223085 (217.86 KB), broadcast=229424 (224.05 KB)
 Benchmarking one_round_initiate_fischlin_large/initiate/t32_n64
 Benchmarking one_round_initiate_fischlin_large/initiate/t32_n64: Warming up for 3.0000 s
 
-Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 5.1s, enable flat sampling, or reduce sample count to 10.
-Benchmarking one_round_initiate_fischlin_large/initiate/t32_n64: Collecting 20 samples in estimated 5.0697 s (210 iterations)
+Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 5.0s, enable flat sampling, or reduce sample count to 10.
+Benchmarking one_round_initiate_fischlin_large/initiate/t32_n64: Collecting 20 samples in estimated 5.0343 s (210 iterations)
 Benchmarking one_round_initiate_fischlin_large/initiate/t32_n64: Analyzing
 one_round_initiate_fischlin_large/initiate/t32_n64
-                        time:   [24.076 ms 24.124 ms 24.178 ms]
-                        change: [-0.0564% +0.3617% +0.8815%] (p = 0.12 > 0.05)
-                        No change in performance detected.
-Found 3 outliers among 20 measurements (15.00%)
-  1 (5.00%) high mild
-  2 (10.00%) high severe
+                        time:   [23.969 ms 23.997 ms 24.021 ms]
+Found 2 outliers among 20 measurements (10.00%)
+  2 (10.00%) high mild
 [fischlin-large initiate t64_n128] proof=443331 (432.94 KB), broadcast=455880 (445.20 KB)
 Benchmarking one_round_initiate_fischlin_large/initiate/t64_n128
 Benchmarking one_round_initiate_fischlin_large/initiate/t64_n128: Warming up for 3.0000 s
-Benchmarking one_round_initiate_fischlin_large/initiate/t64_n128: Collecting 20 samples in estimated 5.9491 s (120 iterations)
+Benchmarking one_round_initiate_fischlin_large/initiate/t64_n128: Collecting 20 samples in estimated 5.8901 s (120 iterations)
 Benchmarking one_round_initiate_fischlin_large/initiate/t64_n128: Analyzing
 one_round_initiate_fischlin_large/initiate/t64_n128
-                        time:   [49.246 ms 49.332 ms 49.434 ms]
-                        change: [+0.3158% +0.5065% +0.7025%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 2 outliers among 20 measurements (10.00%)
-  2 (10.00%) high mild
+                        time:   [49.144 ms 49.194 ms 49.247 ms]
 
-[fischlin-large output t4_n16] received=812160 (793.12 KB)
-Benchmarking one_round_output_fischlin_large/output/t4_n16
-Benchmarking one_round_output_fischlin_large/output/t4_n16: Warming up for 3.0000 s
-Benchmarking one_round_output_fischlin_large/output/t4_n16: Collecting 20 samples in estimated 5.1451 s (40 iterations)
-Benchmarking one_round_output_fischlin_large/output/t4_n16: Analyzing
-one_round_output_fischlin_large/output/t4_n16
-                        time:   [127.64 ms 127.70 ms 127.76 ms]
-                        change: [+0.8228% +0.8791% +0.9383%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-[fischlin-large output t8_n32] received=3262192 (3.11 MB)
-Benchmarking one_round_output_fischlin_large/output/t8_n32
-Benchmarking one_round_output_fischlin_large/output/t8_n32: Warming up for 3.0000 s
+[fischlin-large output t8_n16] received=894720 (873.75 KB)
+Benchmarking one_round_output_fischlin_large/output/t8_n16
+Benchmarking one_round_output_fischlin_large/output/t8_n16: Warming up for 3.0000 s
+Benchmarking one_round_output_fischlin_large/output/t8_n16: Collecting 20 samples in estimated 5.1524 s (40 iterations)
+Benchmarking one_round_output_fischlin_large/output/t8_n16: Analyzing
+one_round_output_fischlin_large/output/t8_n16
+                        time:   [128.69 ms 128.76 ms 128.83 ms]
+[fischlin-large output t16_n32] received=3603440 (3.44 MB)
+Benchmarking one_round_output_fischlin_large/output/t16_n32
+Benchmarking one_round_output_fischlin_large/output/t16_n32: Warming up for 3.0000 s
 
-Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 9.6s, or reduce sample count to 10.
-Benchmarking one_round_output_fischlin_large/output/t8_n32: Collecting 20 samples in estimated 9.6439 s (20 iterations)
-Benchmarking one_round_output_fischlin_large/output/t8_n32: Analyzing
-one_round_output_fischlin_large/output/t8_n32
-                        time:   [482.63 ms 482.93 ms 483.21 ms]
-                        change: [+0.8866% +0.9542% +1.0217%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-[fischlin-large output t16_n64] received=13066704 (12.46 MB)
-Benchmarking one_round_output_fischlin_large/output/t16_n64
-Benchmarking one_round_output_fischlin_large/output/t16_n64: Warming up for 3.0000 s
-
-Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 37.1s, or reduce sample count to 10.
-Benchmarking one_round_output_fischlin_large/output/t16_n64: Collecting 20 samples in estimated 37.097 s (20 iterations)
-Benchmarking one_round_output_fischlin_large/output/t16_n64: Analyzing
-one_round_output_fischlin_large/output/t16_n64
-                        time:   [1.8535 s 1.8539 s 1.8544 s]
-                        change: [-0.0324% +0.0015% +0.0338%] (p = 0.93 > 0.05)
-                        No change in performance detected.
+Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 9.8s, or reduce sample count to 10.
+Benchmarking one_round_output_fischlin_large/output/t16_n32: Collecting 20 samples in estimated 9.7592 s (20 iterations)
+Benchmarking one_round_output_fischlin_large/output/t16_n32: Analyzing
+one_round_output_fischlin_large/output/t16_n32
+                        time:   [487.89 ms 488.02 ms 488.16 ms]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
 [fischlin-large output t32_n64] received=14453712 (13.78 MB)
 Benchmarking one_round_output_fischlin_large/output/t32_n64
 Benchmarking one_round_output_fischlin_large/output/t32_n64: Warming up for 3.0000 s
 
-Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 37.9s, or reduce sample count to 10.
-Benchmarking one_round_output_fischlin_large/output/t32_n64: Collecting 20 samples in estimated 37.892 s (20 iterations)
+Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 38.0s, or reduce sample count to 10.
+Benchmarking one_round_output_fischlin_large/output/t32_n64: Collecting 20 samples in estimated 37.952 s (20 iterations)
 Benchmarking one_round_output_fischlin_large/output/t32_n64: Analyzing
 one_round_output_fischlin_large/output/t32_n64
-                        time:   [1.8941 s 1.8944 s 1.8947 s]
-                        change: [+0.6361% +0.6589% +0.6829%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+                        time:   [1.8960 s 1.8962 s 1.8963 s]
 [fischlin-large output t64_n128] received=57896760 (55.21 MB)
 Benchmarking one_round_output_fischlin_large/output/t64_n128
 Benchmarking one_round_output_fischlin_large/output/t64_n128: Warming up for 3.0000 s
 
-Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 149.1s, or reduce sample count to 10.
-Benchmarking one_round_output_fischlin_large/output/t64_n128: Collecting 20 samples in estimated 149.14 s (20 iterations)
+Warning: Unable to complete 20 samples in 5.0s. You may wish to increase target time to 150.5s, or reduce sample count to 10.
+Benchmarking one_round_output_fischlin_large/output/t64_n128: Collecting 20 samples in estimated 150.48 s (20 iterations)
 Benchmarking one_round_output_fischlin_large/output/t64_n128: Analyzing
 one_round_output_fischlin_large/output/t64_n128
-                        time:   [7.4463 s 7.4471 s 7.4479 s]
-                        change: [-0.2448% -0.2203% -0.1925%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+                        time:   [7.5183 s 7.5187 s 7.5191 s]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
 
