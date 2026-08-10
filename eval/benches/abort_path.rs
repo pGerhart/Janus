@@ -43,9 +43,8 @@ impl BaseParams {
 
 fn parameter_sets() -> Vec<BaseParams> {
     vec![
-        BaseParams { t: 4, n: 16 },
-        BaseParams { t: 8, n: 32 },
-        BaseParams { t: 16, n: 64 },
+        BaseParams { t: 8, n: 16 },
+        BaseParams { t: 16, n: 32 },
         BaseParams { t: 32, n: 64 },
         BaseParams { t: 64, n: 128 },
         BaseParams { t: 128, n: 256 },

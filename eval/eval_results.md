@@ -106,23 +106,37 @@ The parallel rows are wall-clock times of the same work spread over all cores, s
 | (128, 256) | 87 µs | 134 µs | 34.6 ms | 87 µs | 2.1 ms | 544.3 ms |
 | (256, 512) | 87 µs | 134 µs | 69.4 ms | 87 µs | 4.1 ms | 2.10 s |
 
-## Parallel output and batching
+## One core against all cores
+
+The same work, run sequentially and spread over every core. Read the speedup against the physical core count in the machine table, not the logical one. The initiate phase has no parallel counterpart: it is a party's own message, and the Fischlin prover already spreads its repetitions over the cores inside the sequential call.
+
+## Batch verification
+
+Verifying the received proofs and channel signatures one by one against verifying them in a single batched check, at the three largest settings.
 
 ### Schnorr
 
-| (t, n) | Output sequential | Output parallel |
+| (t, n) | Proofs, one by one | Proofs, batched |
 |:---|---:|---:|
-| (64, 128) | 496.2 ms | 53.6 ms |
-| (128, 256) | 2.38 s | 226.7 ms |
-| (256, 512) | 12.85 s | 1.15 s |
+| (64, 128) | 357.1 ms | 356.8 ms |
+| (128, 256) | 1.83 s | 1.82 s |
+| (256, 512) | 10.72 s | 10.71 s |
 
 ### Fischlin small
 
-| (t, n) | Output sequential | Output parallel |
+| (t, n) | Proofs, one by one | Proofs, batched |
 |:---|---:|---:|
-| (64, 128) | 3.11 s | 294.3 ms |
-| (128, 256) | 12.61 s | 1.18 s |
-| (256, 512) | 54.15 s | 4.93 s |
+| (64, 128) | 1.99 s | 2.00 s |
+| (128, 256) | 8.28 s | 8.27 s |
+| (256, 512) | 36.48 s | 36.43 s |
+
+### Channel signatures
+
+| (t, n) | Signatures, one by one | Signatures, batched |
+|:---|---:|---:|
+| (64, 128) | 131.0 ms | 129.4 ms |
+| (128, 256) | 514.6 ms | 521.2 ms |
+| (256, 512) | 2.07 s | 2.05 s |
 
 ## Component breakdown, Fischlin small, (t=32, n=64)
 

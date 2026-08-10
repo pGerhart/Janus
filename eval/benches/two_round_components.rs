@@ -329,6 +329,25 @@ fn bench_finalize_signature_verify_batch(c: &mut Criterion) {
             }
         });
     });
+
+    // The same round-1 messages as bytes off the wire. Decoding is the one-time
+    // cost of turning them back into group elements, counted separately.
+    let wire: Vec<Vec<u8>> = msgs.iter().map(|m| m.to_wire()).collect();
+
+    c.bench_function("finalize/wire_decode_batch_n64", |b| {
+        b.iter(|| {
+            let decoded: Vec<_> = black_box(&wire)
+                .iter()
+                .map(|w| {
+                    Round1Broadcast::<<FischlinDecomScheme as DecomProofScheme>::Proof>::from_wire(
+                        w, &parties,
+                    )
+                    .expect("decodes")
+                })
+                .collect();
+            black_box(decoded.len());
+        });
+    });
 }
 
 fn bench_output_pk_verify_batch(c: &mut Criterion) {

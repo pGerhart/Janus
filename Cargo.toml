@@ -73,3 +73,8 @@ harness = false
 name = "optimizations"
 path = "eval/benches/optimizations.rs"
 harness = false
+
+[[bench]]
+name = "parallel_scaling"
+path = "eval/benches/parallel_scaling.rs"
+harness = false

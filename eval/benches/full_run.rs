@@ -61,9 +61,8 @@ fn parameter_sets() -> Vec<Params> {
 
 fn all_parameter_sets() -> Vec<Params> {
     vec![
-        Params { t: 4, n: 16 },
-        Params { t: 8, n: 32 },
-        Params { t: 16, n: 64 },
+        Params { t: 8, n: 16 },
+        Params { t: 16, n: 32 },
         Params { t: 32, n: 64 },
         Params { t: 64, n: 128 },
         Params { t: 128, n: 256 },

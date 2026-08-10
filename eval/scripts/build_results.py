@@ -40,11 +40,10 @@ ENC_SIZE = re.compile(r"^\[(t\d+_n\d+)\] verbose=(\d+) B compact=(\d+) B")
 ECHO_BYTES = 32
 UNIT = {"B": 1.0, "KB": 1024.0, "MB": 1024.0**2, "GB": 1024.0**3}
 
-SETS = ["t4_n16", "t8_n32", "t16_n64", "t32_n64", "t64_n128", "t128_n256", "t256_n512"]
+SETS = ["t8_n16", "t16_n32", "t32_n64", "t64_n128", "t128_n256", "t256_n512"]
 PRETTY = {
-    "t4_n16": "(4, 16)",
-    "t8_n32": "(8, 32)",
-    "t16_n64": "(16, 64)",
+    "t8_n16": "(8, 16)",
+    "t16_n32": "(16, 32)",
     "t32_n64": "(32, 64)",
     "t64_n128": "(64, 128)",
     "t128_n256": "(128, 256)",
@@ -160,6 +159,7 @@ def main():
     two_comp, _ = parse(f"{RAW}/two_round_components.txt")
     abort, abort_sizes = parse(f"{RAW}/abort_path.txt")
     opt, _ = parse(f"{RAW}/optimizations.txt")
+    par, _ = parse(f"{RAW}/parallel_scaling.txt")
     run, _ = parse(f"{RAW}/full_run.txt")
     enc, _ = parse(f"{RAW}/encoding_compare.txt")
     enc_sizes = {}
@@ -286,19 +286,79 @@ def main():
     if body:
         parts.append(body + "\n")
 
-    parts.append("## Parallel output and batching\n")
+    parts.append("## One core against all cores\n")
+    parts.append(
+        "The same work, run sequentially and spread over every core. Read the "
+        "speedup against the physical core count in the machine table, not the "
+        "logical one. The initiate phase has no parallel counterpart: it is a "
+        "party's own message, and the Fischlin prover already spreads its "
+        "repetitions over the cores inside the sequential call.\n"
+    )
+    schemes = [
+        ("Schnorr", "schnorr"),
+        ("Fischlin small", "fischlin_small"),
+        ("Fischlin large", "fischlin_large"),
+    ]
+    for label, prefix in schemes:
+        body = table(
+            par,
+            [
+                f"par_one_round_{prefix}/output_seq",
+                f"par_one_round_{prefix}/output_par",
+            ],
+            ["Output, one core", "Output, all cores"],
+        )
+        if body:
+            parts.append(f"### Janus-1, {label}\n")
+            parts.append(body + "\n")
+    for label, prefix in schemes:
+        body = table(
+            par,
+            [
+                f"par_two_round_{prefix}/finalize_seq",
+                f"par_two_round_{prefix}/finalize_par",
+                f"par_two_round_{prefix}/output_seq",
+                f"par_two_round_{prefix}/output_par",
+            ],
+            [
+                "Finalize, one core",
+                "Finalize, all cores",
+                "Output, one core",
+                "Output, all cores",
+            ],
+        )
+        if body:
+            parts.append(f"### Janus-2, {label}\n")
+            parts.append(body + "\n")
+
+    parts.append("## Batch verification\n")
+    parts.append(
+        "Verifying the received proofs and channel signatures one by one against "
+        "verifying them in a single batched check, at the three largest settings.\n"
+    )
     for label, prefix in [("Schnorr", "schnorr"), ("Fischlin small", "fischlin_small")]:
         body = table(
             opt,
             [
-                f"opt_one_round_{prefix}/output_seq",
-                f"opt_one_round_{prefix}/output_parallel",
+                f"opt_one_round_{prefix}/proofverify_loop",
+                f"opt_one_round_{prefix}/proofverify_batch",
             ],
-            ["Output sequential", "Output parallel"],
+            ["Proofs, one by one", "Proofs, batched"],
         )
         if body:
             parts.append(f"### {label}\n")
             parts.append(body + "\n")
+    body = table(
+        opt,
+        [
+            "opt_one_round_schnorr/sigverify_loop",
+            "opt_one_round_schnorr/sigverify_batch",
+        ],
+        ["Signatures, one by one", "Signatures, batched"],
+    )
+    if body:
+        parts.append("### Channel signatures\n")
+        parts.append(body + "\n")
 
     parts.append("## Component breakdown, Fischlin small, (t=32, n=64)\n")
     parts.append("| Component | One round | Two rounds |")
@@ -312,7 +372,7 @@ def main():
         ("Opening checks", "output/pedvss_opening_check_batch_n63", "finalize/pedvss_eval_check_batch_n63"),
         ("Key aggregation", "output/vk_aggregation_n64", "finalize/cstar_aggregate_and_eval_n64"),
         ("Message authentication", "output/wire_verify_batch_n64", "finalize/signature_verify_batch_n64"),
-        ("Message decoding", "output/wire_decode_batch_n64", None),
+        ("Message decoding", "output/wire_decode_batch_n64", "finalize/wire_decode_batch_n64"),
     ]
     for label, one_key, two_key in pairs:
         left = fmt(one_comp.get(one_key)) if one_key else "--"

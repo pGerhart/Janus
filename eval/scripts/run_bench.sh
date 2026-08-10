@@ -88,7 +88,7 @@ cargo clippy --workspace --all-targets --locked -- -D warnings \
     -A clippy::type_complexity
 
 for suite in one_round_dkg_run one_round_components two_round_dkg_run \
-             two_round_components abort_path optimizations full_run; do
+             two_round_components abort_path optimizations parallel_scaling full_run; do
     echo "== $suite =="
     cargo bench --bench "$suite" --locked 2>&1 | tee "$OUT/$suite.txt"
 done
