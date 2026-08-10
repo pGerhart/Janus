@@ -59,6 +59,20 @@ fn parameter_sets() -> Vec<Params> {
         .collect()
 }
 
+// Holds the committee fixed and varies the threshold, which the main sweep
+// cannot show since it moves both at once.
+fn threshold_sweep_sets() -> Vec<Params> {
+    let max_n = std::env::var("JANUS_BENCH_MAX_N")
+        .ok()
+        .and_then(|v| v.parse::<usize>().ok())
+        .unwrap_or(usize::MAX);
+    [16, 32, 64, 128, 192]
+        .into_iter()
+        .map(|t| Params { t, n: 256 })
+        .filter(|p| p.n <= max_n)
+        .collect()
+}
+
 fn all_parameter_sets() -> Vec<Params> {
     vec![
         Params { t: 8, n: 16 },
@@ -151,7 +165,7 @@ where
     out.into_iter().unzip()
 }
 
-fn bench_janus1<S>(c: &mut Criterion, name: &str, proof_params: S::Params)
+fn bench_janus1<S>(c: &mut Criterion, name: &str, proof_params: S::Params, sets: Vec<Params>)
 where
     S: PolyProofScheme,
     S::Params: Sync + Clone,
@@ -161,7 +175,7 @@ where
     let mut group = c.benchmark_group(format!("full_run_janus1_{name}"));
     group.sample_size(10);
 
-    for p in parameter_sets() {
+    for p in sets {
         let dkg = p.dkg();
         let (states, parties) = setup_parties(p.n);
         let (wire, locals) = janus1_round::<S>(p, &proof_params, &states, &parties);
@@ -286,7 +300,7 @@ where
     (r1, r1_wire, r1_local, r2_wire, r2_local)
 }
 
-fn bench_janus2<S>(c: &mut Criterion, name: &str, decom_params: S::Params)
+fn bench_janus2<S>(c: &mut Criterion, name: &str, decom_params: S::Params, sets: Vec<Params>)
 where
     S: DecomProofScheme<Statement = DecomStatement, Witness = DecomWitness>,
     S::Params: Clone + std::fmt::Debug + Sync,
@@ -296,7 +310,7 @@ where
     let mut group = c.benchmark_group(format!("full_run_janus2_{name}"));
     group.sample_size(10);
 
-    for p in parameter_sets() {
+    for p in sets {
         let dkg = p.dkg();
         let (states, parties) = setup_parties(p.n);
         let (r1, r1_wire, _r1_local, r2_wire, r2_local) =
@@ -370,19 +384,25 @@ where
     group.finish();
 }
 
+fn fischlin_decom() -> FischlinDecomProofParams {
+    FischlinDecomProofParams {
+        rho: FISCHLIN_SMALL.rho,
+        b: FISCHLIN_SMALL.b,
+        t_bits: FISCHLIN_SMALL.t_bits,
+    }
+}
+
 fn full_run(c: &mut Criterion) {
-    bench_janus1::<SchnorrPolyProof>(c, "schnorr", ());
-    bench_janus1::<FischlinPolyProof>(c, "fischlin_small", FISCHLIN_SMALL);
-    bench_janus2::<SchnorrDecomProof>(c, "schnorr", SchnorrDecomProofParams);
-    bench_janus2::<FischlinDecomScheme>(
-        c,
-        "fischlin_small",
-        FischlinDecomProofParams {
-            rho: FISCHLIN_SMALL.rho,
-            b: FISCHLIN_SMALL.b,
-            t_bits: FISCHLIN_SMALL.t_bits,
-        },
-    );
+    bench_janus1::<SchnorrPolyProof>(c, "schnorr", (), parameter_sets());
+    bench_janus1::<FischlinPolyProof>(c, "fischlin_small", FISCHLIN_SMALL, parameter_sets());
+    bench_janus2::<SchnorrDecomProof>(c, "schnorr", SchnorrDecomProofParams, parameter_sets());
+    bench_janus2::<FischlinDecomScheme>(c, "fischlin_small", fischlin_decom(), parameter_sets());
+
+    let sweep = threshold_sweep_sets();
+    bench_janus1::<SchnorrPolyProof>(c, "schnorr_tsweep", (), sweep.clone());
+    bench_janus1::<FischlinPolyProof>(c, "fischlin_small_tsweep", FISCHLIN_SMALL, sweep.clone());
+    bench_janus2::<SchnorrDecomProof>(c, "schnorr_tsweep", SchnorrDecomProofParams, sweep.clone());
+    bench_janus2::<FischlinDecomScheme>(c, "fischlin_small_tsweep", fischlin_decom(), sweep);
 }
 
 criterion_group!(benches, full_run);
