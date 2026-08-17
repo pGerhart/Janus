@@ -109,14 +109,29 @@ cargo clippy --workspace --all-targets --locked -- -D warnings \
     -A clippy::too_many_arguments \
     -A clippy::type_complexity
 
+threads_for() {
+    case "$1" in
+        parallel_scaling | optimizations) echo "" ;;
+        *) echo 1 ;;
+    esac
+}
+
 for suite in "${SUITES[@]}"; do
-    echo "== $suite =="
+    threads=$(threads_for "$suite")
+    if [ -n "$threads" ]; then
+        echo "== $suite (RAYON_NUM_THREADS=$threads) =="
+        export RAYON_NUM_THREADS="$threads"
+    else
+        echo "== $suite (all cores) =="
+        unset RAYON_NUM_THREADS
+    fi
     if [ "$suite" = encoding_compare ]; then
         cargo bench -p compact-encoding --locked 2>&1 | tee "$OUT/$suite.txt"
     else
         cargo bench --bench "$suite" --locked 2>&1 | tee "$OUT/$suite.txt"
     fi
 done
+unset RAYON_NUM_THREADS
 
 echo "== results =="
 python3 eval/scripts/build_results.py
