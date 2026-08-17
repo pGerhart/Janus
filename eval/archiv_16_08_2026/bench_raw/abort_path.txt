@@ -1,0 +1,313 @@
+    Finished `bench` profile [optimized] target(s) in 0.04s
+     Running eval/benches/abort_path.rs (target/release/deps/abort_path-46a6e6b6d2461cfb)
+Gnuplot not found, using plotters backend
+[one-round abort t8_n16] report=259 bytes
+Benchmarking abort_one_round_report_create/report_create/t8_n16
+Benchmarking abort_one_round_report_create/report_create/t8_n16: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_create/report_create/t8_n16: Collecting 20 samples in estimated 5.0124 s (57k iterations)
+Benchmarking abort_one_round_report_create/report_create/t8_n16: Analyzing
+abort_one_round_report_create/report_create/t8_n16
+                        time:   [87.407 µs 87.419 µs 87.430 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) low severe
+  2 (10.00%) high severe
+[one-round abort t16_n32] report=259 bytes
+Benchmarking abort_one_round_report_create/report_create/t16_n32
+Benchmarking abort_one_round_report_create/report_create/t16_n32: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_create/report_create/t16_n32: Collecting 20 samples in estimated 5.0161 s (57k iterations)
+Benchmarking abort_one_round_report_create/report_create/t16_n32: Analyzing
+abort_one_round_report_create/report_create/t16_n32
+                        time:   [87.489 µs 87.498 µs 87.507 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low severe
+  1 (5.00%) low mild
+[one-round abort t32_n64] report=259 bytes
+Benchmarking abort_one_round_report_create/report_create/t32_n64
+Benchmarking abort_one_round_report_create/report_create/t32_n64: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_create/report_create/t32_n64: Collecting 20 samples in estimated 5.0047 s (57k iterations)
+Benchmarking abort_one_round_report_create/report_create/t32_n64: Analyzing
+abort_one_round_report_create/report_create/t32_n64
+                        time:   [87.157 µs 87.170 µs 87.184 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low mild
+  1 (5.00%) high severe
+[one-round abort t64_n128] report=259 bytes
+Benchmarking abort_one_round_report_create/report_create/t64_n128
+Benchmarking abort_one_round_report_create/report_create/t64_n128: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_create/report_create/t64_n128: Collecting 20 samples in estimated 5.0178 s (57k iterations)
+Benchmarking abort_one_round_report_create/report_create/t64_n128: Analyzing
+abort_one_round_report_create/report_create/t64_n128
+                        time:   [87.483 µs 87.496 µs 87.506 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high severe
+[one-round abort t128_n256] report=259 bytes
+Benchmarking abort_one_round_report_create/report_create/t128_n256
+Benchmarking abort_one_round_report_create/report_create/t128_n256: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_create/report_create/t128_n256: Collecting 20 samples in estimated 5.0168 s (57k iterations)
+Benchmarking abort_one_round_report_create/report_create/t128_n256: Analyzing
+abort_one_round_report_create/report_create/t128_n256
+                        time:   [87.495 µs 87.506 µs 87.516 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+[one-round abort t256_n512] report=259 bytes
+Benchmarking abort_one_round_report_create/report_create/t256_n512
+Benchmarking abort_one_round_report_create/report_create/t256_n512: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_create/report_create/t256_n512: Collecting 20 samples in estimated 5.0028 s (57k iterations)
+Benchmarking abort_one_round_report_create/report_create/t256_n512: Analyzing
+abort_one_round_report_create/report_create/t256_n512
+                        time:   [87.183 µs 87.193 µs 87.202 µs]
+
+Benchmarking abort_one_round_report_verify/report_verify/t8_n16
+Benchmarking abort_one_round_report_verify/report_verify/t8_n16: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_verify/report_verify/t8_n16: Collecting 20 samples in estimated 5.0201 s (33k iterations)
+Benchmarking abort_one_round_report_verify/report_verify/t8_n16: Analyzing
+abort_one_round_report_verify/report_verify/t8_n16
+                        time:   [134.50 µs 134.53 µs 134.55 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking abort_one_round_report_verify/report_verify/t16_n32
+Benchmarking abort_one_round_report_verify/report_verify/t16_n32: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_verify/report_verify/t16_n32: Collecting 20 samples in estimated 5.0169 s (33k iterations)
+Benchmarking abort_one_round_report_verify/report_verify/t16_n32: Analyzing
+abort_one_round_report_verify/report_verify/t16_n32
+                        time:   [134.39 µs 134.41 µs 134.44 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking abort_one_round_report_verify/report_verify/t32_n64
+Benchmarking abort_one_round_report_verify/report_verify/t32_n64: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_verify/report_verify/t32_n64: Collecting 20 samples in estimated 5.0057 s (33k iterations)
+Benchmarking abort_one_round_report_verify/report_verify/t32_n64: Analyzing
+abort_one_round_report_verify/report_verify/t32_n64
+                        time:   [134.12 µs 134.13 µs 134.15 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking abort_one_round_report_verify/report_verify/t64_n128
+Benchmarking abort_one_round_report_verify/report_verify/t64_n128: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_verify/report_verify/t64_n128: Collecting 20 samples in estimated 5.0311 s (33k iterations)
+Benchmarking abort_one_round_report_verify/report_verify/t64_n128: Analyzing
+abort_one_round_report_verify/report_verify/t64_n128
+                        time:   [133.95 µs 134.00 µs 134.05 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking abort_one_round_report_verify/report_verify/t128_n256
+Benchmarking abort_one_round_report_verify/report_verify/t128_n256: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_verify/report_verify/t128_n256: Collecting 20 samples in estimated 5.0236 s (33k iterations)
+Benchmarking abort_one_round_report_verify/report_verify/t128_n256: Analyzing
+abort_one_round_report_verify/report_verify/t128_n256
+                        time:   [134.56 µs 134.58 µs 134.60 µs]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) low mild
+  1 (5.00%) high severe
+Benchmarking abort_one_round_report_verify/report_verify/t256_n512
+Benchmarking abort_one_round_report_verify/report_verify/t256_n512: Warming up for 3.0000 s
+Benchmarking abort_one_round_report_verify/report_verify/t256_n512: Collecting 20 samples in estimated 5.0217 s (33k iterations)
+Benchmarking abort_one_round_report_verify/report_verify/t256_n512: Analyzing
+abort_one_round_report_verify/report_verify/t256_n512
+                        time:   [134.53 µs 134.55 µs 134.58 µs]
+
+[two-round abort t8_n16] report=259 bytes
+Benchmarking abort_two_round_report_create/report_create/t8_n16
+Benchmarking abort_two_round_report_create/report_create/t8_n16: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_create/report_create/t8_n16: Collecting 20 samples in estimated 5.0150 s (57k iterations)
+Benchmarking abort_two_round_report_create/report_create/t8_n16: Analyzing
+abort_two_round_report_create/report_create/t8_n16
+                        time:   [87.381 µs 87.391 µs 87.401 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low severe
+  1 (5.00%) high severe
+[two-round abort t16_n32] report=259 bytes
+Benchmarking abort_two_round_report_create/report_create/t16_n32
+Benchmarking abort_two_round_report_create/report_create/t16_n32: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_create/report_create/t16_n32: Collecting 20 samples in estimated 5.0148 s (57k iterations)
+Benchmarking abort_two_round_report_create/report_create/t16_n32: Analyzing
+abort_two_round_report_create/report_create/t16_n32
+                        time:   [87.457 µs 87.466 µs 87.476 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+[two-round abort t32_n64] report=259 bytes
+Benchmarking abort_two_round_report_create/report_create/t32_n64
+Benchmarking abort_two_round_report_create/report_create/t32_n64: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_create/report_create/t32_n64: Collecting 20 samples in estimated 5.0176 s (57k iterations)
+Benchmarking abort_two_round_report_create/report_create/t32_n64: Analyzing
+abort_two_round_report_create/report_create/t32_n64
+                        time:   [87.191 µs 87.198 µs 87.206 µs]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) low mild
+  1 (5.00%) high mild
+[two-round abort t64_n128] report=259 bytes
+Benchmarking abort_two_round_report_create/report_create/t64_n128
+Benchmarking abort_two_round_report_create/report_create/t64_n128: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_create/report_create/t64_n128: Collecting 20 samples in estimated 5.0182 s (57k iterations)
+Benchmarking abort_two_round_report_create/report_create/t64_n128: Analyzing
+abort_two_round_report_create/report_create/t64_n128
+                        time:   [87.134 µs 87.143 µs 87.151 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+[two-round abort t128_n256] report=259 bytes
+Benchmarking abort_two_round_report_create/report_create/t128_n256
+Benchmarking abort_two_round_report_create/report_create/t128_n256: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_create/report_create/t128_n256: Collecting 20 samples in estimated 5.0178 s (57k iterations)
+Benchmarking abort_two_round_report_create/report_create/t128_n256: Analyzing
+abort_two_round_report_create/report_create/t128_n256
+                        time:   [87.115 µs 87.127 µs 87.139 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) low mild
+[two-round abort t256_n512] report=259 bytes
+Benchmarking abort_two_round_report_create/report_create/t256_n512
+Benchmarking abort_two_round_report_create/report_create/t256_n512: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_create/report_create/t256_n512: Collecting 20 samples in estimated 5.0012 s (57k iterations)
+Benchmarking abort_two_round_report_create/report_create/t256_n512: Analyzing
+abort_two_round_report_create/report_create/t256_n512
+                        time:   [87.197 µs 87.205 µs 87.212 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+
+Benchmarking abort_two_round_report_verify/report_verify/t8_n16
+Benchmarking abort_two_round_report_verify/report_verify/t8_n16: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_verify/report_verify/t8_n16: Collecting 20 samples in estimated 5.0503 s (18k iterations)
+Benchmarking abort_two_round_report_verify/report_verify/t8_n16: Analyzing
+abort_two_round_report_verify/report_verify/t8_n16
+                        time:   [276.91 µs 276.93 µs 276.95 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high severe
+Benchmarking abort_two_round_report_verify/report_verify/t16_n32
+Benchmarking abort_two_round_report_verify/report_verify/t16_n32: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_verify/report_verify/t16_n32: Collecting 20 samples in estimated 5.0512 s (13k iterations)
+Benchmarking abort_two_round_report_verify/report_verify/t16_n32: Analyzing
+abort_two_round_report_verify/report_verify/t16_n32
+                        time:   [402.13 µs 402.16 µs 402.19 µs]
+Benchmarking abort_two_round_report_verify/report_verify/t32_n64
+Benchmarking abort_two_round_report_verify/report_verify/t32_n64: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_verify/report_verify/t32_n64: Collecting 20 samples in estimated 5.0404 s (7770 iterations)
+Benchmarking abort_two_round_report_verify/report_verify/t32_n64: Analyzing
+abort_two_round_report_verify/report_verify/t32_n64
+                        time:   [651.74 µs 651.77 µs 651.82 µs]
+Found 1 outliers among 20 measurements (5.00%)
+  1 (5.00%) high mild
+Benchmarking abort_two_round_report_verify/report_verify/t64_n128
+Benchmarking abort_two_round_report_verify/report_verify/t64_n128: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_verify/report_verify/t64_n128: Collecting 20 samples in estimated 5.0691 s (4410 iterations)
+Benchmarking abort_two_round_report_verify/report_verify/t64_n128: Analyzing
+abort_two_round_report_verify/report_verify/t64_n128
+                        time:   [1.1559 ms 1.1560 ms 1.1562 ms]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking abort_two_round_report_verify/report_verify/t128_n256
+Benchmarking abort_two_round_report_verify/report_verify/t128_n256: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_verify/report_verify/t128_n256: Collecting 20 samples in estimated 5.3886 s (2520 iterations)
+Benchmarking abort_two_round_report_verify/report_verify/t128_n256: Analyzing
+abort_two_round_report_verify/report_verify/t128_n256
+                        time:   [2.1518 ms 2.1519 ms 2.1521 ms]
+Found 2 outliers among 20 measurements (10.00%)
+  1 (5.00%) high mild
+  1 (5.00%) high severe
+Benchmarking abort_two_round_report_verify/report_verify/t256_n512
+Benchmarking abort_two_round_report_verify/report_verify/t256_n512: Warming up for 3.0000 s
+Benchmarking abort_two_round_report_verify/report_verify/t256_n512: Collecting 20 samples in estimated 5.2027 s (1260 iterations)
+Benchmarking abort_two_round_report_verify/report_verify/t256_n512: Analyzing
+abort_two_round_report_verify/report_verify/t256_n512
+                        time:   [4.1557 ms 4.1560 ms 4.1564 ms]
+Found 3 outliers among 20 measurements (15.00%)
+  2 (10.00%) high mild
+  1 (5.00%) high severe
+
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t8_n16
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t8_n16: Warming up for 3.0000 s
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t8_n16: Collecting 10 samples in estimated 5.1053 s (2255 iterations)
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t8_n16: Analyzing
+abort_one_round_verify_worstcase/verify_n_minus_1/t8_n16
+                        time:   [2.2713 ms 2.2715 ms 2.2718 ms]
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t16_n32
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t16_n32: Warming up for 3.0000 s
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t16_n32: Collecting 10 samples in estimated 5.1469 s (1100 iterations)
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t16_n32: Analyzing
+abort_one_round_verify_worstcase/verify_n_minus_1/t16_n32
+                        time:   [4.6934 ms 4.6947 ms 4.6963 ms]
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t32_n64
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t32_n64: Warming up for 3.0000 s
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t32_n64: Collecting 10 samples in estimated 5.2378 s (550 iterations)
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t32_n64: Analyzing
+abort_one_round_verify_worstcase/verify_n_minus_1/t32_n64
+                        time:   [9.5521 ms 9.5536 ms 9.5554 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low mild
+  2 (20.00%) high mild
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t64_n128
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t64_n128: Warming up for 3.0000 s
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t64_n128: Collecting 10 samples in estimated 5.2831 s (275 iterations)
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t64_n128: Analyzing
+abort_one_round_verify_worstcase/verify_n_minus_1/t64_n128
+                        time:   [19.275 ms 19.278 ms 19.280 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  2 (20.00%) high mild
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t128_n256
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t128_n256: Warming up for 3.0000 s
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t128_n256: Collecting 10 samples in estimated 6.3709 s (165 iterations)
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t128_n256: Analyzing
+abort_one_round_verify_worstcase/verify_n_minus_1/t128_n256
+                        time:   [38.732 ms 38.737 ms 38.743 ms]
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t256_n512
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t256_n512: Warming up for 3.0000 s
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t256_n512: Collecting 10 samples in estimated 8.5153 s (110 iterations)
+Benchmarking abort_one_round_verify_worstcase/verify_n_minus_1/t256_n512: Analyzing
+abort_one_round_verify_worstcase/verify_n_minus_1/t256_n512
+                        time:   [77.650 ms 77.661 ms 77.675 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t8_n16
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t8_n16: Warming up for 3.0000 s
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t8_n16: Collecting 10 samples in estimated 5.0041 s (1210 iterations)
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t8_n16: Analyzing
+abort_two_round_verify_worstcase/verify_n_minus_1/t8_n16
+                        time:   [4.1468 ms 4.1476 ms 4.1486 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t16_n32
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t16_n32: Warming up for 3.0000 s
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t16_n32: Collecting 10 samples in estimated 5.4392 s (440 iterations)
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t16_n32: Analyzing
+abort_two_round_verify_worstcase/verify_n_minus_1/t16_n32
+                        time:   [12.386 ms 12.388 ms 12.390 ms]
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t32_n64
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t32_n64: Warming up for 3.0000 s
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t32_n64: Collecting 10 samples in estimated 6.7360 s (165 iterations)
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t32_n64: Analyzing
+abort_two_round_verify_worstcase/verify_n_minus_1/t32_n64
+                        time:   [40.864 ms 40.868 ms 40.874 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t64_n128
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t64_n128: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 8.0s or enable flat sampling.
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t64_n128: Collecting 10 samples in estimated 8.0215 s (55 iterations)
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t64_n128: Analyzing
+abort_two_round_verify_worstcase/verify_n_minus_1/t64_n128
+                        time:   [145.94 ms 145.94 ms 145.95 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t128_n256
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 5.5s.
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t128_n256: Collecting 10 samples in estimated 5.4525 s (10 iterations)
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t128_n256: Analyzing
+abort_two_round_verify_worstcase/verify_n_minus_1/t128_n256
+                        time:   [545.37 ms 545.46 ms 545.56 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t256_n512
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 21.1s.
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t256_n512: Collecting 10 samples in estimated 21.096 s (10 iterations)
+Benchmarking abort_two_round_verify_worstcase/verify_n_minus_1/t256_n512: Analyzing
+abort_two_round_verify_worstcase/verify_n_minus_1/t256_n512
+                        time:   [2.1097 s 2.1098 s 2.1099 s]
+

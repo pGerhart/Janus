@@ -1,0 +1,322 @@
+    Finished `bench` profile [optimized] target(s) in 0.06s
+     Running eval/benches/optimizations.rs (target/release/deps/optimizations-945c8b81ac4d96f1)
+Gnuplot not found, using plotters backend
+Benchmarking opt_one_round_schnorr/output_seq/t64_n128
+Benchmarking opt_one_round_schnorr/output_seq/t64_n128: Warming up for 3.0000 s
+Benchmarking opt_one_round_schnorr/output_seq/t64_n128: Collecting 10 samples in estimated 9.9202 s (20 iterations)
+Benchmarking opt_one_round_schnorr/output_seq/t64_n128: Analyzing
+opt_one_round_schnorr/output_seq/t64_n128
+                        time:   [497.66 ms 497.76 ms 497.85 ms]
+Benchmarking opt_one_round_schnorr/output_parallel/t64_n128
+Benchmarking opt_one_round_schnorr/output_parallel/t64_n128: Warming up for 3.0000 s
+Benchmarking opt_one_round_schnorr/output_parallel/t64_n128: Collecting 10 samples in estimated 5.9065 s (110 iterations)
+Benchmarking opt_one_round_schnorr/output_parallel/t64_n128: Analyzing
+opt_one_round_schnorr/output_parallel/t64_n128
+                        time:   [54.703 ms 54.848 ms 54.991 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high severe
+Benchmarking opt_one_round_schnorr/proofverify_loop/t64_n128
+Benchmarking opt_one_round_schnorr/proofverify_loop/t64_n128: Warming up for 3.0000 s
+Benchmarking opt_one_round_schnorr/proofverify_loop/t64_n128: Collecting 10 samples in estimated 7.0981 s (20 iterations)
+Benchmarking opt_one_round_schnorr/proofverify_loop/t64_n128: Analyzing
+opt_one_round_schnorr/proofverify_loop/t64_n128
+                        time:   [356.58 ms 356.62 ms 356.67 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking opt_one_round_schnorr/proofverify_batch/t64_n128
+Benchmarking opt_one_round_schnorr/proofverify_batch/t64_n128: Warming up for 3.0000 s
+Benchmarking opt_one_round_schnorr/proofverify_batch/t64_n128: Collecting 10 samples in estimated 7.1328 s (20 iterations)
+Benchmarking opt_one_round_schnorr/proofverify_batch/t64_n128: Analyzing
+opt_one_round_schnorr/proofverify_batch/t64_n128
+                        time:   [353.45 ms 353.53 ms 353.59 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking opt_one_round_schnorr/sigverify_loop/t64_n128
+Benchmarking opt_one_round_schnorr/sigverify_loop/t64_n128: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 7.2s or enable flat sampling.
+Benchmarking opt_one_round_schnorr/sigverify_loop/t64_n128: Collecting 10 samples in estimated 7.2208 s (55 iterations)
+Benchmarking opt_one_round_schnorr/sigverify_loop/t64_n128: Analyzing
+opt_one_round_schnorr/sigverify_loop/t64_n128
+                        time:   [131.27 ms 131.28 ms 131.29 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high mild
+Benchmarking opt_one_round_schnorr/sigverify_batch/t64_n128
+Benchmarking opt_one_round_schnorr/sigverify_batch/t64_n128: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 7.2s or enable flat sampling.
+Benchmarking opt_one_round_schnorr/sigverify_batch/t64_n128: Collecting 10 samples in estimated 7.2307 s (55 iterations)
+Benchmarking opt_one_round_schnorr/sigverify_batch/t64_n128: Analyzing
+opt_one_round_schnorr/sigverify_batch/t64_n128
+                        time:   [131.49 ms 131.56 ms 131.60 ms]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+Benchmarking opt_one_round_schnorr/output_seq/t128_n256
+Benchmarking opt_one_round_schnorr/output_seq/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 23.8s.
+Benchmarking opt_one_round_schnorr/output_seq/t128_n256: Collecting 10 samples in estimated 23.808 s (10 iterations)
+Benchmarking opt_one_round_schnorr/output_seq/t128_n256: Analyzing
+opt_one_round_schnorr/output_seq/t128_n256
+                        time:   [2.3956 s 2.3966 s 2.3975 s]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking opt_one_round_schnorr/output_parallel/t128_n256
+Benchmarking opt_one_round_schnorr/output_parallel/t128_n256: Warming up for 3.0000 s
+Benchmarking opt_one_round_schnorr/output_parallel/t128_n256: Collecting 10 samples in estimated 6.8102 s (30 iterations)
+Benchmarking opt_one_round_schnorr/output_parallel/t128_n256: Analyzing
+opt_one_round_schnorr/output_parallel/t128_n256
+                        time:   [229.11 ms 229.47 ms 229.83 ms]
+Benchmarking opt_one_round_schnorr/proofverify_loop/t128_n256
+Benchmarking opt_one_round_schnorr/proofverify_loop/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 18.3s.
+Benchmarking opt_one_round_schnorr/proofverify_loop/t128_n256: Collecting 10 samples in estimated 18.303 s (10 iterations)
+Benchmarking opt_one_round_schnorr/proofverify_loop/t128_n256: Analyzing
+opt_one_round_schnorr/proofverify_loop/t128_n256
+                        time:   [1.8427 s 1.8430 s 1.8433 s]
+Benchmarking opt_one_round_schnorr/proofverify_batch/t128_n256
+Benchmarking opt_one_round_schnorr/proofverify_batch/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 18.4s.
+Benchmarking opt_one_round_schnorr/proofverify_batch/t128_n256: Collecting 10 samples in estimated 18.431 s (10 iterations)
+Benchmarking opt_one_round_schnorr/proofverify_batch/t128_n256: Analyzing
+opt_one_round_schnorr/proofverify_batch/t128_n256
+                        time:   [1.8204 s 1.8206 s 1.8208 s]
+Benchmarking opt_one_round_schnorr/sigverify_loop/t128_n256
+Benchmarking opt_one_round_schnorr/sigverify_loop/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 5.2s.
+Benchmarking opt_one_round_schnorr/sigverify_loop/t128_n256: Collecting 10 samples in estimated 5.2371 s (10 iterations)
+Benchmarking opt_one_round_schnorr/sigverify_loop/t128_n256: Analyzing
+opt_one_round_schnorr/sigverify_loop/t128_n256
+                        time:   [520.87 ms 520.93 ms 521.00 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking opt_one_round_schnorr/sigverify_batch/t128_n256
+Benchmarking opt_one_round_schnorr/sigverify_batch/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 5.2s.
+Benchmarking opt_one_round_schnorr/sigverify_batch/t128_n256: Collecting 10 samples in estimated 5.2103 s (10 iterations)
+Benchmarking opt_one_round_schnorr/sigverify_batch/t128_n256: Analyzing
+opt_one_round_schnorr/sigverify_batch/t128_n256
+                        time:   [521.73 ms 521.83 ms 521.94 ms]
+Benchmarking opt_one_round_schnorr/output_seq/t256_n512
+Benchmarking opt_one_round_schnorr/output_seq/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 128.5s.
+Benchmarking opt_one_round_schnorr/output_seq/t256_n512: Collecting 10 samples in estimated 128.47 s (10 iterations)
+Benchmarking opt_one_round_schnorr/output_seq/t256_n512: Analyzing
+opt_one_round_schnorr/output_seq/t256_n512
+                        time:   [12.956 s 12.957 s 12.959 s]
+Benchmarking opt_one_round_schnorr/output_parallel/t256_n512
+Benchmarking opt_one_round_schnorr/output_parallel/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 11.5s.
+Benchmarking opt_one_round_schnorr/output_parallel/t256_n512: Collecting 10 samples in estimated 11.468 s (10 iterations)
+Benchmarking opt_one_round_schnorr/output_parallel/t256_n512: Analyzing
+opt_one_round_schnorr/output_parallel/t256_n512
+                        time:   [1.1517 s 1.1524 s 1.1530 s]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking opt_one_round_schnorr/proofverify_loop/t256_n512
+Benchmarking opt_one_round_schnorr/proofverify_loop/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 107.3s.
+Benchmarking opt_one_round_schnorr/proofverify_loop/t256_n512: Collecting 10 samples in estimated 107.30 s (10 iterations)
+Benchmarking opt_one_round_schnorr/proofverify_loop/t256_n512: Analyzing
+opt_one_round_schnorr/proofverify_loop/t256_n512
+                        time:   [10.827 s 10.827 s 10.828 s]
+Benchmarking opt_one_round_schnorr/proofverify_batch/t256_n512
+Benchmarking opt_one_round_schnorr/proofverify_batch/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 108.3s.
+Benchmarking opt_one_round_schnorr/proofverify_batch/t256_n512: Collecting 10 samples in estimated 108.27 s (10 iterations)
+Benchmarking opt_one_round_schnorr/proofverify_batch/t256_n512: Analyzing
+opt_one_round_schnorr/proofverify_batch/t256_n512
+                        time:   [10.654 s 10.655 s 10.656 s]
+Benchmarking opt_one_round_schnorr/sigverify_loop/t256_n512
+Benchmarking opt_one_round_schnorr/sigverify_loop/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 20.5s.
+Benchmarking opt_one_round_schnorr/sigverify_loop/t256_n512: Collecting 10 samples in estimated 20.469 s (10 iterations)
+Benchmarking opt_one_round_schnorr/sigverify_loop/t256_n512: Analyzing
+opt_one_round_schnorr/sigverify_loop/t256_n512
+                        time:   [2.0444 s 2.0446 s 2.0448 s]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low mild
+  1 (10.00%) high mild
+Benchmarking opt_one_round_schnorr/sigverify_batch/t256_n512
+Benchmarking opt_one_round_schnorr/sigverify_batch/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 20.7s.
+Benchmarking opt_one_round_schnorr/sigverify_batch/t256_n512: Collecting 10 samples in estimated 20.710 s (10 iterations)
+Benchmarking opt_one_round_schnorr/sigverify_batch/t256_n512: Analyzing
+opt_one_round_schnorr/sigverify_batch/t256_n512
+                        time:   [2.0734 s 2.0737 s 2.0739 s]
+
+Benchmarking opt_one_round_fischlin_small/output_seq/t64_n128
+Benchmarking opt_one_round_fischlin_small/output_seq/t64_n128: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 31.1s.
+Benchmarking opt_one_round_fischlin_small/output_seq/t64_n128: Collecting 10 samples in estimated 31.098 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/output_seq/t64_n128: Analyzing
+opt_one_round_fischlin_small/output_seq/t64_n128
+                        time:   [3.1080 s 3.1088 s 3.1094 s]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  1 (10.00%) high mild
+  1 (10.00%) high severe
+Benchmarking opt_one_round_fischlin_small/output_parallel/t64_n128
+Benchmarking opt_one_round_fischlin_small/output_parallel/t64_n128: Warming up for 3.0000 s
+Benchmarking opt_one_round_fischlin_small/output_parallel/t64_n128: Collecting 10 samples in estimated 5.9194 s (20 iterations)
+Benchmarking opt_one_round_fischlin_small/output_parallel/t64_n128: Analyzing
+opt_one_round_fischlin_small/output_parallel/t64_n128
+                        time:   [294.33 ms 295.90 ms 298.04 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  1 (10.00%) low severe
+  2 (20.00%) high severe
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t64_n128
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t64_n128: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 20.0s.
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t64_n128: Collecting 10 samples in estimated 20.029 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t64_n128: Analyzing
+opt_one_round_fischlin_small/proofverify_loop/t64_n128
+                        time:   [2.0020 s 2.0030 s 2.0039 s]
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t64_n128
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t64_n128: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 19.5s.
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t64_n128: Collecting 10 samples in estimated 19.512 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t64_n128: Analyzing
+opt_one_round_fischlin_small/proofverify_batch/t64_n128
+                        time:   [1.9480 s 1.9487 s 1.9494 s]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking opt_one_round_fischlin_small/output_seq/t128_n256
+Benchmarking opt_one_round_fischlin_small/output_seq/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 127.1s.
+Benchmarking opt_one_round_fischlin_small/output_seq/t128_n256: Collecting 10 samples in estimated 127.13 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/output_seq/t128_n256: Analyzing
+opt_one_round_fischlin_small/output_seq/t128_n256
+                        time:   [12.720 s 12.722 s 12.724 s]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking opt_one_round_fischlin_small/output_parallel/t128_n256
+Benchmarking opt_one_round_fischlin_small/output_parallel/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 11.8s.
+Benchmarking opt_one_round_fischlin_small/output_parallel/t128_n256: Collecting 10 samples in estimated 11.828 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/output_parallel/t128_n256: Analyzing
+opt_one_round_fischlin_small/output_parallel/t128_n256
+                        time:   [1.1840 s 1.1850 s 1.1859 s]
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t128_n256
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 83.3s.
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t128_n256: Collecting 10 samples in estimated 83.269 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t128_n256: Analyzing
+opt_one_round_fischlin_small/proofverify_loop/t128_n256
+                        time:   [8.3158 s 8.3177 s 8.3196 s]
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t128_n256
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 82.8s.
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t128_n256: Collecting 10 samples in estimated 82.788 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t128_n256: Analyzing
+opt_one_round_fischlin_small/proofverify_batch/t128_n256
+                        time:   [8.2603 s 8.2616 s 8.2630 s]
+Benchmarking opt_one_round_fischlin_small/output_seq/t256_n512
+Benchmarking opt_one_round_fischlin_small/output_seq/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 541.9s.
+Benchmarking opt_one_round_fischlin_small/output_seq/t256_n512: Collecting 10 samples in estimated 541.94 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/output_seq/t256_n512: Analyzing
+opt_one_round_fischlin_small/output_seq/t256_n512
+                        time:   [54.274 s 54.280 s 54.286 s]
+Benchmarking opt_one_round_fischlin_small/output_parallel/t256_n512
+Benchmarking opt_one_round_fischlin_small/output_parallel/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 49.4s.
+Benchmarking opt_one_round_fischlin_small/output_parallel/t256_n512: Collecting 10 samples in estimated 49.448 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/output_parallel/t256_n512: Analyzing
+opt_one_round_fischlin_small/output_parallel/t256_n512
+                        time:   [4.9334 s 4.9361 s 4.9383 s]
+Found 2 outliers among 10 measurements (20.00%)
+  1 (10.00%) low severe
+  1 (10.00%) low mild
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t256_n512
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 366.9s.
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t256_n512: Collecting 10 samples in estimated 366.87 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/proofverify_loop/t256_n512: Analyzing
+opt_one_round_fischlin_small/proofverify_loop/t256_n512
+                        time:   [36.604 s 36.610 s 36.617 s]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t256_n512
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 365.0s.
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t256_n512: Collecting 10 samples in estimated 364.96 s (10 iterations)
+Benchmarking opt_one_round_fischlin_small/proofverify_batch/t256_n512: Analyzing
+opt_one_round_fischlin_small/proofverify_batch/t256_n512
+                        time:   [36.390 s 36.406 s 36.420 s]
+
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t64_n128
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t64_n128: Warming up for 3.0000 s
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t64_n128: Collecting 10 samples in estimated 7.5955 s (20 iterations)
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t64_n128: Analyzing
+opt_two_round_finalize_schnorr/finalize_seq/t64_n128
+                        time:   [379.64 ms 379.67 ms 379.69 ms]
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t64_n128
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t64_n128: Warming up for 3.0000 s
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t64_n128: Collecting 10 samples in estimated 6.6245 s (165 iterations)
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t64_n128: Analyzing
+opt_two_round_finalize_schnorr/finalize_parallel/t64_n128
+                        time:   [39.913 ms 39.976 ms 40.053 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t128_n256
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 14.8s.
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t128_n256: Collecting 10 samples in estimated 14.757 s (10 iterations)
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t128_n256: Analyzing
+opt_two_round_finalize_schnorr/finalize_seq/t128_n256
+                        time:   [1.4747 s 1.4750 s 1.4754 s]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t128_n256
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t128_n256: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 8.0s or enable flat sampling.
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t128_n256: Collecting 10 samples in estimated 7.9579 s (55 iterations)
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t128_n256: Analyzing
+opt_two_round_finalize_schnorr/finalize_parallel/t128_n256
+                        time:   [144.69 ms 144.98 ms 145.19 ms]
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t256_n512
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 57.2s.
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t256_n512: Collecting 10 samples in estimated 57.211 s (10 iterations)
+Benchmarking opt_two_round_finalize_schnorr/finalize_seq/t256_n512: Analyzing
+opt_two_round_finalize_schnorr/finalize_seq/t256_n512
+                        time:   [5.7206 s 5.7212 s 5.7217 s]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t256_n512
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t256_n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 5.4s.
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t256_n512: Collecting 10 samples in estimated 5.3860 s (10 iterations)
+Benchmarking opt_two_round_finalize_schnorr/finalize_parallel/t256_n512: Analyzing
+opt_two_round_finalize_schnorr/finalize_parallel/t256_n512
+                        time:   [538.35 ms 539.21 ms 540.12 ms]
+
