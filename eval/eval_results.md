@@ -16,13 +16,7 @@ Median runtimes per party, measured with `cargo bench` (Criterion). Regenerate w
 | RUSTFLAGS | `-C target-cpu=native` |
 | Date | 2026-08-17T04:07:16Z |
 
-The curve backend row is what `curve25519-dalek` actually compiled, read from its build script rather than inferred from the CPU. `avx512` is the IFMA path, `simd` is AVX2, and `serial` is the portable fallback, so that row states which arithmetic these numbers measure.
-
-The parallel rows are wall-clock times of the same work spread over all cores, so read their speedup against the physical core count above, not the logical one.
-
-`(t, n)` = (threshold, parties). Initiate and output are the phases each party runs; output verifies the other `n - 1` proofs, so it grows quadratically in the committee size. The abort rows run only when a dealer sends a share that does not open its commitment, so they are off the honest path.
-
-Every setting is n-out-of-n, `t = n - 1`, which is the largest degree the protocol admits and so the most expensive one. The threshold sweep further down measures that rather than assuming it. The previous run, at `t = n/2`, is in `eval/archiv_16_08_2026/`.
+`(t, n)` = (degree, parties), every setting n-out-of-n with `t = n - 1`. Previous run at `t = n/2` in `eval/archiv_16_08_2026/`.
 
 ## Janus-1 (one round)
 
@@ -103,8 +97,6 @@ Every setting is n-out-of-n, `t = n - 1`, which is the largest degree the protoc
 
 ## One core against all cores
 
-The same work, run sequentially and spread over every core. Read the speedup against the physical core count in the machine table, not the logical one. The initiate phase has no parallel counterpart: it is a party's own message, and the Fischlin prover already spreads its repetitions over the cores inside the sequential call.
-
 ### Janus-1, Schnorr
 
 | (t, n) | Output, one core | Output, all cores |
@@ -169,8 +161,6 @@ The same work, run sequentially and spread over every core. Read the speedup aga
 
 ## Batch verification
 
-Verifying the received proofs and channel signatures one by one against verifying them in a single batched check, at the three largest settings.
-
 ### Schnorr
 
 | (t, n) | Proofs, one by one | Proofs, batched |
@@ -209,17 +199,11 @@ Verifying the received proofs and channel signatures one by one against verifyin
 | Message authentication | 11.1 ms | 31.0 ms |
 | Message decoding | 293.7 ms | 43.3 ms |
 
-> Message authentication checks the signature over the bytes as received. Message decoding is the one-time cost of parsing those bytes into group elements, which dominates because every point needs a decompression.
-
 ## End-to-end run
 
-One party's whole run, from building its own message to holding the output key. Every message is encoded on the way out and decoded on the way in, which the phase tables above skip.
+Link columns are `max(compute, transfer) + rounds * RTT`, with 2 rounds charged per broadcast round, so 2 for Janus-1 and 4 for Janus-2.
 
-Compute is measured, the link columns are attributed as `max(compute, transfer) + rounds * RTT`. A party reaches that bound by verifying each message as it arrives; one that waits for the whole round pays the sum instead. Broadcast is counted as point-to-point fan-out on a full-duplex link, so a party uploads once per peer.
-
-The benchmark process peaked at 1.7 GB resident while holding every party of the largest setting at once, which bounds what one party needs to keep a round in memory.
-
-The rounds include one echo round on top of the protocol, since the protocol rounds only disseminate: every party sends a digest of what it received, which catches a dealer that told two parties different things. That gives broadcast with abort, which suits a protocol that already identifies the party at fault. Naming the culprit needs per-dealer hashes and is counted with the abort path.
+Peak resident memory: 1.7 GB.
 
 ### Janus-1, Schnorr
 
@@ -247,27 +231,27 @@ The rounds include one echo round on top of the protocol, since the protocol rou
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (15, 16) | 20.1 ms | 48.8 KB | 23.1 ms | 95.1 ms | 470.1 ms |
-| (31, 32) | 64.5 ms | 178.9 KB | 67.5 ms | 139.5 ms | 514.5 ms |
-| (63, 64) | 227.8 ms | 680.5 KB | 230.8 ms | 302.8 ms | 677.8 ms |
-| (127, 128) | 851.1 ms | 2.6 MB | 854.1 ms | 926.1 ms | 1.30 s |
-| (255, 256) | 3.24 s | 10.2 MB | 3.24 s | 3.31 s | 3.69 s |
-| (511, 512) | 12.63 s | 40.7 MB | 12.63 s | 12.71 s | 13.08 s |
+| (15, 16) | 20.1 ms | 49.3 KB | 24.1 ms | 120.1 ms | 620.1 ms |
+| (31, 32) | 64.5 ms | 179.9 KB | 68.5 ms | 164.5 ms | 664.5 ms |
+| (63, 64) | 227.8 ms | 682.5 KB | 231.8 ms | 327.8 ms | 827.8 ms |
+| (127, 128) | 851.1 ms | 2.6 MB | 855.1 ms | 951.1 ms | 1.45 s |
+| (255, 256) | 3.24 s | 10.2 MB | 3.24 s | 3.34 s | 3.84 s |
+| (511, 512) | 12.63 s | 40.7 MB | 12.64 s | 12.73 s | 13.23 s |
 
 ### Janus-2, Fischlin small
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (15, 16) | 45.4 ms | 295.7 KB | 48.4 ms | 120.4 ms | 495.4 ms |
-| (31, 32) | 118.8 ms | 1.1 MB | 121.8 ms | 193.8 ms | 568.8 ms |
-| (63, 64) | 364.7 ms | 4.4 MB | 367.7 ms | 439.7 ms | 814.7 ms |
-| (127, 128) | 1.24 s | 17.7 MB | 1.24 s | 1.31 s | 1.69 s |
-| (255, 256) | 4.50 s | 70.4 MB | 4.50 s | 4.57 s | 4.95 s |
-| (511, 512) | 17.15 s | 281.0 MB | 17.16 s | 17.23 s | 17.60 s |
+| (15, 16) | 45.4 ms | 296.2 KB | 49.4 ms | 145.4 ms | 645.4 ms |
+| (31, 32) | 118.8 ms | 1.1 MB | 122.8 ms | 218.8 ms | 718.8 ms |
+| (63, 64) | 364.7 ms | 4.4 MB | 368.7 ms | 464.7 ms | 964.7 ms |
+| (127, 128) | 1.24 s | 17.7 MB | 1.24 s | 1.34 s | 1.84 s |
+| (255, 256) | 4.50 s | 70.4 MB | 4.50 s | 4.60 s | 5.10 s |
+| (511, 512) | 17.15 s | 281.0 MB | 17.16 s | 17.25 s | 17.75 s |
 
-### What the echo round costs
+### What the second round of a broadcast costs
 
-The tables above include it. It is the same for both protocols and both proof systems, one round-trip plus a digest to every peer, so subtract a row here to read a protocol without agreement.
+Included above once per broadcast round. Subtract a row to read a protocol charged one round per broadcast instead.
 
 | n | Extra bytes | One region | Cross-region | Intercontinental |
 |:---|---:|---:|---:|---:|
@@ -280,7 +264,7 @@ The tables above include it. It is the same for both protocols and both proof sy
 
 ## Threshold sweep at a fixed committee
 
-The main sweep moves the threshold and the committee together, so it cannot separate their effects. Here the committee is fixed at 256 and only the threshold moves, up to the n-out-of-n point the tables above are measured at. The last row is the worst one, which makes those tables an upper bound. Same link model as above, one echo round included.
+Committee fixed at 256, threshold alone moving, up to the n-out-of-n point the tables above are measured at.
 
 ### Janus-1, Schnorr
 
@@ -308,27 +292,27 @@ The main sweep moves the threshold and the committee together, so it cannot sepa
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (16, 256) | 352.4 ms | 4.7 MB | 355.4 ms | 427.4 ms | 802.4 ms |
-| (32, 256) | 546.8 ms | 5.0 MB | 549.8 ms | 621.8 ms | 996.8 ms |
-| (64, 256) | 942.3 ms | 5.8 MB | 945.3 ms | 1.02 s | 1.39 s |
-| (128, 256) | 1.73 s | 7.3 MB | 1.73 s | 1.80 s | 2.18 s |
-| (192, 256) | 2.49 s | 8.8 MB | 2.49 s | 2.56 s | 2.94 s |
-| (255, 256) | 3.24 s | 10.2 MB | 3.24 s | 3.31 s | 3.69 s |
+| (16, 256) | 352.4 ms | 4.7 MB | 356.4 ms | 452.4 ms | 952.4 ms |
+| (32, 256) | 546.8 ms | 5.0 MB | 550.8 ms | 646.8 ms | 1.15 s |
+| (64, 256) | 942.3 ms | 5.8 MB | 946.3 ms | 1.04 s | 1.54 s |
+| (128, 256) | 1.73 s | 7.3 MB | 1.73 s | 1.83 s | 2.33 s |
+| (192, 256) | 2.49 s | 8.8 MB | 2.49 s | 2.59 s | 3.09 s |
+| (255, 256) | 3.24 s | 10.2 MB | 3.24 s | 3.34 s | 3.84 s |
 
 ### Janus-2, Fischlin small
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (16, 256) | 576.8 ms | 9.0 MB | 579.8 ms | 651.8 ms | 1.03 s |
-| (32, 256) | 846.5 ms | 13.1 MB | 849.5 ms | 921.5 ms | 1.30 s |
-| (64, 256) | 1.37 s | 21.3 MB | 1.38 s | 1.45 s | 1.82 s |
-| (128, 256) | 2.44 s | 37.8 MB | 2.44 s | 2.51 s | 2.89 s |
-| (192, 256) | 3.49 s | 54.2 MB | 3.49 s | 3.56 s | 3.94 s |
-| (255, 256) | 4.50 s | 70.4 MB | 4.51 s | 4.58 s | 4.95 s |
+| (16, 256) | 576.8 ms | 9.0 MB | 580.8 ms | 676.8 ms | 1.18 s |
+| (32, 256) | 846.5 ms | 13.1 MB | 850.5 ms | 946.5 ms | 1.45 s |
+| (64, 256) | 1.37 s | 21.3 MB | 1.38 s | 1.47 s | 1.97 s |
+| (128, 256) | 2.44 s | 37.8 MB | 2.44 s | 2.54 s | 3.04 s |
+| (192, 256) | 3.49 s | 54.2 MB | 3.49 s | 3.59 s | 4.09 s |
+| (255, 256) | 4.50 s | 70.4 MB | 4.51 s | 4.60 s | 5.10 s |
 
 ## An encoding we measured and did not adopt
 
-A verifier can rebuild the first-round commitments from the challenge and the responses instead of receiving them, the way a Schnorr signature carries the challenge. Both columns run the same path, encode then decode then verify, so the parsing the shorter encoding avoids is counted in its favour. The code is in `eval/compact-encoding`.
+Rebuilding the first-round commitments from the challenge and the responses instead of receiving them. Code in `eval/compact-encoding`.
 
 | (t, n) | Proof sent | Proof rebuilt | Saved | Verify sent | Verify rebuilt | Cost |
 |:---|---:|---:|---:|---:|---:|---:|
@@ -339,7 +323,7 @@ A verifier can rebuild the first-round commitments from the challenge and the re
 | (255, 256) | 384.6 KB | 256.1 KB | 33% | 53.1 ms | 214.9 ms | 4.05x |
 | (511, 512) | 768.6 KB | 512.1 KB | 33% | 120.2 ms | 655.0 ms | 5.45x |
 
-The saving holds at about 35 percent while the cost climbs with the committee size, so the trade gets worse exactly where a smaller message would help most. At the largest setting the bytes are worth the arithmetic only below roughly 4 Mbit/s, which is under every link profile above, so the protocol keeps the longer encoding.
+Saving about 35 percent, and at the largest setting worth the arithmetic only below roughly 4 Mbit/s, under every link profile above.
 
 ## Communication
 

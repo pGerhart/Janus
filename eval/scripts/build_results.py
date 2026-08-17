@@ -38,6 +38,12 @@ RUN_LINE = re.compile(
 RSS = re.compile(r"peak_rss=([\d.]+) (\w+)")
 ENC_SIZE = re.compile(r"^\[(t\d+_n\d+)\] verbose=(\d+) B compact=(\d+) B")
 ECHO_BYTES = 32
+
+# Two network rounds per broadcast round, which is what a broadcast costs in the
+# optimistic case and with a trusted dealer. Janus-1 has one broadcast round,
+# Janus-2 has two.
+ROUNDS_PER_BROADCAST = 2
+BROADCASTS = {"janus1": 1, "janus2": 2}
 UNIT = {"B": 1.0, "KB": 1024.0, "MB": 1024.0**2, "GB": 1024.0**3}
 
 SETS = [f"t{n - 1}_n{n}" for n in (16, 32, 64, 128, 256, 512)]
@@ -210,28 +216,8 @@ def main():
     parts.append(f"| RUSTFLAGS | `{info.get('rustflags', '<unset>')}` |")
     parts.append(f"| Date | {info.get('date', '?')} |\n")
     parts.append(
-        "The curve backend row is what `curve25519-dalek` actually compiled, read "
-        "from its build script rather than inferred from the CPU. `avx512` is the "
-        "IFMA path, `simd` is AVX2, and `serial` is the portable fallback, so that "
-        "row states which arithmetic these numbers measure.\n"
-    )
-    parts.append(
-        "The parallel rows are wall-clock times of the same work spread over all "
-        "cores, so read their speedup against the physical core count above, not "
-        "the logical one.\n"
-    )
-    parts.append(
-        "`(t, n)` = (threshold, parties). Initiate and output are the phases each "
-        "party runs; output verifies the other `n - 1` proofs, so it grows "
-        "quadratically in the committee size. The abort rows run only when a "
-        "dealer sends a share that does not open its commitment, so they are off "
-        "the honest path.\n"
-    )
-    parts.append(
-        "Every setting is n-out-of-n, `t = n - 1`, which is the largest degree "
-        "the protocol admits and so the most expensive one. The threshold sweep "
-        "further down measures that rather than assuming it. The previous run, at "
-        "`t = n/2`, is in `eval/archiv_16_08_2026/`.\n"
+        "`(t, n)` = (degree, parties), every setting n-out-of-n with `t = n - 1`. "
+        "Previous run at `t = n/2` in `eval/archiv_16_08_2026/`.\n"
     )
 
     parts.append("## Janus-1 (one round)\n")
@@ -292,13 +278,6 @@ def main():
         parts.append(body + "\n")
 
     parts.append("## One core against all cores\n")
-    parts.append(
-        "The same work, run sequentially and spread over every core. Read the "
-        "speedup against the physical core count in the machine table, not the "
-        "logical one. The initiate phase has no parallel counterpart: it is a "
-        "party's own message, and the Fischlin prover already spreads its "
-        "repetitions over the cores inside the sequential call.\n"
-    )
     schemes = [
         ("Schnorr", "schnorr"),
         ("Fischlin small", "fischlin_small"),
@@ -337,10 +316,6 @@ def main():
             parts.append(body + "\n")
 
     parts.append("## Batch verification\n")
-    parts.append(
-        "Verifying the received proofs and channel signatures one by one against "
-        "verifying them in a single batched check, at the three largest settings.\n"
-    )
     for label, prefix in [("Schnorr", "schnorr"), ("Fischlin small", "fischlin_small")]:
         body = table(
             opt,
@@ -387,49 +362,23 @@ def main():
         right = fmt(two_comp.get(two_key)) if two_key else "--"
         parts.append(f"| {label} | {left} | {right} |")
     parts.append("")
-    parts.append(
-        "> Message authentication checks the signature over the bytes as received. "
-        "Message decoding is the one-time cost of parsing those bytes into group "
-        "elements, which dominates because every point needs a decompression.\n"
-    )
 
     if run_sizes:
         parts.append("## End-to-end run\n")
         parts.append(
-            "One party's whole run, from building its own message to holding the "
-            "output key. Every message is encoded on the way out and decoded on "
-            "the way in, which the phase tables above skip.\n"
-        )
-        parts.append(
-            "Compute is measured, the link columns are attributed as "
-            "`max(compute, transfer) + rounds * RTT`. A party reaches that bound "
-            "by verifying each message as it arrives; one that waits for the whole "
-            "round pays the sum instead. Broadcast is counted as point-to-point "
-            "fan-out on a full-duplex link, so a party uploads once per peer.\n"
+            "Link columns are `max(compute, transfer) + rounds * RTT`, with "
+            f"{ROUNDS_PER_BROADCAST} rounds charged per broadcast round, so "
+            f"{BROADCASTS['janus1'] * ROUNDS_PER_BROADCAST} for Janus-1 and "
+            f"{BROADCASTS['janus2'] * ROUNDS_PER_BROADCAST} for Janus-2.\n"
         )
         if peak:
-            parts.append(
-                f"The benchmark process peaked at {bytes_pretty(peak)} resident "
-                "while holding every party of the largest setting at once, which "
-                "bounds what one party needs to keep a round in memory.\n"
-            )
-        parts.append(
-            "The rounds include one echo round on top of the protocol, since the "
-            "protocol rounds only disseminate: every party sends a digest of what "
-            "it received, which catches a dealer that told two parties different "
-            "things. That gives broadcast with abort, which suits a protocol that "
-            "already identifies the party at fault. Naming the culprit needs "
-            "per-dealer hashes and is counted with the abort path.\n"
-        )
+            parts.append(f"Peak resident memory: {bytes_pretty(peak)}.\n")
         header = "| (t, n) | Compute | Received | " + " | ".join(
             f"{name} ({int(rtt)} ms, {int(bw / 1000)} Gbit/s)" for name, rtt, bw in PROFILES
         ) + " |"
-        # The protocol rounds disseminate, they do not agree. One echo round on
-        # top turns that into broadcast with abort: every party digests the round
-        # it received and sends that digest to the others, so an equivocating
-        # dealer is caught. Localizing which dealer equivocated needs per-dealer
-        # hashes, which is dispute traffic and belongs to the abort path.
-        for proto, rounds, label in [("janus1", 2, "Janus-1"), ("janus2", 3, "Janus-2")]:
+        for proto, label in [("janus1", "Janus-1"), ("janus2", "Janus-2")]:
+            broadcasts = BROADCASTS[proto]
+            rounds = broadcasts * ROUNDS_PER_BROADCAST
             for scheme, sname in [("schnorr", "Schnorr"), ("fischlin_small", "Fischlin small")]:
                 rows = []
                 for param in SETS:
@@ -439,7 +388,7 @@ def main():
                         continue
                     _sent, received = run_sizes[key]
                     n = int(param.split("_n")[1])
-                    received += ECHO_BYTES * (n - 1)
+                    received += ECHO_BYTES * (n - 1) * broadcasts
                     cells = [PRETTY[param], fmt(compute), bytes_pretty(received)]
                     for _n, rtt, bw in PROFILES:
                         t = transfer_ms(received, bw)
@@ -454,11 +403,10 @@ def main():
 
     if run_sizes:
         ns = sorted({int(p.split("_n")[1]) for p in SETS})
-        parts.append("### What the echo round costs\n")
+        parts.append("### What the second round of a broadcast costs\n")
         parts.append(
-            "The tables above include it. It is the same for both protocols and "
-            "both proof systems, one round-trip plus a digest to every peer, so "
-            "subtract a row here to read a protocol without agreement.\n"
+            "Included above once per broadcast round. Subtract a row to read a "
+            "protocol charged one round per broadcast instead.\n"
         )
         parts.append(
             "| n | Extra bytes | "
@@ -477,14 +425,12 @@ def main():
     if run_sizes:
         parts.append("## Threshold sweep at a fixed committee\n")
         parts.append(
-            "The main sweep moves the threshold and the committee together, so it "
-            "cannot separate their effects. Here the committee is fixed at 256 and "
-            "only the threshold moves, up to the n-out-of-n point the tables above "
-            "are measured at. The last row is the worst one, which makes those "
-            "tables an upper bound. Same link model as above, one echo round "
-            "included.\n"
+            "Committee fixed at 256, threshold alone moving, up to the n-out-of-n "
+            "point the tables above are measured at.\n"
         )
-        for proto, rounds, label in [("janus1", 2, "Janus-1"), ("janus2", 3, "Janus-2")]:
+        for proto, label in [("janus1", "Janus-1"), ("janus2", "Janus-2")]:
+            broadcasts = BROADCASTS[proto]
+            rounds = broadcasts * ROUNDS_PER_BROADCAST
             for scheme, sname in [("schnorr", "Schnorr"), ("fischlin_small", "Fischlin small")]:
                 rows = []
                 for param in TSWEEP:
@@ -494,7 +440,7 @@ def main():
                         continue
                     _sent, received = run_sizes[key]
                     n = int(param.split("_n")[1])
-                    received += ECHO_BYTES * (n - 1)
+                    received += ECHO_BYTES * (n - 1) * broadcasts
                     cells = [PRETTY.get(param, param), fmt(compute), bytes_pretty(received)]
                     for _n, rtt, bw in PROFILES:
                         t = transfer_ms(received, bw)
@@ -510,12 +456,8 @@ def main():
     if enc_sizes:
         parts.append("## An encoding we measured and did not adopt\n")
         parts.append(
-            "A verifier can rebuild the first-round commitments from the challenge "
-            "and the responses instead of receiving them, the way a Schnorr "
-            "signature carries the challenge. Both columns run the same path, "
-            "encode then decode then verify, so the parsing the shorter encoding "
-            "avoids is counted in its favour. The code is in "
-            "`eval/compact-encoding`.\n"
+            "Rebuilding the first-round commitments from the challenge and the "
+            "responses instead of receiving them. Code in `eval/compact-encoding`.\n"
         )
         parts.append("| (t, n) | Proof sent | Proof rebuilt | Saved | Verify sent | Verify rebuilt | Cost |")
         parts.append("|:---|---:|---:|---:|---:|---:|---:|")
@@ -545,24 +487,17 @@ def main():
             slowest = min(bw for _n, _r, bw in PROFILES)
             if crossover and crossover < slowest:
                 tail = (
-                    "At the largest setting the bytes are worth the arithmetic only "
-                    f"below roughly {crossover:.0f} Mbit/s, which is under every "
-                    "link profile above, so the protocol keeps the longer "
-                    "encoding.\n"
+                    f"worth the arithmetic only below roughly {crossover:.0f} "
+                    "Mbit/s, under every link profile above.\n"
                 )
             elif crossover:
                 tail = (
-                    "At the largest setting the bytes are worth the arithmetic "
-                    f"below roughly {crossover:.0f} Mbit/s, which reaches into the "
-                    "link profiles above, so the trade is worth revisiting.\n"
+                    f"worth the arithmetic below roughly {crossover:.0f} Mbit/s, "
+                    "which reaches into the link profiles above.\n"
                 )
             else:
-                tail = "The protocol keeps the longer encoding.\n"
-            parts.append(
-                f"The saving holds at {span} while the cost climbs with the "
-                "committee size, so the trade gets worse exactly where a smaller "
-                "message would help most. " + tail
-            )
+                tail = "not worth the arithmetic at any measured setting.\n"
+            parts.append(f"Saving {span}, and at the largest setting " + tail)
 
     parts.append("## Communication\n")
     parts.append("```")
