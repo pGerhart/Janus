@@ -3,7 +3,10 @@
 # Criterion output. Produces eval/bench_raw/, which build_results.py turns into
 # eval/eval_results.md. Both are overwritten.
 #
-# Usage:  ./scripts/run_bench.sh
+# Usage:  ./eval/scripts/run_bench.sh [suite ...]
+# With no argument it runs every suite. Naming suites reruns only those and
+# rebuilds eval/eval_results.md from the raw output of all of them, e.g.
+#   ./eval/scripts/run_bench.sh one_round_components two_round_components
 # The (511,512) points take several minutes each, so run this under tmux.
 # JANUS_BENCH_MAX_N caps the committee size for a smoke run.
 #
