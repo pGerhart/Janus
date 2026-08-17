@@ -1,4 +1,4 @@
-// Component-level breakdown of the two-round DKG for t=32, n=64, Fischlin Small.
+// Component-level breakdown of the two-round DKG for t=63, n=64, Fischlin Small.
 //
 // Each benchmark isolates one step so we can see where the time goes within
 // initiate, finalize, and output.
@@ -23,8 +23,8 @@ use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use rand::rng;
 
-const T: usize = 32;
 const N: usize = 64;
+const T: usize = N - 1;
 
 const FISCHLIN: FischlinDecomProofParams = FischlinDecomProofParams {
     rho: 16,

@@ -66,7 +66,7 @@ fn threshold_sweep_sets() -> Vec<Params> {
         .ok()
         .and_then(|v| v.parse::<usize>().ok())
         .unwrap_or(usize::MAX);
-    [16, 32, 64, 128, 192]
+    [16, 32, 64, 128, 192, 255]
         .into_iter()
         .map(|t| Params { t, n: 256 })
         .filter(|p| p.n <= max_n)
@@ -74,14 +74,10 @@ fn threshold_sweep_sets() -> Vec<Params> {
 }
 
 fn all_parameter_sets() -> Vec<Params> {
-    vec![
-        Params { t: 8, n: 16 },
-        Params { t: 16, n: 32 },
-        Params { t: 32, n: 64 },
-        Params { t: 64, n: 128 },
-        Params { t: 128, n: 256 },
-        Params { t: 256, n: 512 },
-    ]
+    [16, 32, 64, 128, 256, 512]
+        .into_iter()
+        .map(|n| Params { t: n - 1, n })
+        .collect()
 }
 
 // A party holds the whole round at once, so the high-water mark is the number

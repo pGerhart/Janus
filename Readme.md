@@ -101,14 +101,16 @@ The repository includes [Criterion](https://github.com/bheisler/criterion.rs) be
 | Suite | File | What is measured |
 |---|---|---|
 | Janus-1 DKG | `eval/benches/one_round_dkg_run.rs` | Initiation (proof generation) and output (verification + share aggregation) per party |
-| Janus-1 components | `eval/benches/one_round_components.rs` | Individual operations (proving, encryption, decryption, VSS checks, message authentication and decoding) in isolation at Fischlin small with $(t=32, n=64)$ |
+| Janus-1 components | `eval/benches/one_round_components.rs` | Individual operations (proving, encryption, decryption, VSS checks, message authentication and decoding) in isolation at Fischlin small with $(t=63, n=64)$ |
 | Janus-2 DKG | `eval/benches/two_round_dkg_run.rs` | Round 1 (initiate), round 2 (finalize), and output per party |
-| Janus-2 components | `eval/benches/two_round_components.rs` | Individual operations in isolation at Fischlin small with $(t=32, n=64)$ |
+| Janus-2 components | `eval/benches/two_round_components.rs` | Individual operations in isolation at Fischlin small with $(t=63, n=64)$ |
 | Identifiable abort | `eval/benches/abort_path.rs` | Building and verifying a complaint, and the worst case where every other party complains |
 | Optimizations | `eval/benches/optimizations.rs` | Batch proof verification and a multi-threaded output phase at large committees |
 | End-to-end run | `eval/benches/full_run.rs` | One party's whole run with messages encoded and decoded as they are on a channel, plus the bytes it sends and receives |
 
-All DKG benchmarks run over seven parameter sets: **(t=4, n=16)**, **(t=8, n=32)**, **(t=16, n=64)**, **(t=32, n=64)**, **(t=64, n=128)**, **(t=128, n=256)**, **(t=256, n=512)** at 128-bit security on Ristretto (Curve25519). The large Fischlin profile is benchmarked up to $n < 256$; Schnorr and the small Fischlin profile cover the full range.
+All DKG benchmarks run over six parameter sets: **(t=15, n=16)**, **(t=31, n=32)**, **(t=63, n=64)**, **(t=127, n=128)**, **(t=255, n=256)**, **(t=511, n=512)** at 128-bit security on Ristretto (Curve25519). The large Fischlin profile is benchmarked up to $n < 256$; Schnorr and the small Fischlin profile cover the full range.
+
+Every set is $n$-out-of-$n$. Here $t$ is the degree of the sharing polynomial, so $t = n - 1$ needs every share to reconstruct and is the largest degree the protocol admits, hence the most expensive setting. The end-to-end suite also sweeps $t \in \{16, 32, 64, 128, 192, 255\}$ at a fixed $n = 256$, to verify that $t=n-1$ is the most convservative measurement.
 
 ```
 cargo bench
@@ -119,11 +121,14 @@ The pinned results, together with the machine they were measured on, are in [`ev
 # Reproducing the Published Numbers
 
 The paper's numbers were measured on an AWS `c8i.4xlarge` (16 vCPU on 8 physical cores, 30 GB, x86-64, Granite Rapids). 
-The full benchmarks take roughly two and a half hours, and the largest points take several minutes each. 
+The full benchmarks take a few hours, and the largest points take several minutes each. 
 All benchmarks can be run with the script
 
 ```
 ./eval/scripts/run_bench.sh
 ```
 
-This script runs all benchmarks. It records the machine, OS, toolchain, architecture, core count and date, runs the gate battery (build, test, fmt, clippy) over the workspace and stops on any failure, runs every benchmark suite plus the encoding comparison into `eval/bench_raw/`, and finally combines those raw logs into `eval/eval_results.md`.
+This script records the machine, OS, toolchain, architecture, core count and date, runs the gate battery (build, test, fmt, clippy) over the workspace and stops on any failure, runs every benchmark suite plus the encoding comparison into `eval/bench_raw/`, and finally combines those raw logs into `eval/eval_results.md`.
+
+Both are overwritten by a rerun. 
+We kept an earlier $t = n/2$ run in [`eval/archiv_16_08_2026/`](eval/archiv_16_08_2026/).

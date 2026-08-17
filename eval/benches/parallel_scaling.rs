@@ -52,17 +52,11 @@ fn parameter_sets() -> Vec<BaseParams> {
         .ok()
         .and_then(|v| v.parse::<usize>().ok())
         .unwrap_or(usize::MAX);
-    [
-        BaseParams { t: 8, n: 16 },
-        BaseParams { t: 16, n: 32 },
-        BaseParams { t: 32, n: 64 },
-        BaseParams { t: 64, n: 128 },
-        BaseParams { t: 128, n: 256 },
-        BaseParams { t: 256, n: 512 },
-    ]
-    .into_iter()
-    .filter(|p| p.n <= max_n)
-    .collect()
+    [16, 32, 64, 128, 256, 512]
+        .into_iter()
+        .map(|n| BaseParams { t: n - 1, n })
+        .filter(|p| p.n <= max_n)
+        .collect()
 }
 
 // The large Fischlin profile is not the recommended choice at large committees.

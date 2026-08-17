@@ -40,22 +40,14 @@ ENC_SIZE = re.compile(r"^\[(t\d+_n\d+)\] verbose=(\d+) B compact=(\d+) B")
 ECHO_BYTES = 32
 UNIT = {"B": 1.0, "KB": 1024.0, "MB": 1024.0**2, "GB": 1024.0**3}
 
-SETS = ["t8_n16", "t16_n32", "t32_n64", "t64_n128", "t128_n256", "t256_n512"]
+SETS = [f"t{n - 1}_n{n}" for n in (16, 32, 64, 128, 256, 512)]
 
 # The threshold sweep holds the committee at 256 and moves t alone.
-TSWEEP = ["t16_n256", "t32_n256", "t64_n256", "t128_n256", "t192_n256"]
-PRETTY = {
-    "t16_n256": "(16, 256)",
-    "t32_n256": "(32, 256)",
-    "t64_n256": "(64, 256)",
-    "t192_n256": "(192, 256)",
-    "t8_n16": "(8, 16)",
-    "t16_n32": "(16, 32)",
-    "t32_n64": "(32, 64)",
-    "t64_n128": "(64, 128)",
-    "t128_n256": "(128, 256)",
-    "t256_n512": "(256, 512)",
-}
+TSWEEP = [f"t{t}_n256" for t in (16, 32, 64, 128, 192, 255)]
+
+PRETTY = {p: f"({p[1:].split('_n')[0]}, {p.split('_n')[1]})" for p in SETS + TSWEEP}
+
+COMPONENT_SET = "t63_n64"
 
 
 def to_ms(value, unit):
@@ -235,6 +227,12 @@ def main():
         "dealer sends a share that does not open its commitment, so they are off "
         "the honest path.\n"
     )
+    parts.append(
+        "Every setting is n-out-of-n, `t = n - 1`, which is the largest degree "
+        "the protocol admits and so the most expensive one. The threshold sweep "
+        "further down measures that rather than assuming it. The previous run, at "
+        "`t = n/2`, is in `eval/archiv_16_08_2026/`.\n"
+    )
 
     parts.append("## Janus-1 (one round)\n")
     for label, prefix in [
@@ -367,7 +365,10 @@ def main():
         parts.append("### Channel signatures\n")
         parts.append(body + "\n")
 
-    parts.append("## Component breakdown, Fischlin small, (t=32, n=64)\n")
+    t_comp, n_comp = COMPONENT_SET[1:].split("_n")
+    parts.append(
+        f"## Component breakdown, Fischlin small, (t={t_comp}, n={n_comp})\n"
+    )
     parts.append("| Component | One round | Two rounds |")
     parts.append("|:---|---:|---:|")
     pairs = [
@@ -478,7 +479,9 @@ def main():
         parts.append(
             "The main sweep moves the threshold and the committee together, so it "
             "cannot separate their effects. Here the committee is fixed at 256 and "
-            "only the threshold moves. Same link model as above, one echo round "
+            "only the threshold moves, up to the n-out-of-n point the tables above "
+            "are measured at. The last row is the worst one, which makes those "
+            "tables an upper bound. Same link model as above, one echo round "
             "included.\n"
         )
         for proto, rounds, label in [("janus1", 2, "Janus-1"), ("janus2", 3, "Janus-2")]:
@@ -516,6 +519,7 @@ def main():
         )
         parts.append("| (t, n) | Proof sent | Proof rebuilt | Saved | Verify sent | Verify rebuilt | Cost |")
         parts.append("|:---|---:|---:|---:|---:|---:|---:|")
+        savings, crossover = [], None
         for param in SETS:
             if param not in enc_sizes:
                 continue
@@ -524,18 +528,41 @@ def main():
             c = enc.get(f"encoding/compact/{param}")
             if v is None or c is None:
                 continue
+            savings.append(100.0 * (vb - cb) / vb)
+            if c > v:
+                crossover = (vb - cb) * 8.0 / ((c - v) * 1000.0)
             parts.append(
                 f"| {PRETTY[param]} | {bytes_pretty(vb)} | {bytes_pretty(cb)} | "
                 f"{100.0 * (vb - cb) / vb:.0f}% | {fmt(v)} | {fmt(c)} | {c / v:.2f}x |"
             )
         parts.append("")
-        parts.append(
-            "The saving holds at about 40 percent while the cost climbs with the "
-            "committee size, so the trade gets worse exactly where a smaller message would "
-            "help most. At the largest setting the bytes are worth the arithmetic "
-            "only below roughly 8 Mbit/s, which is far under any link these parties "
-            "run on, so the protocol keeps the longer encoding.\n"
-        )
+        if savings:
+            span = (
+                f"about {savings[0]:.0f} percent"
+                if max(savings) - min(savings) < 2.0
+                else f"between {min(savings):.0f} and {max(savings):.0f} percent"
+            )
+            slowest = min(bw for _n, _r, bw in PROFILES)
+            if crossover and crossover < slowest:
+                tail = (
+                    "At the largest setting the bytes are worth the arithmetic only "
+                    f"below roughly {crossover:.0f} Mbit/s, which is under every "
+                    "link profile above, so the protocol keeps the longer "
+                    "encoding.\n"
+                )
+            elif crossover:
+                tail = (
+                    "At the largest setting the bytes are worth the arithmetic "
+                    f"below roughly {crossover:.0f} Mbit/s, which reaches into the "
+                    "link profiles above, so the trade is worth revisiting.\n"
+                )
+            else:
+                tail = "The protocol keeps the longer encoding.\n"
+            parts.append(
+                f"The saving holds at {span} while the cost climbs with the "
+                "committee size, so the trade gets worse exactly where a smaller "
+                "message would help most. " + tail
+            )
 
     parts.append("## Communication\n")
     parts.append("```")

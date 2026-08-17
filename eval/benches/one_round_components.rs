@@ -1,4 +1,4 @@
-// Component-level breakdown of the one-round DKG for t=32, n=64, Fischlin Small.
+// Component-level breakdown of the one-round DKG for t=63, n=64, Fischlin Small.
 // Mirrors two_round_components.rs so the two can be compared side-by-side.
 
 use janus::{
@@ -18,8 +18,8 @@ use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use curve25519_dalek::{ristretto::RistrettoPoint, scalar::Scalar};
 use rand::rng;
 
-const T: usize = 32;
 const N: usize = 64;
+const T: usize = N - 1;
 
 const FISCHLIN: FischlinProofParams = FischlinProofParams {
     rho: 16,

@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 # Runs every benchmark suite and records the machine context alongside the raw
 # Criterion output. Produces eval/bench_raw/, which build_results.py turns into
-# eval/eval_results.md.
+# eval/eval_results.md. Both are overwritten.
 #
 # Usage:  ./scripts/run_bench.sh
-# The (256,512) points take several minutes each, so run this under tmux.
+# The (511,512) points take several minutes each, so run this under tmux.
+# JANUS_BENCH_MAX_N caps the committee size for a smoke run.
 #
 # target-cpu=native is set on purpose. curve25519-dalek decides its backend in
 # build.rs from the compile-time target features: without avx512ifma and

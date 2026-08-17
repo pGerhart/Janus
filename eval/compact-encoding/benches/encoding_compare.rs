@@ -46,18 +46,11 @@ fn parameter_sets() -> Vec<(usize, usize)> {
         .ok()
         .and_then(|v| v.parse::<usize>().ok())
         .unwrap_or(usize::MAX);
-    [
-        (4usize, 16usize),
-        (8, 32),
-        (16, 64),
-        (32, 64),
-        (64, 128),
-        (128, 256),
-        (256, 512),
-    ]
-    .into_iter()
-    .filter(|(_t, n)| *n <= max_n)
-    .collect()
+    [16usize, 32, 64, 128, 256, 512]
+        .into_iter()
+        .map(|n| (n - 1, n))
+        .filter(|(_t, n)| *n <= max_n)
+        .collect()
 }
 
 fn compare(c: &mut Criterion) {

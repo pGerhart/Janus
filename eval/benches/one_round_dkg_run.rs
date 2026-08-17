@@ -63,14 +63,10 @@ fn parameter_sets() -> Vec<BaseParams> {
 }
 
 fn all_parameter_sets() -> Vec<BaseParams> {
-    vec![
-        BaseParams { t: 8, n: 16 },
-        BaseParams { t: 16, n: 32 },
-        BaseParams { t: 32, n: 64 },
-        BaseParams { t: 64, n: 128 },
-        BaseParams { t: 128, n: 256 },
-        BaseParams { t: 256, n: 512 },
-    ]
+    [16, 32, 64, 128, 256, 512]
+        .into_iter()
+        .map(|n| BaseParams { t: n - 1, n })
+        .collect()
 }
 
 // The large Fischlin profile is not recommended for large committees, so it is
