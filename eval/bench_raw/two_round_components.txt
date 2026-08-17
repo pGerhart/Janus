@@ -1,132 +1,492 @@
     Finished `bench` profile [optimized] target(s) in 0.06s
      Running eval/benches/two_round_components.rs (target/release/deps/two_round_components-b476ca6276f4ac42)
 Gnuplot not found, using plotters backend
-Benchmarking initiate/decom_prove_fischlin
-Benchmarking initiate/decom_prove_fischlin: Warming up for 3.0000 s
-Benchmarking initiate/decom_prove_fischlin: Collecting 100 samples in estimated 8.3701 s (200 iterations)
-Benchmarking initiate/decom_prove_fischlin: Analyzing
-initiate/decom_prove_fischlin
-                        time:   [41.476 ms 42.925 ms 44.408 ms]
-
-Benchmarking initiate/pk_prove
-Benchmarking initiate/pk_prove: Warming up for 3.0000 s
-Benchmarking initiate/pk_prove: Collecting 100 samples in estimated 5.2958 s (66k iterations)
-Benchmarking initiate/pk_prove: Analyzing
-initiate/pk_prove       time:   [80.094 µs 80.145 µs 80.187 µs]
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) high mild
-
-Benchmarking initiate/encrypt_shares_batch
-Benchmarking initiate/encrypt_shares_batch: Warming up for 3.0000 s
-
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.5s, enable flat sampling, or reduce sample count to 60.
-Benchmarking initiate/encrypt_shares_batch: Collecting 100 samples in estimated 6.4695 s (5050 iterations)
-Benchmarking initiate/encrypt_shares_batch: Analyzing
-initiate/encrypt_shares_batch
-                        time:   [1.2722 ms 1.2731 ms 1.2739 ms]
-                        change: [-0.6650% -0.5824% -0.5009%] (p = 0.00 < 0.05)
+Benchmarking initiate/pk_prove/n16
+Benchmarking initiate/pk_prove/n16: Warming up for 3.0000 s
+Benchmarking initiate/pk_prove/n16: Collecting 100 samples in estimated 5.1685 s (81k iterations)
+Benchmarking initiate/pk_prove/n16: Analyzing
+initiate/pk_prove/n16   time:   [64.300 µs 64.312 µs 64.324 µs]
+Found 6 outliers among 100 measurements (6.00%)
+  4 (4.00%) high mild
+  2 (2.00%) high severe
+Benchmarking initiate/encrypt_shares_batch/n16
+Benchmarking initiate/encrypt_shares_batch/n16: Warming up for 3.0000 s
+Benchmarking initiate/encrypt_shares_batch/n16: Collecting 100 samples in estimated 6.5024 s (20k iterations)
+Benchmarking initiate/encrypt_shares_batch/n16: Analyzing
+initiate/encrypt_shares_batch/n16
+                        time:   [323.91 µs 323.94 µs 323.97 µs]
+                        change: [+0.1625% +0.1963% +0.2379%] (p = 0.00 < 0.05)
                         Change within noise threshold.
-Found 3 outliers among 100 measurements (3.00%)
+Found 8 outliers among 100 measurements (8.00%)
+  5 (5.00%) high mild
+  3 (3.00%) high severe
+
+Benchmarking finalize/decrypt_batch/n16
+Benchmarking finalize/decrypt_batch/n16: Warming up for 3.0000 s
+Benchmarking finalize/decrypt_batch/n16: Collecting 100 samples in estimated 6.2569 s (10k iterations)
+Benchmarking finalize/decrypt_batch/n16: Analyzing
+finalize/decrypt_batch/n16
+                        time:   [619.46 µs 619.50 µs 619.56 µs]
+Found 9 outliers among 100 measurements (9.00%)
+  1 (1.00%) low severe
+  3 (3.00%) low mild
+  2 (2.00%) high mild
+  3 (3.00%) high severe
+Benchmarking finalize/pedvss_eval_check_batch/n16
+Benchmarking finalize/pedvss_eval_check_batch/n16: Warming up for 3.0000 s
+Benchmarking finalize/pedvss_eval_check_batch/n16: Collecting 100 samples in estimated 5.2112 s (1300 iterations)
+Benchmarking finalize/pedvss_eval_check_batch/n16: Analyzing
+finalize/pedvss_eval_check_batch/n16
+                        time:   [4.0398 ms 4.0401 ms 4.0405 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  7 (7.00%) high mild
+  1 (1.00%) high severe
+Benchmarking finalize/cstar_aggregate_and_eval/n16
+Benchmarking finalize/cstar_aggregate_and_eval/n16: Warming up for 3.0000 s
+Benchmarking finalize/cstar_aggregate_and_eval/n16: Collecting 100 samples in estimated 5.2052 s (1300 iterations)
+Benchmarking finalize/cstar_aggregate_and_eval/n16: Analyzing
+finalize/cstar_aggregate_and_eval/n16
+                        time:   [4.0330 ms 4.0332 ms 4.0335 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  2 (2.00%) high mild
+  3 (3.00%) high severe
+Benchmarking finalize/comeq_prove/n16
+Benchmarking finalize/comeq_prove/n16: Warming up for 3.0000 s
+Benchmarking finalize/comeq_prove/n16: Collecting 100 samples in estimated 5.3686 s (45k iterations)
+Benchmarking finalize/comeq_prove/n16: Analyzing
+finalize/comeq_prove/n16
+                        time:   [118.85 µs 118.87 µs 118.89 µs]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
+
+Benchmarking output/pk_verify_batch/n16
+Benchmarking output/pk_verify_batch/n16: Warming up for 3.0000 s
+Benchmarking output/pk_verify_batch/n16: Collecting 100 samples in estimated 9.0877 s (10k iterations)
+Benchmarking output/pk_verify_batch/n16: Analyzing
+output/pk_verify_batch/n16
+                        time:   [899.35 µs 899.43 µs 899.52 µs]
+Found 6 outliers among 100 measurements (6.00%)
   1 (1.00%) low mild
+  5 (5.00%) high mild
+Benchmarking output/comeq_verify_batch/n16
+Benchmarking output/comeq_verify_batch/n16: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.1s, enable flat sampling, or reduce sample count to 50.
+Benchmarking output/comeq_verify_batch/n16: Collecting 100 samples in estimated 7.0759 s (5050 iterations)
+Benchmarking output/comeq_verify_batch/n16: Analyzing
+output/comeq_verify_batch/n16
+                        time:   [1.4002 ms 1.4003 ms 1.4005 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  1 (1.00%) low severe
   1 (1.00%) high mild
+
+Benchmarking initiate/decom_prove_schnorr/n16
+Benchmarking initiate/decom_prove_schnorr/n16: Warming up for 3.0000 s
+Benchmarking initiate/decom_prove_schnorr/n16: Collecting 100 samples in estimated 5.2999 s (40k iterations)
+Benchmarking initiate/decom_prove_schnorr/n16: Analyzing
+initiate/decom_prove_schnorr/n16
+                        time:   [131.13 µs 131.15 µs 131.18 µs]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low mild
+  4 (4.00%) high mild
   1 (1.00%) high severe
 
-Benchmarking finalize/decom_verify_fischlin_single
-Benchmarking finalize/decom_verify_fischlin_single: Warming up for 3.0000 s
+Benchmarking finalize/decom_verify_single_schnorr/n16
+Benchmarking finalize/decom_verify_single_schnorr/n16: Warming up for 3.0000 s
+Benchmarking finalize/decom_verify_single_schnorr/n16: Collecting 100 samples in estimated 5.3901 s (35k iterations)
+Benchmarking finalize/decom_verify_single_schnorr/n16: Analyzing
+finalize/decom_verify_single_schnorr/n16
+                        time:   [152.38 µs 152.41 µs 152.44 µs]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) low mild
+  1 (1.00%) high severe
+Benchmarking finalize/decom_verify_batch_schnorr/n16
+Benchmarking finalize/decom_verify_batch_schnorr/n16: Warming up for 3.0000 s
+Benchmarking finalize/decom_verify_batch_schnorr/n16: Collecting 100 samples in estimated 5.1421 s (2000 iterations)
+Benchmarking finalize/decom_verify_batch_schnorr/n16: Analyzing
+finalize/decom_verify_batch_schnorr/n16
+                        time:   [2.5668 ms 2.5675 ms 2.5681 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low mild
+  4 (4.00%) high mild
+  1 (1.00%) high severe
+Benchmarking finalize/signature_verify_batch_schnorr/n16
+Benchmarking finalize/signature_verify_batch_schnorr/n16: Warming up for 3.0000 s
 
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.7s, enable flat sampling, or reduce sample count to 50.
-Benchmarking finalize/decom_verify_fischlin_single: Collecting 100 samples in estimated 7.7419 s (5050 iterations)
-Benchmarking finalize/decom_verify_fischlin_single: Analyzing
-finalize/decom_verify_fischlin_single
-                        time:   [1.5295 ms 1.5302 ms 1.5310 ms]
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 8.2s, enable flat sampling, or reduce sample count to 50.
+Benchmarking finalize/signature_verify_batch_schnorr/n16: Collecting 100 samples in estimated 8.2458 s (5050 iterations)
+Benchmarking finalize/signature_verify_batch_schnorr/n16: Analyzing
+finalize/signature_verify_batch_schnorr/n16
+                        time:   [1.6324 ms 1.6326 ms 1.6327 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) low severe
+  4 (4.00%) low mild
+  2 (2.00%) high mild
+  1 (1.00%) high severe
+Benchmarking finalize/wire_decode_batch_schnorr/n16
+Benchmarking finalize/wire_decode_batch_schnorr/n16: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 8.7s, enable flat sampling, or reduce sample count to 50.
+Benchmarking finalize/wire_decode_batch_schnorr/n16: Collecting 100 samples in estimated 8.7483 s (5050 iterations)
+Benchmarking finalize/wire_decode_batch_schnorr/n16: Analyzing
+finalize/wire_decode_batch_schnorr/n16
+                        time:   [1.7304 ms 1.7306 ms 1.7309 ms]
 Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low severe
+
+Benchmarking initiate/decom_prove_fischlin_small/n16
+Benchmarking initiate/decom_prove_fischlin_small/n16: Warming up for 3.0000 s
+Benchmarking initiate/decom_prove_fischlin_small/n16: Collecting 100 samples in estimated 5.8962 s (500 iterations)
+Benchmarking initiate/decom_prove_fischlin_small/n16: Analyzing
+initiate/decom_prove_fischlin_small/n16
+                        time:   [11.405 ms 11.664 ms 11.928 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
+
+Benchmarking finalize/decom_verify_single_fischlin_small/n16
+Benchmarking finalize/decom_verify_single_fischlin_small/n16: Warming up for 3.0000 s
+Benchmarking finalize/decom_verify_single_fischlin_small/n16: Collecting 100 samples in estimated 7.3475 s (10k iterations)
+Benchmarking finalize/decom_verify_single_fischlin_small/n16: Analyzing
+finalize/decom_verify_single_fischlin_small/n16
+                        time:   [727.48 µs 727.57 µs 727.67 µs]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) high mild
   1 (1.00%) high severe
-
-Benchmarking finalize/decom_verify_fischlin_batch_n64
-Benchmarking finalize/decom_verify_fischlin_batch_n64: Warming up for 3.0000 s
-
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.9s, or reduce sample count to 50.
-Benchmarking finalize/decom_verify_fischlin_batch_n64: Collecting 100 samples in estimated 9.9177 s (100 iterations)
-Benchmarking finalize/decom_verify_fischlin_batch_n64: Analyzing
-finalize/decom_verify_fischlin_batch_n64
-                        time:   [99.137 ms 99.168 ms 99.200 ms]
+Benchmarking finalize/decom_verify_batch_fischlin_small/n16
+Benchmarking finalize/decom_verify_batch_fischlin_small/n16: Warming up for 3.0000 s
+Benchmarking finalize/decom_verify_batch_fischlin_small/n16: Collecting 100 samples in estimated 5.9314 s (500 iterations)
+Benchmarking finalize/decom_verify_batch_fischlin_small/n16: Analyzing
+finalize/decom_verify_batch_fischlin_small/n16
+                        time:   [11.857 ms 11.858 ms 11.859 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  6 (6.00%) high mild
+Benchmarking finalize/signature_verify_batch_fischlin_small/n16
+Benchmarking finalize/signature_verify_batch_fischlin_small/n16: Warming up for 3.0000 s
+Benchmarking finalize/signature_verify_batch_fischlin_small/n16: Collecting 100 samples in estimated 5.1654 s (1700 iterations)
+Benchmarking finalize/signature_verify_batch_fischlin_small/n16: Analyzing
+finalize/signature_verify_batch_fischlin_small/n16
+                        time:   [3.0372 ms 3.0377 ms 3.0382 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+Benchmarking finalize/wire_decode_batch_fischlin_small/n16
+Benchmarking finalize/wire_decode_batch_fischlin_small/n16: Warming up for 3.0000 s
+Benchmarking finalize/wire_decode_batch_fischlin_small/n16: Collecting 100 samples in estimated 5.3492 s (1400 iterations)
+Benchmarking finalize/wire_decode_batch_fischlin_small/n16: Analyzing
+finalize/wire_decode_batch_fischlin_small/n16
+                        time:   [3.7999 ms 3.8003 ms 3.8007 ms]
 Found 2 outliers among 100 measurements (2.00%)
   2 (2.00%) high mild
 
-Benchmarking finalize/decrypt_batch_n63
-Benchmarking finalize/decrypt_batch_n63: Warming up for 3.0000 s
-Benchmarking finalize/decrypt_batch_n63: Collecting 100 samples in estimated 5.2397 s (2000 iterations)
-Benchmarking finalize/decrypt_batch_n63: Analyzing
-finalize/decrypt_batch_n63
-                        time:   [2.6186 ms 2.6199 ms 2.6213 ms]
-Found 2 outliers among 100 measurements (2.00%)
+Benchmarking initiate/pk_prove/n64
+Benchmarking initiate/pk_prove/n64: Warming up for 3.0000 s
+Benchmarking initiate/pk_prove/n64: Collecting 100 samples in estimated 5.1686 s (81k iterations)
+Benchmarking initiate/pk_prove/n64: Analyzing
+initiate/pk_prove/n64   time:   [64.298 µs 64.308 µs 64.318 µs]
+Found 5 outliers among 100 measurements (5.00%)
+  1 (1.00%) low severe
+  3 (3.00%) high mild
+  1 (1.00%) high severe
+Benchmarking initiate/encrypt_shares_batch/n64
+Benchmarking initiate/encrypt_shares_batch/n64: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.4s, enable flat sampling, or reduce sample count to 60.
+Benchmarking initiate/encrypt_shares_batch/n64: Collecting 100 samples in estimated 6.3929 s (5050 iterations)
+Benchmarking initiate/encrypt_shares_batch/n64: Analyzing
+initiate/encrypt_shares_batch/n64
+                        time:   [1.2737 ms 1.2738 ms 1.2740 ms]
+                        change: [+0.0941% +0.1129% +0.1307%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 5 outliers among 100 measurements (5.00%)
   2 (2.00%) high mild
+  3 (3.00%) high severe
 
-Benchmarking finalize/pedvss_eval_check_batch_n63
-Benchmarking finalize/pedvss_eval_check_batch_n63: Warming up for 3.0000 s
-
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.5s, or reduce sample count to 70.
-Benchmarking finalize/pedvss_eval_check_batch_n63: Collecting 100 samples in estimated 6.4680 s (100 iterations)
-Benchmarking finalize/pedvss_eval_check_batch_n63: Analyzing
-finalize/pedvss_eval_check_batch_n63
-                        time:   [64.191 ms 64.220 ms 64.249 ms]
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) high mild
-
-Benchmarking finalize/cstar_aggregate_and_eval_n64
-Benchmarking finalize/cstar_aggregate_and_eval_n64: Warming up for 3.0000 s
+Benchmarking finalize/decrypt_batch/n64
+Benchmarking finalize/decrypt_batch/n64: Warming up for 3.0000 s
+Benchmarking finalize/decrypt_batch/n64: Collecting 100 samples in estimated 5.2061 s (2000 iterations)
+Benchmarking finalize/decrypt_batch/n64: Analyzing
+finalize/decrypt_batch/n64
+                        time:   [2.6019 ms 2.6023 ms 2.6026 ms]
+Found 7 outliers among 100 measurements (7.00%)
+  3 (3.00%) high mild
+  4 (4.00%) high severe
+Benchmarking finalize/pedvss_eval_check_batch/n64
+Benchmarking finalize/pedvss_eval_check_batch/n64: Warming up for 3.0000 s
 
 Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.4s, or reduce sample count to 70.
-Benchmarking finalize/cstar_aggregate_and_eval_n64: Collecting 100 samples in estimated 6.4432 s (100 iterations)
-Benchmarking finalize/cstar_aggregate_and_eval_n64: Analyzing
-finalize/cstar_aggregate_and_eval_n64
-                        time:   [64.891 ms 64.916 ms 64.942 ms]
-Found 1 outliers among 100 measurements (1.00%)
+Benchmarking finalize/pedvss_eval_check_batch/n64: Collecting 100 samples in estimated 6.3790 s (100 iterations)
+Benchmarking finalize/pedvss_eval_check_batch/n64: Analyzing
+finalize/pedvss_eval_check_batch/n64
+                        time:   [64.253 ms 64.258 ms 64.265 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  4 (4.00%) high mild
+  2 (2.00%) high severe
+Benchmarking finalize/cstar_aggregate_and_eval/n64
+Benchmarking finalize/cstar_aggregate_and_eval/n64: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.4s, or reduce sample count to 70.
+Benchmarking finalize/cstar_aggregate_and_eval/n64: Collecting 100 samples in estimated 6.4094 s (100 iterations)
+Benchmarking finalize/cstar_aggregate_and_eval/n64: Analyzing
+finalize/cstar_aggregate_and_eval/n64
+                        time:   [64.542 ms 64.547 ms 64.553 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  7 (7.00%) high mild
+  2 (2.00%) high severe
+Benchmarking finalize/comeq_prove/n64
+Benchmarking finalize/comeq_prove/n64: Warming up for 3.0000 s
+Benchmarking finalize/comeq_prove/n64: Collecting 100 samples in estimated 5.3677 s (45k iterations)
+Benchmarking finalize/comeq_prove/n64: Analyzing
+finalize/comeq_prove/n64
+                        time:   [118.83 µs 118.85 µs 118.87 µs]
+Found 5 outliers among 100 measurements (5.00%)
   1 (1.00%) high mild
+  4 (4.00%) high severe
 
-Benchmarking finalize/comeq_prove
-Benchmarking finalize/comeq_prove: Warming up for 3.0000 s
-Benchmarking finalize/comeq_prove: Collecting 100 samples in estimated 5.4317 s (45k iterations)
-Benchmarking finalize/comeq_prove: Analyzing
-finalize/comeq_prove    time:   [118.55 µs 118.59 µs 118.64 µs]
-Found 2 outliers among 100 measurements (2.00%)
+Benchmarking output/pk_verify_batch/n64
+Benchmarking output/pk_verify_batch/n64: Warming up for 3.0000 s
+Benchmarking output/pk_verify_batch/n64: Collecting 100 samples in estimated 5.1235 s (1400 iterations)
+Benchmarking output/pk_verify_batch/n64: Analyzing
+output/pk_verify_batch/n64
+                        time:   [3.6588 ms 3.6592 ms 3.6596 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  2 (2.00%) low mild
+  5 (5.00%) high mild
+  2 (2.00%) high severe
+Benchmarking output/comeq_verify_batch/n64
+Benchmarking output/comeq_verify_batch/n64: Warming up for 3.0000 s
+Benchmarking output/comeq_verify_batch/n64: Collecting 100 samples in estimated 5.0844 s (900 iterations)
+Benchmarking output/comeq_verify_batch/n64: Analyzing
+output/comeq_verify_batch/n64
+                        time:   [5.6435 ms 5.6441 ms 5.6447 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+
+Benchmarking initiate/decom_prove_schnorr/n64
+Benchmarking initiate/decom_prove_schnorr/n64: Warming up for 3.0000 s
+Benchmarking initiate/decom_prove_schnorr/n64: Collecting 100 samples in estimated 6.0543 s (15k iterations)
+Benchmarking initiate/decom_prove_schnorr/n64: Analyzing
+initiate/decom_prove_schnorr/n64
+                        time:   [399.41 µs 399.51 µs 399.62 µs]
+Found 5 outliers among 100 measurements (5.00%)
+  2 (2.00%) low mild
   1 (1.00%) high mild
-  1 (1.00%) high severe
+  2 (2.00%) high severe
 
-Benchmarking finalize/signature_verify_batch_n64
-Benchmarking finalize/signature_verify_batch_n64: Warming up for 3.0000 s
-Benchmarking finalize/signature_verify_batch_n64: Collecting 100 samples in estimated 6.2098 s (200 iterations)
-Benchmarking finalize/signature_verify_batch_n64: Analyzing
-finalize/signature_verify_batch_n64
-                        time:   [31.022 ms 31.039 ms 31.055 ms]
+Benchmarking finalize/decom_verify_single_schnorr/n64
+Benchmarking finalize/decom_verify_single_schnorr/n64: Warming up for 3.0000 s
+Benchmarking finalize/decom_verify_single_schnorr/n64: Collecting 100 samples in estimated 5.3510 s (10k iterations)
+Benchmarking finalize/decom_verify_single_schnorr/n64: Analyzing
+finalize/decom_verify_single_schnorr/n64
+                        time:   [528.26 µs 528.42 µs 528.59 µs]
 Found 3 outliers among 100 measurements (3.00%)
-  3 (3.00%) low mild
-
-Benchmarking finalize/wire_decode_batch_n64
-Benchmarking finalize/wire_decode_batch_n64: Warming up for 3.0000 s
-Benchmarking finalize/wire_decode_batch_n64: Collecting 100 samples in estimated 8.5641 s (200 iterations)
-Benchmarking finalize/wire_decode_batch_n64: Analyzing
-finalize/wire_decode_batch_n64
-                        time:   [43.265 ms 43.280 ms 43.296 ms]
-Found 3 outliers among 100 measurements (3.00%)
-  2 (2.00%) high mild
-  1 (1.00%) high severe
-
-Benchmarking output/pk_verify_batch_n64
-Benchmarking output/pk_verify_batch_n64: Warming up for 3.0000 s
-Benchmarking output/pk_verify_batch_n64: Collecting 100 samples in estimated 5.1602 s (1400 iterations)
-Benchmarking output/pk_verify_batch_n64: Analyzing
-output/pk_verify_batch_n64
-                        time:   [3.6908 ms 3.6928 ms 3.6948 ms]
-Found 1 outliers among 100 measurements (1.00%)
   1 (1.00%) low mild
+  2 (2.00%) high mild
+Benchmarking finalize/decom_verify_batch_schnorr/n64
+Benchmarking finalize/decom_verify_batch_schnorr/n64: Warming up for 3.0000 s
+Benchmarking finalize/decom_verify_batch_schnorr/n64: Collecting 100 samples in estimated 7.0948 s (200 iterations)
+Benchmarking finalize/decom_verify_batch_schnorr/n64: Analyzing
+finalize/decom_verify_batch_schnorr/n64
+                        time:   [35.447 ms 35.454 ms 35.461 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) low mild
+  1 (1.00%) high mild
+Benchmarking finalize/signature_verify_batch_schnorr/n64
+Benchmarking finalize/signature_verify_batch_schnorr/n64: Warming up for 3.0000 s
+Benchmarking finalize/signature_verify_batch_schnorr/n64: Collecting 100 samples in estimated 5.6432 s (300 iterations)
+Benchmarking finalize/signature_verify_batch_schnorr/n64: Analyzing
+finalize/signature_verify_batch_schnorr/n64
+                        time:   [18.826 ms 18.829 ms 18.831 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
+Benchmarking finalize/wire_decode_batch_schnorr/n64
+Benchmarking finalize/wire_decode_batch_schnorr/n64: Warming up for 3.0000 s
+Benchmarking finalize/wire_decode_batch_schnorr/n64: Collecting 100 samples in estimated 6.1175 s (300 iterations)
+Benchmarking finalize/wire_decode_batch_schnorr/n64: Analyzing
+finalize/wire_decode_batch_schnorr/n64
+                        time:   [20.401 ms 20.403 ms 20.406 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
 
-Benchmarking output/comeq_verify_batch_n64
-Benchmarking output/comeq_verify_batch_n64: Warming up for 3.0000 s
-Benchmarking output/comeq_verify_batch_n64: Collecting 100 samples in estimated 5.1110 s (900 iterations)
-Benchmarking output/comeq_verify_batch_n64: Analyzing
-output/comeq_verify_batch_n64
-                        time:   [5.6733 ms 5.6757 ms 5.6782 ms]
+Benchmarking initiate/decom_prove_fischlin_small/n64
+Benchmarking initiate/decom_prove_fischlin_small/n64: Warming up for 3.0000 s
+Benchmarking initiate/decom_prove_fischlin_small/n64: Collecting 100 samples in estimated 8.2288 s (200 iterations)
+Benchmarking initiate/decom_prove_fischlin_small/n64: Analyzing
+initiate/decom_prove_fischlin_small/n64
+                        time:   [38.938 ms 40.273 ms 41.611 ms]
+
+Benchmarking finalize/decom_verify_single_fischlin_small/n64
+Benchmarking finalize/decom_verify_single_fischlin_small/n64: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.7s, enable flat sampling, or reduce sample count to 50.
+Benchmarking finalize/decom_verify_single_fischlin_small/n64: Collecting 100 samples in estimated 7.6763 s (5050 iterations)
+Benchmarking finalize/decom_verify_single_fischlin_small/n64: Analyzing
+finalize/decom_verify_single_fischlin_small/n64
+                        time:   [1.5235 ms 1.5238 ms 1.5241 ms]
 Found 2 outliers among 100 measurements (2.00%)
   2 (2.00%) high mild
+Benchmarking finalize/decom_verify_batch_fischlin_small/n64
+Benchmarking finalize/decom_verify_batch_fischlin_small/n64: Warming up for 3.0000 s
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.9s, or reduce sample count to 50.
+Benchmarking finalize/decom_verify_batch_fischlin_small/n64: Collecting 100 samples in estimated 9.8583 s (100 iterations)
+Benchmarking finalize/decom_verify_batch_fischlin_small/n64: Analyzing
+finalize/decom_verify_batch_fischlin_small/n64
+                        time:   [98.485 ms 98.498 ms 98.514 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high severe
+Benchmarking finalize/signature_verify_batch_fischlin_small/n64
+Benchmarking finalize/signature_verify_batch_fischlin_small/n64: Warming up for 3.0000 s
+Benchmarking finalize/signature_verify_batch_fischlin_small/n64: Collecting 100 samples in estimated 6.0904 s (200 iterations)
+Benchmarking finalize/signature_verify_batch_fischlin_small/n64: Analyzing
+finalize/signature_verify_batch_fischlin_small/n64
+                        time:   [30.491 ms 30.537 ms 30.585 ms]
+Benchmarking finalize/wire_decode_batch_fischlin_small/n64
+Benchmarking finalize/wire_decode_batch_fischlin_small/n64: Warming up for 3.0000 s
+Benchmarking finalize/wire_decode_batch_fischlin_small/n64: Collecting 100 samples in estimated 8.4254 s (200 iterations)
+Benchmarking finalize/wire_decode_batch_fischlin_small/n64: Analyzing
+finalize/wire_decode_batch_fischlin_small/n64
+                        time:   [41.650 ms 41.658 ms 41.667 ms]
+
+Benchmarking initiate/pk_prove/n512
+Benchmarking initiate/pk_prove/n512: Warming up for 3.0000 s
+Benchmarking initiate/pk_prove/n512: Collecting 10 samples in estimated 5.0017 s (78k iterations)
+Benchmarking initiate/pk_prove/n512: Analyzing
+initiate/pk_prove/n512  time:   [64.278 µs 64.286 µs 64.292 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+Benchmarking initiate/encrypt_shares_batch/n512
+Benchmarking initiate/encrypt_shares_batch/n512: Warming up for 3.0000 s
+Benchmarking initiate/encrypt_shares_batch/n512: Collecting 10 samples in estimated 5.5389 s (550 iterations)
+Benchmarking initiate/encrypt_shares_batch/n512: Analyzing
+initiate/encrypt_shares_batch/n512
+                        time:   [10.131 ms 10.131 ms 10.132 ms]
+                        change: [+0.1418% +0.1568% +0.1746%] (p = 0.00 < 0.05)
+                        Change within noise threshold.
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
+
+Benchmarking finalize/decrypt_batch/n512
+Benchmarking finalize/decrypt_batch/n512: Warming up for 3.0000 s
+Benchmarking finalize/decrypt_batch/n512: Collecting 10 samples in estimated 5.4721 s (275 iterations)
+Benchmarking finalize/decrypt_batch/n512: Analyzing
+finalize/decrypt_batch/n512
+                        time:   [19.923 ms 19.926 ms 19.929 ms]
+Benchmarking finalize/pedvss_eval_check_batch/n512
+Benchmarking finalize/pedvss_eval_check_batch/n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 40.7s.
+Benchmarking finalize/pedvss_eval_check_batch/n512: Collecting 10 samples in estimated 40.733 s (10 iterations)
+Benchmarking finalize/pedvss_eval_check_batch/n512: Analyzing
+finalize/pedvss_eval_check_batch/n512
+                        time:   [4.1023 s 4.1026 s 4.1029 s]
+Benchmarking finalize/cstar_aggregate_and_eval/n512
+Benchmarking finalize/cstar_aggregate_and_eval/n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 41.0s.
+Benchmarking finalize/cstar_aggregate_and_eval/n512: Collecting 10 samples in estimated 41.018 s (10 iterations)
+Benchmarking finalize/cstar_aggregate_and_eval/n512: Analyzing
+finalize/cstar_aggregate_and_eval/n512
+                        time:   [4.1319 s 4.1324 s 4.1330 s]
+Benchmarking finalize/comeq_prove/n512
+Benchmarking finalize/comeq_prove/n512: Warming up for 3.0000 s
+Benchmarking finalize/comeq_prove/n512: Collecting 10 samples in estimated 5.0012 s (42k iterations)
+Benchmarking finalize/comeq_prove/n512: Analyzing
+finalize/comeq_prove/n512
+                        time:   [118.83 µs 118.85 µs 118.86 µs]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high severe
+
+Benchmarking output/pk_verify_batch/n512
+Benchmarking output/pk_verify_batch/n512: Warming up for 3.0000 s
+Benchmarking output/pk_verify_batch/n512: Collecting 10 samples in estimated 6.4441 s (220 iterations)
+Benchmarking output/pk_verify_batch/n512: Analyzing
+output/pk_verify_batch/n512
+                        time:   [29.285 ms 29.287 ms 29.288 ms]
+Benchmarking output/comeq_verify_batch/n512
+Benchmarking output/comeq_verify_batch/n512: Warming up for 3.0000 s
+Benchmarking output/comeq_verify_batch/n512: Collecting 10 samples in estimated 7.4655 s (165 iterations)
+Benchmarking output/comeq_verify_batch/n512: Analyzing
+output/comeq_verify_batch/n512
+                        time:   [45.204 ms 45.209 ms 45.212 ms]
+Found 3 outliers among 10 measurements (30.00%)
+  2 (20.00%) low mild
+  1 (10.00%) high severe
+
+Benchmarking initiate/decom_prove_schnorr/n512
+Benchmarking initiate/decom_prove_schnorr/n512: Warming up for 3.0000 s
+Benchmarking initiate/decom_prove_schnorr/n512: Collecting 10 samples in estimated 5.1271 s (1760 iterations)
+Benchmarking initiate/decom_prove_schnorr/n512: Analyzing
+initiate/decom_prove_schnorr/n512
+                        time:   [2.9146 ms 2.9152 ms 2.9159 ms]
+
+Benchmarking finalize/decom_verify_single_schnorr/n512
+Benchmarking finalize/decom_verify_single_schnorr/n512: Warming up for 3.0000 s
+Benchmarking finalize/decom_verify_single_schnorr/n512: Collecting 10 samples in estimated 5.1159 s (1375 iterations)
+Benchmarking finalize/decom_verify_single_schnorr/n512: Analyzing
+finalize/decom_verify_single_schnorr/n512
+                        time:   [3.7153 ms 3.7163 ms 3.7172 ms]
+Benchmarking finalize/decom_verify_batch_schnorr/n512
+Benchmarking finalize/decom_verify_batch_schnorr/n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 19.1s.
+Benchmarking finalize/decom_verify_batch_schnorr/n512: Collecting 10 samples in estimated 19.085 s (10 iterations)
+Benchmarking finalize/decom_verify_batch_schnorr/n512: Analyzing
+finalize/decom_verify_batch_schnorr/n512
+                        time:   [1.9107 s 1.9108 s 1.9110 s]
+Benchmarking finalize/signature_verify_batch_schnorr/n512
+Benchmarking finalize/signature_verify_batch_schnorr/n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 10.7s.
+Benchmarking finalize/signature_verify_batch_schnorr/n512: Collecting 10 samples in estimated 10.725 s (10 iterations)
+Benchmarking finalize/signature_verify_batch_schnorr/n512: Analyzing
+finalize/signature_verify_batch_schnorr/n512
+                        time:   [1.0772 s 1.0774 s 1.0775 s]
+Benchmarking finalize/wire_decode_batch_schnorr/n512
+Benchmarking finalize/wire_decode_batch_schnorr/n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 11.8s.
+Benchmarking finalize/wire_decode_batch_schnorr/n512: Collecting 10 samples in estimated 11.832 s (10 iterations)
+Benchmarking finalize/wire_decode_batch_schnorr/n512: Analyzing
+finalize/wire_decode_batch_schnorr/n512
+                        time:   [1.1842 s 1.1846 s 1.1850 s]
+
+Benchmarking initiate/decom_prove_fischlin_small/n512
+Benchmarking initiate/decom_prove_fischlin_small/n512: Warming up for 3.0000 s
+Benchmarking initiate/decom_prove_fischlin_small/n512: Collecting 10 samples in estimated 5.8419 s (20 iterations)
+Benchmarking initiate/decom_prove_fischlin_small/n512: Analyzing
+initiate/decom_prove_fischlin_small/n512
+                        time:   [293.83 ms 333.23 ms 369.40 ms]
+
+Benchmarking finalize/decom_verify_single_fischlin_small/n512
+Benchmarking finalize/decom_verify_single_fischlin_small/n512: Warming up for 3.0000 s
+Benchmarking finalize/decom_verify_single_fischlin_small/n512: Collecting 10 samples in estimated 5.0795 s (605 iterations)
+Benchmarking finalize/decom_verify_single_fischlin_small/n512: Analyzing
+finalize/decom_verify_single_fischlin_small/n512
+                        time:   [8.4277 ms 8.4298 ms 8.4314 ms]
+Benchmarking finalize/decom_verify_batch_fischlin_small/n512
+Benchmarking finalize/decom_verify_batch_fischlin_small/n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 43.3s.
+Benchmarking finalize/decom_verify_batch_fischlin_small/n512: Collecting 10 samples in estimated 43.260 s (10 iterations)
+Benchmarking finalize/decom_verify_batch_fischlin_small/n512: Analyzing
+finalize/decom_verify_batch_fischlin_small/n512
+                        time:   [4.3184 s 4.3191 s 4.3196 s]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
+Benchmarking finalize/signature_verify_batch_fischlin_small/n512
+Benchmarking finalize/signature_verify_batch_fischlin_small/n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 16.1s.
+Benchmarking finalize/signature_verify_batch_fischlin_small/n512: Collecting 10 samples in estimated 16.103 s (10 iterations)
+Benchmarking finalize/signature_verify_batch_fischlin_small/n512: Analyzing
+finalize/signature_verify_batch_fischlin_small/n512
+                        time:   [1.6099 s 1.6102 s 1.6105 s]
+Benchmarking finalize/wire_decode_batch_fischlin_small/n512
+Benchmarking finalize/wire_decode_batch_fischlin_small/n512: Warming up for 3.0000 s
+
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 23.5s.
+Benchmarking finalize/wire_decode_batch_fischlin_small/n512: Collecting 10 samples in estimated 23.502 s (10 iterations)
+Benchmarking finalize/wire_decode_batch_fischlin_small/n512: Analyzing
+finalize/wire_decode_batch_fischlin_small/n512
+                        time:   [2.3177 s 2.3186 s 2.3195 s]
 
