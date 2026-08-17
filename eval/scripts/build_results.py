@@ -53,7 +53,26 @@ TSWEEP = [f"t{t}_n256" for t in (16, 32, 64, 128, 192, 255)]
 
 PRETTY = {p: f"({p[1:].split('_n')[0]}, {p.split('_n')[1]})" for p in SETS + TSWEEP}
 
-COMPONENT_SET = "t63_n64"
+COMPONENT_NS = [16, 512]
+COMPONENT_SCHEMES = [("Fiat-Shamir", "schnorr"), ("Fischlin small", "fischlin_small")]
+
+
+def component_pairs(scheme, n):
+    """(label, one-round id, two-round id) for one proof system at one committee."""
+    s, p = scheme, f"n{n}"
+    return [
+        ("Proof generation", f"initiate/poly_prove_{s}/{p}", f"initiate/decom_prove_{s}/{p}"),
+        ("Share encryption", f"initiate/encrypt_shares_batch/{p}", f"initiate/encrypt_shares_batch/{p}"),
+        ("Proof verification, one", f"output/poly_verify_single_{s}/{p}", f"finalize/decom_verify_single_{s}/{p}"),
+        ("Proof verification, all", f"output/poly_verify_batch_{s}/{p}", f"finalize/decom_verify_batch_{s}/{p}"),
+        ("Share decryption", f"output/decrypt_batch/{p}", f"finalize/decrypt_batch/{p}"),
+        ("Opening checks", f"output/pedvss_opening_check_batch/{p}", f"finalize/pedvss_eval_check_batch/{p}"),
+        ("Key aggregation", f"output/vk_aggregation/{p}", f"finalize/cstar_aggregate_and_eval/{p}"),
+        ("Message authentication", f"output/wire_verify_batch_{s}/{p}", f"finalize/signature_verify_batch_{s}/{p}"),
+        ("Message decoding", f"output/wire_decode_batch_{s}/{p}", f"finalize/wire_decode_batch_{s}/{p}"),
+        ("Public-key contributions", None, f"output/pk_verify_batch/{p}"),
+        ("Key-equality proofs", None, f"output/comeq_verify_batch/{p}"),
+    ]
 
 
 def to_ms(value, unit):
@@ -340,28 +359,30 @@ def main():
         parts.append("### Channel signatures\n")
         parts.append(body + "\n")
 
-    t_comp, n_comp = COMPONENT_SET[1:].split("_n")
-    parts.append(
-        f"## Component breakdown, Fischlin small, (t={t_comp}, n={n_comp})\n"
-    )
-    parts.append("| Component | One round | Two rounds |")
-    parts.append("|:---|---:|---:|")
-    pairs = [
-        ("Proof generation", "initiate/poly_prove_fischlin", "initiate/decom_prove_fischlin"),
-        ("Share encryption", "initiate/encrypt_shares_batch", "initiate/encrypt_shares_batch"),
-        ("Proof verification, one", "output/poly_verify_fischlin_single", "finalize/decom_verify_fischlin_single"),
-        ("Proof verification, all", "output/poly_verify_fischlin_batch_n64", "finalize/decom_verify_fischlin_batch_n64"),
-        ("Share decryption", "output/decrypt_batch_n63", "finalize/decrypt_batch_n63"),
-        ("Opening checks", "output/pedvss_opening_check_batch_n63", "finalize/pedvss_eval_check_batch_n63"),
-        ("Key aggregation", "output/vk_aggregation_n64", "finalize/cstar_aggregate_and_eval_n64"),
-        ("Message authentication", "output/wire_verify_batch_n64", "finalize/signature_verify_batch_n64"),
-        ("Message decoding", "output/wire_decode_batch_n64", "finalize/wire_decode_batch_n64"),
-    ]
-    for label, one_key, two_key in pairs:
-        left = fmt(one_comp.get(one_key)) if one_key else "--"
-        right = fmt(two_comp.get(two_key)) if two_key else "--"
-        parts.append(f"| {label} | {left} | {right} |")
-    parts.append("")
+    parts.append("## Component breakdown\n")
+    for n in COMPONENT_NS:
+        for sname, scheme in COMPONENT_SCHEMES:
+            pairs = component_pairs(scheme, n)
+            rows, one_total, two_total = [], 0.0, 0.0
+            for label, one_key, two_key in pairs:
+                one = one_comp.get(one_key) if one_key else None
+                two = two_comp.get(two_key) if two_key else None
+                if one is None and two is None:
+                    continue
+                # The per-proof row is a unit cost, already counted n times by the
+                # batch row, so it is reported but not summed.
+                if not label.endswith(", one"):
+                    one_total += one or 0.0
+                    two_total += two or 0.0
+                rows.append(f"| {label} | {fmt(one)} | {fmt(two)} |")
+            if not rows:
+                continue
+            parts.append(f"### {sname}, (t={n - 1}, n={n})\n")
+            parts.append("| Component | One round | Two rounds |")
+            parts.append("|:---|---:|---:|")
+            parts.extend(rows)
+            parts.append(f"| **Total** | **{fmt(one_total)}** | **{fmt(two_total)}** |")
+            parts.append("")
 
     if run_sizes:
         parts.append("## End-to-end run\n")
