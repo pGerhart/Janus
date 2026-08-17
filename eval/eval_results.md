@@ -185,19 +185,109 @@ Median runtimes per party, measured with `cargo bench` (Criterion). Regenerate w
 | (255, 256) | 520.6 ms | 519.7 ms |
 | (511, 512) | 2.06 s | 2.07 s |
 
-## Component breakdown, Fischlin small, (t=63, n=64)
+## Component breakdown
+
+### Fiat-Shamir, (t=15, n=16)
 
 | Component | One round | Two rounds |
 |:---|---:|---:|
-| Proof generation | 12.8 ms | 42.9 ms |
+| Proof generation | 492 µs | 131 µs |
+| Share encryption | 323 µs | 324 µs |
+| Proof verification, one | 302 µs | 152 µs |
+| Proof verification, all | 5.1 ms | 2.6 ms |
+| Share decryption | 620 µs | 620 µs |
+| Opening checks | 285 µs | 4.0 ms |
+| Key aggregation | 37 µs | 4.0 ms |
+| Message authentication | 435 µs | 1.6 ms |
+| Message decoding | 2.7 ms | 1.7 ms |
+| Public-key contributions | -- | 899 µs |
+| Key-equality proofs | -- | 1.4 ms |
+| **Total** | **10.0 ms** | **17.4 ms** |
+
+### Fischlin small, (t=15, n=16)
+
+| Component | One round | Two rounds |
+|:---|---:|---:|
+| Proof generation | 3.5 ms | 11.7 ms |
+| Share encryption | 323 µs | 324 µs |
+| Proof verification, one | 2.2 ms | 728 µs |
+| Proof verification, all | 34.5 ms | 11.9 ms |
+| Share decryption | 620 µs | 620 µs |
+| Opening checks | 285 µs | 4.0 ms |
+| Key aggregation | 37 µs | 4.0 ms |
+| Message authentication | 963 µs | 3.0 ms |
+| Message decoding | 19.3 ms | 3.8 ms |
+| Public-key contributions | -- | 899 µs |
+| Key-equality proofs | -- | 1.4 ms |
+| **Total** | **59.6 ms** | **41.7 ms** |
+
+### Fiat-Shamir, (t=63, n=64)
+
+| Component | One round | Two rounds |
+|:---|---:|---:|
+| Proof generation | 2.2 ms | 400 µs |
+| Share encryption | 1.3 ms | 1.3 ms |
+| Proof verification, one | 1.5 ms | 528 µs |
+| Proof verification, all | 96.0 ms | 35.5 ms |
+| Share decryption | 2.6 ms | 2.6 ms |
+| Opening checks | 1.2 ms | 64.3 ms |
+| Key aggregation | 579 µs | 64.5 ms |
+| Message authentication | 2.6 ms | 18.8 ms |
+| Message decoding | 35.9 ms | 20.4 ms |
+| Public-key contributions | -- | 3.7 ms |
+| Key-equality proofs | -- | 5.6 ms |
+| **Total** | **142.4 ms** | **217.1 ms** |
+
+### Fischlin small, (t=63, n=64)
+
+| Component | One round | Two rounds |
+|:---|---:|---:|
+| Proof generation | 12.7 ms | 40.3 ms |
 | Share encryption | 1.3 ms | 1.3 ms |
 | Proof verification, one | 8.0 ms | 1.5 ms |
-| Proof verification, all | 514.2 ms | 99.2 ms |
+| Proof verification, all | 511.7 ms | 98.5 ms |
 | Share decryption | 2.6 ms | 2.6 ms |
-| Opening checks | 1.2 ms | 64.2 ms |
-| Key aggregation | 578 µs | 64.9 ms |
-| Message authentication | 11.1 ms | 31.0 ms |
-| Message decoding | 293.7 ms | 43.3 ms |
+| Opening checks | 1.2 ms | 64.3 ms |
+| Key aggregation | 579 µs | 64.5 ms |
+| Message authentication | 10.9 ms | 30.5 ms |
+| Message decoding | 296.2 ms | 41.7 ms |
+| Public-key contributions | -- | 3.7 ms |
+| Key-equality proofs | -- | 5.6 ms |
+| **Total** | **837.2 ms** | **353.0 ms** |
+
+### Fiat-Shamir, (t=511, n=512)
+
+| Component | One round | Two rounds |
+|:---|---:|---:|
+| Proof generation | 42.4 ms | 2.9 ms |
+| Share encryption | 10.1 ms | 10.1 ms |
+| Proof verification, one | 34.9 ms | 3.7 ms |
+| Proof verification, all | 17.86 s | 1.91 s |
+| Share decryption | 19.9 ms | 19.9 ms |
+| Opening checks | 9.6 ms | 4.10 s |
+| Key aggregation | 64.0 ms | 4.13 s |
+| Message authentication | 86.2 ms | 1.08 s |
+| Message decoding | 2.18 s | 1.18 s |
+| Public-key contributions | -- | 29.3 ms |
+| Key-equality proofs | -- | 45.2 ms |
+| **Total** | **20.27 s** | **12.52 s** |
+
+### Fischlin small, (t=511, n=512)
+
+| Component | One round | Two rounds |
+|:---|---:|---:|
+| Proof generation | 125.4 ms | 333.2 ms |
+| Share encryption | 10.1 ms | 10.1 ms |
+| Proof verification, one | 87.2 ms | 8.4 ms |
+| Proof verification, all | 44.59 s | 4.32 s |
+| Share decryption | 19.9 ms | 19.9 ms |
+| Opening checks | 9.6 ms | 4.10 s |
+| Key aggregation | 64.0 ms | 4.13 s |
+| Message authentication | 638.7 ms | 1.61 s |
+| Message decoding | 18.59 s | 2.32 s |
+| Public-key contributions | -- | 29.3 ms |
+| Key-equality proofs | -- | 45.2 ms |
+| **Total** | **64.05 s** | **16.92 s** |
 
 ## End-to-end run
 
