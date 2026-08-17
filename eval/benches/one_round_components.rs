@@ -1,6 +1,4 @@
-// Component-level breakdown of the one-round DKG, per proof system and committee
-// size. The two committee sizes bracket the crossover with the two-round variant,
-// so the breakdown shows which operations move it.
+// Component-level breakdown of the one-round DKG, per proof system and committee size.
 // Mirrors two_round_components.rs so the two can be compared side-by-side.
 
 use janus::{
@@ -22,7 +20,7 @@ use rand::rng;
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 
-const NS: [usize; 2] = [16, 512];
+const NS: [usize; 3] = [16, 64, 512];
 
 fn committee_sizes() -> Vec<usize> {
     let max_n = std::env::var("JANUS_BENCH_MAX_N")
@@ -38,13 +36,10 @@ const FISCHLIN: FischlinProofParams = FischlinProofParams {
     t_bits: 13,
 };
 
-// n-out-of-n, as everywhere else in the suite.
 fn degree(n: usize) -> usize {
     n - 1
 }
 
-// The batch benchmarks at n = 512 take tens of seconds per iteration, so the
-// default sample count would run for a quarter of an hour each.
 fn samples(n: usize) -> usize {
     if n >= 256 { 10 } else { 100 }
 }
@@ -76,7 +71,6 @@ fn poly_instance(n: usize) -> (PolyWellFormedStatement, PolyWellFormedWitness) {
     (stmt, wit)
 }
 
-// Everything that does not depend on the proof system: measured once per n.
 fn bench_transform_independent(c: &mut Criterion, n: usize) {
     let mut rng = rng();
     let t = degree(n);
@@ -179,8 +173,6 @@ fn bench_transform_independent(c: &mut Criterion, n: usize) {
     group.finish();
 }
 
-// Everything the proof system moves: proving, verifying, and the wire path, whose
-// cost follows the proof bytes.
 fn bench_scheme<S>(c: &mut Criterion, scheme: &str, proof_params: S::Params, n: usize)
 where
     S: PolyProofScheme,
@@ -244,8 +236,6 @@ where
     );
     drop(proofs);
 
-    // The channel-facing path. Both steps follow the proof bytes, so they are
-    // measured per proof system and split so each is attributable on its own.
     let dkg_params = DkgParams { t: degree(n), n };
     let party_states: Vec<_> = (1..=n).map(|i| make_party_state(&mut rng, i)).collect();
     let parties = collect_public_parties(&party_states);

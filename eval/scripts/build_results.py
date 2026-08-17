@@ -39,9 +39,6 @@ RSS = re.compile(r"peak_rss=([\d.]+) (\w+)")
 ENC_SIZE = re.compile(r"^\[(t\d+_n\d+)\] verbose=(\d+) B compact=(\d+) B")
 ECHO_BYTES = 32
 
-# Two network rounds per broadcast round, which is what a broadcast costs in the
-# optimistic case and with a trusted dealer. Janus-1 has one broadcast round,
-# Janus-2 has two.
 ROUNDS_PER_BROADCAST = 2
 BROADCASTS = {"janus1": 1, "janus2": 2}
 UNIT = {"B": 1.0, "KB": 1024.0, "MB": 1024.0**2, "GB": 1024.0**3}
@@ -53,7 +50,7 @@ TSWEEP = [f"t{t}_n256" for t in (16, 32, 64, 128, 192, 255)]
 
 PRETTY = {p: f"({p[1:].split('_n')[0]}, {p.split('_n')[1]})" for p in SETS + TSWEEP}
 
-COMPONENT_NS = [16, 512]
+COMPONENT_NS = [16, 64, 512]
 COMPONENT_SCHEMES = [("Fiat-Shamir", "schnorr"), ("Fischlin small", "fischlin_small")]
 
 
@@ -369,8 +366,6 @@ def main():
                 two = two_comp.get(two_key) if two_key else None
                 if one is None and two is None:
                     continue
-                # The per-proof row is a unit cost, already counted n times by the
-                # batch row, so it is reported but not summed.
                 if not label.endswith(", one"):
                     one_total += one or 0.0
                     two_total += two or 0.0

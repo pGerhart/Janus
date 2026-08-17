@@ -1,6 +1,4 @@
-// Component-level breakdown of the two-round DKG, per proof system and committee
-// size. The two committee sizes bracket the crossover with the one-round variant,
-// so the breakdown shows which operations move it.
+// Component-level breakdown of the two-round DKG, per proof system and committee size.
 //
 // Each benchmark isolates one step so we can see where the time goes within
 // initiate, finalize, and output.
@@ -27,7 +25,7 @@ use rand::rng;
 use serde::Serialize;
 use serde::de::DeserializeOwned;
 
-const NS: [usize; 2] = [16, 512];
+const NS: [usize; 3] = [16, 64, 512];
 
 fn committee_sizes() -> Vec<usize> {
     let max_n = std::env::var("JANUS_BENCH_MAX_N")
@@ -43,13 +41,10 @@ const FISCHLIN: FischlinDecomProofParams = FischlinDecomProofParams {
     t_bits: 13,
 };
 
-// n-out-of-n, as everywhere else in the suite.
 fn degree(n: usize) -> usize {
     n - 1
 }
 
-// The batch benchmarks at n = 512 take tens of seconds per iteration, so the
-// default sample count would run for a quarter of an hour each.
 fn samples(n: usize) -> usize {
     if n >= 256 { 10 } else { 100 }
 }
@@ -127,7 +122,6 @@ fn build_cstar(all_pedvss: &[Vec<PedersenCommitment>], n: usize) -> Vec<Ristrett
         .collect()
 }
 
-// Everything that does not depend on the proof system: measured once per n.
 fn bench_transform_independent(c: &mut Criterion, n: usize) {
     let mut rng = rng();
     let t = degree(n);
@@ -197,7 +191,6 @@ fn bench_transform_independent(c: &mut Criterion, n: usize) {
             });
         });
 
-        // n-1 pedvss sets (one per remote party), each with t+1 commitments.
         let pedvss_sets: Vec<Vec<PedersenCommitment>> = (0..n - 1)
             .map(|_| {
                 (0..=t)
@@ -304,8 +297,6 @@ fn bench_transform_independent(c: &mut Criterion, n: usize) {
     group.finish();
 }
 
-// Everything the proof system moves: proving, verifying, and the wire path, whose
-// cost follows the proof bytes.
 fn bench_scheme<S>(c: &mut Criterion, scheme: &str, proof_params: S::Params, n: usize)
 where
     S: DecomProofScheme<Statement = DecomStatement, Witness = DecomWitness>,
@@ -369,8 +360,6 @@ where
     );
     drop(proofs);
 
-    // The channel-facing path. Both steps follow the proof bytes, so they are
-    // measured per proof system.
     let dkg_params = DkgParams { t: degree(n), n };
     let party_states: Vec<_> = (1..=n).map(|i| make_party_state(&mut rng, i)).collect();
     let parties = collect_public_parties(&party_states);
