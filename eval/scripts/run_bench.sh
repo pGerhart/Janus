@@ -20,6 +20,24 @@ export RUSTFLAGS="${RUSTFLAGS:--C target-cpu=native}"
 OUT=eval/bench_raw
 mkdir -p "$OUT"
 
+ALL_SUITES=(one_round_dkg_run one_round_components two_round_dkg_run
+            two_round_components abort_path optimizations parallel_scaling
+            full_run encoding_compare)
+
+if [ "$#" -gt 0 ]; then
+    SUITES=("$@")
+    for s in "${SUITES[@]}"; do
+        case " ${ALL_SUITES[*]} " in
+            *" $s "*) ;;
+            *) echo "unknown suite: $s" >&2
+               echo "pick from: ${ALL_SUITES[*]}" >&2
+               exit 1 ;;
+        esac
+    done
+else
+    SUITES=("${ALL_SUITES[@]}")
+fi
+
 # Record what the numbers depend on. Without this the run is not reproducible.
 {
     echo "date=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
@@ -88,15 +106,14 @@ cargo clippy --workspace --all-targets --locked -- -D warnings \
     -A clippy::too_many_arguments \
     -A clippy::type_complexity
 
-for suite in one_round_dkg_run one_round_components two_round_dkg_run \
-             two_round_components abort_path optimizations parallel_scaling full_run; do
+for suite in "${SUITES[@]}"; do
     echo "== $suite =="
-    cargo bench --bench "$suite" --locked 2>&1 | tee "$OUT/$suite.txt"
+    if [ "$suite" = encoding_compare ]; then
+        cargo bench -p compact-encoding --locked 2>&1 | tee "$OUT/$suite.txt"
+    else
+        cargo bench --bench "$suite" --locked 2>&1 | tee "$OUT/$suite.txt"
+    fi
 done
-
-# The alternative encoding lives in its own crate, so it needs its own line.
-echo "== encoding_compare =="
-cargo bench -p compact-encoding --locked 2>&1 | tee "$OUT/encoding_compare.txt"
 
 echo "== results =="
 python3 eval/scripts/build_results.py
