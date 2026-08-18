@@ -25,31 +25,31 @@ Median runtimes per party, measured with `cargo bench` (Criterion). Regenerate w
 | (t, n) | Initiate | Output |
 |:---|---:|---:|
 | (15, 16) | 1.3 ms | 8.7 ms |
-| (31, 32) | 2.7 ms | 32.5 ms |
-| (63, 64) | 5.7 ms | 135.7 ms |
-| (127, 128) | 13.1 ms | 612.7 ms |
-| (255, 256) | 33.1 ms | 3.29 s |
-| (511, 512) | 94.0 ms | 20.10 s |
+| (31, 32) | 2.7 ms | 32.3 ms |
+| (63, 64) | 5.7 ms | 135.1 ms |
+| (127, 128) | 13.1 ms | 611.7 ms |
+| (255, 256) | 33.0 ms | 3.27 s |
+| (511, 512) | 93.7 ms | 20.01 s |
 
 ### Fischlin small
 
 | (t, n) | Initiate | Output |
 |:---|---:|---:|
-| (15, 16) | 5.9 ms | 54.3 ms |
-| (31, 32) | 10.6 ms | 203.3 ms |
-| (63, 64) | 20.5 ms | 796.2 ms |
-| (127, 128) | 41.1 ms | 3.26 s |
-| (255, 256) | 91.0 ms | 13.77 s |
-| (511, 512) | 208.6 ms | 62.06 s |
+| (15, 16) | 18.3 ms | 53.9 ms |
+| (31, 32) | 35.4 ms | 203.0 ms |
+| (63, 64) | 73.3 ms | 792.3 ms |
+| (127, 128) | 157.6 ms | 3.25 s |
+| (255, 256) | 369.3 ms | 13.77 s |
+| (511, 512) | 993.5 ms | 62.09 s |
 
 ### Fischlin large
 
 | (t, n) | Initiate | Output |
 |:---|---:|---:|
-| (15, 16) | 6.6 ms | 130.5 ms |
-| (31, 32) | 12.7 ms | 495.3 ms |
-| (63, 64) | 25.6 ms | 1.94 s |
-| (127, 128) | 54.7 ms | 7.74 s |
+| (15, 16) | 22.5 ms | 129.9 ms |
+| (31, 32) | 46.3 ms | 494.3 ms |
+| (63, 64) | 100.5 ms | 1.93 s |
+| (127, 128) | 238.0 ms | 7.73 s |
 
 ## Janus-2 (two rounds)
 
@@ -191,14 +191,14 @@ Median runtimes per party, measured with `cargo bench` (Criterion). Regenerate w
 
 | Component | One round | Two rounds |
 |:---|---:|---:|
-| Proof generation | 492 µs | 131 µs |
+| Proof generation | 494 µs | 131 µs |
 | Share encryption | 323 µs | 324 µs |
-| Proof verification, one | 302 µs | 152 µs |
+| Proof verification, one | 300 µs | 152 µs |
 | Proof verification, all | 5.1 ms | 2.6 ms |
-| Share decryption | 620 µs | 620 µs |
-| Opening checks | 285 µs | 4.0 ms |
+| Share decryption | 616 µs | 620 µs |
+| Opening checks | 283 µs | 4.0 ms |
 | Key aggregation | 37 µs | 4.0 ms |
-| Message authentication | 435 µs | 1.6 ms |
+| Message authentication | 433 µs | 1.6 ms |
 | Message decoding | 2.7 ms | 1.7 ms |
 | Public-key contributions | -- | 899 µs |
 | Key-equality proofs | -- | 1.4 ms |
@@ -208,18 +208,18 @@ Median runtimes per party, measured with `cargo bench` (Criterion). Regenerate w
 
 | Component | One round | Two rounds |
 |:---|---:|---:|
-| Proof generation | 3.5 ms | 11.7 ms |
+| Proof generation | 16.3 ms | 11.7 ms |
 | Share encryption | 323 µs | 324 µs |
-| Proof verification, one | 2.2 ms | 728 µs |
+| Proof verification, one | 2.1 ms | 728 µs |
 | Proof verification, all | 34.5 ms | 11.9 ms |
-| Share decryption | 620 µs | 620 µs |
-| Opening checks | 285 µs | 4.0 ms |
+| Share decryption | 616 µs | 620 µs |
+| Opening checks | 283 µs | 4.0 ms |
 | Key aggregation | 37 µs | 4.0 ms |
-| Message authentication | 963 µs | 3.0 ms |
-| Message decoding | 19.3 ms | 3.8 ms |
+| Message authentication | 960 µs | 3.0 ms |
+| Message decoding | 19.2 ms | 3.8 ms |
 | Public-key contributions | -- | 899 µs |
 | Key-equality proofs | -- | 1.4 ms |
-| **Total** | **59.6 ms** | **41.7 ms** |
+| **Total** | **72.2 ms** | **41.7 ms** |
 
 ### Fiat-Shamir, (t=63, n=64)
 
@@ -228,66 +228,66 @@ Median runtimes per party, measured with `cargo bench` (Criterion). Regenerate w
 | Proof generation | 2.2 ms | 400 µs |
 | Share encryption | 1.3 ms | 1.3 ms |
 | Proof verification, one | 1.5 ms | 528 µs |
-| Proof verification, all | 96.0 ms | 35.5 ms |
+| Proof verification, all | 95.9 ms | 35.5 ms |
 | Share decryption | 2.6 ms | 2.6 ms |
 | Opening checks | 1.2 ms | 64.3 ms |
-| Key aggregation | 579 µs | 64.5 ms |
+| Key aggregation | 581 µs | 64.5 ms |
 | Message authentication | 2.6 ms | 18.8 ms |
-| Message decoding | 35.9 ms | 20.4 ms |
+| Message decoding | 35.8 ms | 20.4 ms |
 | Public-key contributions | -- | 3.7 ms |
 | Key-equality proofs | -- | 5.6 ms |
-| **Total** | **142.4 ms** | **217.1 ms** |
+| **Total** | **142.1 ms** | **217.1 ms** |
 
 ### Fischlin small, (t=63, n=64)
 
 | Component | One round | Two rounds |
 |:---|---:|---:|
-| Proof generation | 12.7 ms | 40.3 ms |
+| Proof generation | 65.1 ms | 40.3 ms |
 | Share encryption | 1.3 ms | 1.3 ms |
 | Proof verification, one | 8.0 ms | 1.5 ms |
-| Proof verification, all | 511.7 ms | 98.5 ms |
+| Proof verification, all | 512.0 ms | 98.5 ms |
 | Share decryption | 2.6 ms | 2.6 ms |
 | Opening checks | 1.2 ms | 64.3 ms |
-| Key aggregation | 579 µs | 64.5 ms |
+| Key aggregation | 581 µs | 64.5 ms |
 | Message authentication | 10.9 ms | 30.5 ms |
-| Message decoding | 296.2 ms | 41.7 ms |
+| Message decoding | 295.6 ms | 41.7 ms |
 | Public-key contributions | -- | 3.7 ms |
 | Key-equality proofs | -- | 5.6 ms |
-| **Total** | **837.2 ms** | **353.0 ms** |
+| **Total** | **889.3 ms** | **353.0 ms** |
 
 ### Fiat-Shamir, (t=511, n=512)
 
 | Component | One round | Two rounds |
 |:---|---:|---:|
-| Proof generation | 42.4 ms | 2.9 ms |
+| Proof generation | 42.0 ms | 2.9 ms |
 | Share encryption | 10.1 ms | 10.1 ms |
-| Proof verification, one | 34.9 ms | 3.7 ms |
-| Proof verification, all | 17.86 s | 1.91 s |
-| Share decryption | 19.9 ms | 19.9 ms |
-| Opening checks | 9.6 ms | 4.10 s |
-| Key aggregation | 64.0 ms | 4.13 s |
+| Proof verification, one | 34.6 ms | 3.7 ms |
+| Proof verification, all | 17.70 s | 1.91 s |
+| Share decryption | 19.8 ms | 19.9 ms |
+| Opening checks | 9.7 ms | 4.10 s |
+| Key aggregation | 50.7 ms | 4.13 s |
 | Message authentication | 86.2 ms | 1.08 s |
 | Message decoding | 2.18 s | 1.18 s |
 | Public-key contributions | -- | 29.3 ms |
 | Key-equality proofs | -- | 45.2 ms |
-| **Total** | **20.27 s** | **12.52 s** |
+| **Total** | **20.09 s** | **12.52 s** |
 
 ### Fischlin small, (t=511, n=512)
 
 | Component | One round | Two rounds |
 |:---|---:|---:|
-| Proof generation | 125.4 ms | 333.2 ms |
+| Proof generation | 853.6 ms | 333.2 ms |
 | Share encryption | 10.1 ms | 10.1 ms |
-| Proof verification, one | 87.2 ms | 8.4 ms |
-| Proof verification, all | 44.59 s | 4.32 s |
-| Share decryption | 19.9 ms | 19.9 ms |
-| Opening checks | 9.6 ms | 4.10 s |
-| Key aggregation | 64.0 ms | 4.13 s |
-| Message authentication | 638.7 ms | 1.61 s |
-| Message decoding | 18.59 s | 2.32 s |
+| Proof verification, one | 87.8 ms | 8.4 ms |
+| Proof verification, all | 44.96 s | 4.32 s |
+| Share decryption | 19.8 ms | 19.9 ms |
+| Opening checks | 9.7 ms | 4.10 s |
+| Key aggregation | 50.7 ms | 4.13 s |
+| Message authentication | 637.9 ms | 1.61 s |
+| Message decoding | 18.54 s | 2.32 s |
 | Public-key contributions | -- | 29.3 ms |
 | Key-equality proofs | -- | 45.2 ms |
-| **Total** | **64.05 s** | **16.92 s** |
+| **Total** | **65.08 s** | **16.92 s** |
 
 ## End-to-end run
 
@@ -299,45 +299,45 @@ Peak resident memory: 1.7 GB.
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (15, 16) | 10.3 ms | 48.2 KB | 12.3 ms | 60.3 ms | 310.3 ms |
-| (31, 32) | 35.9 ms | 193.2 KB | 37.9 ms | 85.9 ms | 335.9 ms |
-| (63, 64) | 144.2 ms | 772.5 KB | 146.2 ms | 194.2 ms | 444.1 ms |
-| (127, 128) | 633.8 ms | 3.0 MB | 635.8 ms | 683.8 ms | 933.8 ms |
-| (255, 256) | 3.35 s | 12.1 MB | 3.35 s | 3.40 s | 3.65 s |
-| (511, 512) | 20.33 s | 48.4 MB | 20.33 s | 20.38 s | 20.63 s |
+| (15, 16) | 10.2 ms | 48.2 KB | 12.2 ms | 60.2 ms | 310.2 ms |
+| (31, 32) | 35.7 ms | 193.2 KB | 37.7 ms | 85.7 ms | 335.7 ms |
+| (63, 64) | 143.2 ms | 772.5 KB | 145.2 ms | 193.2 ms | 443.2 ms |
+| (127, 128) | 628.8 ms | 3.0 MB | 630.8 ms | 678.8 ms | 928.8 ms |
+| (255, 256) | 3.31 s | 12.1 MB | 3.31 s | 3.36 s | 3.61 s |
+| (511, 512) | 20.05 s | 48.4 MB | 20.05 s | 20.10 s | 20.35 s |
 
 ### Janus-1, Fischlin small
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (15, 16) | 62.2 ms | 393.8 KB | 64.2 ms | 112.2 ms | 362.2 ms |
-| (31, 32) | 220.3 ms | 1.6 MB | 222.3 ms | 270.4 ms | 520.4 ms |
-| (63, 64) | 836.5 ms | 6.3 MB | 838.5 ms | 886.5 ms | 1.14 s |
-| (127, 128) | 3.32 s | 25.4 MB | 3.33 s | 3.37 s | 3.62 s |
-| (255, 256) | 14.11 s | 101.9 MB | 14.11 s | 14.16 s | 14.41 s |
-| (511, 512) | 63.19 s | 408.0 MB | 63.19 s | 63.24 s | 63.49 s |
+| (15, 16) | 74.7 ms | 393.8 KB | 76.7 ms | 124.7 ms | 374.7 ms |
+| (31, 32) | 243.2 ms | 1.6 MB | 245.2 ms | 293.2 ms | 543.2 ms |
+| (63, 64) | 889.5 ms | 6.3 MB | 891.5 ms | 939.5 ms | 1.19 s |
+| (127, 128) | 3.42 s | 25.4 MB | 3.42 s | 3.47 s | 3.72 s |
+| (255, 256) | 14.34 s | 101.9 MB | 14.34 s | 14.39 s | 14.64 s |
+| (511, 512) | 63.75 s | 408.0 MB | 63.75 s | 63.80 s | 64.05 s |
 
 ### Janus-2, Schnorr
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (15, 16) | 20.1 ms | 49.3 KB | 24.1 ms | 120.1 ms | 620.1 ms |
-| (31, 32) | 64.5 ms | 179.9 KB | 68.5 ms | 164.5 ms | 664.5 ms |
-| (63, 64) | 227.8 ms | 682.5 KB | 231.8 ms | 327.8 ms | 827.8 ms |
-| (127, 128) | 851.1 ms | 2.6 MB | 855.1 ms | 951.1 ms | 1.45 s |
-| (255, 256) | 3.24 s | 10.2 MB | 3.24 s | 3.34 s | 3.84 s |
-| (511, 512) | 12.63 s | 40.7 MB | 12.64 s | 12.73 s | 13.23 s |
+| (15, 16) | 19.9 ms | 49.3 KB | 23.9 ms | 119.9 ms | 619.9 ms |
+| (31, 32) | 64.1 ms | 179.9 KB | 68.1 ms | 164.1 ms | 664.1 ms |
+| (63, 64) | 226.4 ms | 682.5 KB | 230.4 ms | 326.4 ms | 826.4 ms |
+| (127, 128) | 846.5 ms | 2.6 MB | 850.5 ms | 946.5 ms | 1.45 s |
+| (255, 256) | 3.22 s | 10.2 MB | 3.22 s | 3.32 s | 3.82 s |
+| (511, 512) | 12.57 s | 40.7 MB | 12.57 s | 12.67 s | 13.17 s |
 
 ### Janus-2, Fischlin small
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (15, 16) | 45.4 ms | 296.2 KB | 49.4 ms | 145.4 ms | 645.4 ms |
-| (31, 32) | 118.8 ms | 1.1 MB | 122.8 ms | 218.8 ms | 718.8 ms |
-| (63, 64) | 364.7 ms | 4.4 MB | 368.7 ms | 464.7 ms | 964.7 ms |
+| (15, 16) | 44.5 ms | 296.2 KB | 48.5 ms | 144.5 ms | 644.5 ms |
+| (31, 32) | 119.8 ms | 1.1 MB | 123.8 ms | 219.8 ms | 719.8 ms |
+| (63, 64) | 365.8 ms | 4.4 MB | 369.8 ms | 465.8 ms | 965.8 ms |
 | (127, 128) | 1.24 s | 17.7 MB | 1.24 s | 1.34 s | 1.84 s |
-| (255, 256) | 4.50 s | 70.4 MB | 4.50 s | 4.60 s | 5.10 s |
-| (511, 512) | 17.15 s | 281.0 MB | 17.16 s | 17.25 s | 17.75 s |
+| (255, 256) | 4.48 s | 70.4 MB | 4.48 s | 4.58 s | 5.08 s |
+| (511, 512) | 17.00 s | 281.0 MB | 17.00 s | 17.10 s | 17.60 s |
 
 ### What the second round of a broadcast costs
 
@@ -360,44 +360,44 @@ Committee fixed at 256, threshold alone moving, up to the n-out-of-n point the t
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (16, 256) | 1.63 s | 10.2 MB | 1.64 s | 1.68 s | 1.93 s |
-| (32, 256) | 1.75 s | 10.4 MB | 1.75 s | 1.80 s | 2.05 s |
-| (64, 256) | 1.98 s | 10.6 MB | 1.98 s | 2.03 s | 2.28 s |
-| (128, 256) | 2.44 s | 11.1 MB | 2.44 s | 2.49 s | 2.74 s |
-| (192, 256) | 2.90 s | 11.6 MB | 2.90 s | 2.95 s | 3.20 s |
-| (255, 256) | 3.35 s | 12.1 MB | 3.35 s | 3.40 s | 3.65 s |
+| (16, 256) | 1.62 s | 10.2 MB | 1.62 s | 1.67 s | 1.92 s |
+| (32, 256) | 1.73 s | 10.4 MB | 1.74 s | 1.78 s | 2.03 s |
+| (64, 256) | 1.96 s | 10.6 MB | 1.96 s | 2.01 s | 2.26 s |
+| (128, 256) | 2.41 s | 11.1 MB | 2.41 s | 2.46 s | 2.71 s |
+| (192, 256) | 2.86 s | 11.6 MB | 2.87 s | 2.91 s | 3.16 s |
+| (255, 256) | 3.31 s | 12.1 MB | 3.31 s | 3.36 s | 3.61 s |
 
 ### Janus-1, Fischlin small
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (16, 256) | 11.69 s | 72.1 MB | 11.69 s | 11.74 s | 11.99 s |
-| (32, 256) | 11.84 s | 74.1 MB | 11.84 s | 11.89 s | 12.14 s |
-| (64, 256) | 12.14 s | 78.1 MB | 12.14 s | 12.19 s | 12.44 s |
-| (128, 256) | 12.74 s | 86.1 MB | 12.74 s | 12.79 s | 13.04 s |
-| (192, 256) | 13.33 s | 94.0 MB | 13.34 s | 13.38 s | 13.63 s |
-| (255, 256) | 13.92 s | 101.9 MB | 13.92 s | 13.97 s | 14.22 s |
+| (16, 256) | 11.79 s | 72.1 MB | 11.79 s | 11.84 s | 12.09 s |
+| (32, 256) | 11.93 s | 74.1 MB | 11.94 s | 11.98 s | 12.23 s |
+| (64, 256) | 12.25 s | 78.1 MB | 12.25 s | 12.30 s | 12.55 s |
+| (128, 256) | 12.88 s | 86.1 MB | 12.88 s | 12.93 s | 13.18 s |
+| (192, 256) | 13.50 s | 94.0 MB | 13.50 s | 13.55 s | 13.80 s |
+| (255, 256) | 14.14 s | 101.9 MB | 14.14 s | 14.19 s | 14.44 s |
 
 ### Janus-2, Schnorr
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (16, 256) | 352.4 ms | 4.7 MB | 356.4 ms | 452.4 ms | 952.4 ms |
-| (32, 256) | 546.8 ms | 5.0 MB | 550.8 ms | 646.8 ms | 1.15 s |
-| (64, 256) | 942.3 ms | 5.8 MB | 946.3 ms | 1.04 s | 1.54 s |
-| (128, 256) | 1.73 s | 7.3 MB | 1.73 s | 1.83 s | 2.33 s |
-| (192, 256) | 2.49 s | 8.8 MB | 2.49 s | 2.59 s | 3.09 s |
-| (255, 256) | 3.24 s | 10.2 MB | 3.24 s | 3.34 s | 3.84 s |
+| (16, 256) | 352.1 ms | 4.7 MB | 356.1 ms | 452.1 ms | 952.1 ms |
+| (32, 256) | 547.5 ms | 5.0 MB | 551.5 ms | 647.5 ms | 1.15 s |
+| (64, 256) | 938.5 ms | 5.8 MB | 942.5 ms | 1.04 s | 1.54 s |
+| (128, 256) | 1.72 s | 7.3 MB | 1.72 s | 1.82 s | 2.32 s |
+| (192, 256) | 2.47 s | 8.8 MB | 2.48 s | 2.57 s | 3.07 s |
+| (255, 256) | 3.22 s | 10.2 MB | 3.22 s | 3.32 s | 3.82 s |
 
 ### Janus-2, Fischlin small
 
 | (t, n) | Compute | Received | One region (1 ms, 10 Gbit/s) | Cross-region (25 ms, 1 Gbit/s) | Intercontinental (150 ms, 1 Gbit/s) |
 |:---|---:|---:|---:|---:|---:|
-| (16, 256) | 576.8 ms | 9.0 MB | 580.8 ms | 676.8 ms | 1.18 s |
-| (32, 256) | 846.5 ms | 13.1 MB | 850.5 ms | 946.5 ms | 1.45 s |
+| (16, 256) | 576.9 ms | 9.0 MB | 580.9 ms | 676.9 ms | 1.18 s |
+| (32, 256) | 846.0 ms | 13.1 MB | 850.0 ms | 946.0 ms | 1.45 s |
 | (64, 256) | 1.37 s | 21.3 MB | 1.38 s | 1.47 s | 1.97 s |
-| (128, 256) | 2.44 s | 37.8 MB | 2.44 s | 2.54 s | 3.04 s |
-| (192, 256) | 3.49 s | 54.2 MB | 3.49 s | 3.59 s | 4.09 s |
+| (128, 256) | 2.43 s | 37.8 MB | 2.43 s | 2.53 s | 3.03 s |
+| (192, 256) | 3.46 s | 54.2 MB | 3.46 s | 3.56 s | 4.06 s |
 | (255, 256) | 4.50 s | 70.4 MB | 4.51 s | 4.60 s | 5.10 s |
 
 ## An encoding we measured and did not adopt
@@ -430,18 +430,18 @@ Saving about 35 percent, and at the largest setting worth the arithmetic only be
 [schnorr output t127_n128] received=3159125 (3.01 MB)
 [schnorr output t255_n256] received=12675540 (12.09 MB)
 [schnorr output t511_n512] received=50779092 (48.43 MB)
-[fischlin-small initiate t15_n16] proof=25162 (24.57 KB), broadcast=26845 (26.22 KB)
-[fischlin-small initiate t31_n32] proof=49738 (48.57 KB), broadcast=52973 (51.73 KB)
-[fischlin-small initiate t63_n64] proof=98890 (96.57 KB), broadcast=105229 (102.76 KB)
-[fischlin-small initiate t127_n128] proof=197242 (192.62 KB), broadcast=209791 (204.87 KB)
-[fischlin-small initiate t255_n256] proof=393850 (384.62 KB), broadcast=418944 (409.12 KB)
-[fischlin-small initiate t511_n512] proof=787068 (768.62 KB), broadcast=837250 (817.63 KB)
-[fischlin-small output t15_n16] received=402685 (393.25 KB)
-[fischlin-small output t31_n32] received=1642200 (1.57 MB)
-[fischlin-small output t63_n64] received=6629470 (6.32 MB)
-[fischlin-small output t127_n128] received=26643482 (25.41 MB)
-[fischlin-small output t255_n256] received=106830933 (101.88 MB)
-[fischlin-small output t511_n512] received=427834042 (408.01 MB)
+[fischlin-small initiate t15_n16] proof=25166 (24.58 KB), broadcast=26849 (26.22 KB)
+[fischlin-small initiate t31_n32] proof=49740 (48.57 KB), broadcast=52975 (51.73 KB)
+[fischlin-small initiate t63_n64] proof=98892 (96.57 KB), broadcast=105231 (102.76 KB)
+[fischlin-small initiate t127_n128] proof=197246 (192.62 KB), broadcast=209795 (204.88 KB)
+[fischlin-small initiate t255_n256] proof=393851 (384.62 KB), broadcast=418945 (409.13 KB)
+[fischlin-small initiate t511_n512] proof=787065 (768.62 KB), broadcast=837247 (817.62 KB)
+[fischlin-small output t15_n16] received=402681 (393.24 KB)
+[fischlin-small output t31_n32] received=1642193 (1.57 MB)
+[fischlin-small output t63_n64] received=6629445 (6.32 MB)
+[fischlin-small output t127_n128] received=26643530 (25.41 MB)
+[fischlin-small output t255_n256] received=106830923 (101.88 MB)
+[fischlin-small output t511_n512] received=427834137 (408.01 MB)
 [fischlin-large initiate t15_n16] proof=67597 (66.01 KB), broadcast=69280 (67.66 KB)
 [fischlin-large initiate t31_n32] proof=133645 (130.51 KB), broadcast=136880 (133.67 KB)
 [fischlin-large initiate t63_n64] proof=265741 (259.51 KB), broadcast=272080 (265.70 KB)
