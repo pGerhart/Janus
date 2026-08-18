@@ -3,493 +3,425 @@
 Gnuplot not found, using plotters backend
 Benchmarking initiate/encrypt_shares_batch/n16
 Benchmarking initiate/encrypt_shares_batch/n16: Warming up for 3.0000 s
-Benchmarking initiate/encrypt_shares_batch/n16: Collecting 100 samples in estimated 6.4940 s (20k iterations)
+Benchmarking initiate/encrypt_shares_batch/n16: Collecting 100 samples in estimated 6.5349 s (20k iterations)
 Benchmarking initiate/encrypt_shares_batch/n16: Analyzing
 initiate/encrypt_shares_batch/n16
-                        time:   [323.30 µs 323.35 µs 323.41 µs]
-                        change: [-36.073% -36.041% -36.009%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 9 outliers among 100 measurements (9.00%)
+                        time:   [323.20 µs 323.23 µs 323.26 µs]
+Found 6 outliers among 100 measurements (6.00%)
   1 (1.00%) low severe
   2 (2.00%) high mild
-  6 (6.00%) high severe
+  3 (3.00%) high severe
 
 Benchmarking output/decrypt_batch/n16
 Benchmarking output/decrypt_batch/n16: Warming up for 3.0000 s
-Benchmarking output/decrypt_batch/n16: Collecting 100 samples in estimated 6.2550 s (10k iterations)
+Benchmarking output/decrypt_batch/n16: Collecting 100 samples in estimated 6.2281 s (10k iterations)
 Benchmarking output/decrypt_batch/n16: Analyzing
 output/decrypt_batch/n16
-                        time:   [619.66 µs 619.75 µs 619.86 µs]
-                        change: [-31.978% -31.949% -31.919%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 12 outliers among 100 measurements (12.00%)
+                        time:   [615.52 µs 615.60 µs 615.70 µs]
+Found 3 outliers among 100 measurements (3.00%)
   2 (2.00%) low mild
-  3 (3.00%) high mild
-  7 (7.00%) high severe
+  1 (1.00%) high severe
 Benchmarking output/pedvss_opening_check_batch/n16
 Benchmarking output/pedvss_opening_check_batch/n16: Warming up for 3.0000 s
-Benchmarking output/pedvss_opening_check_batch/n16: Collecting 100 samples in estimated 5.7190 s (20k iterations)
+Benchmarking output/pedvss_opening_check_batch/n16: Collecting 100 samples in estimated 5.6854 s (20k iterations)
 Benchmarking output/pedvss_opening_check_batch/n16: Analyzing
 output/pedvss_opening_check_batch/n16
-                        time:   [284.53 µs 284.82 µs 285.11 µs]
-                        change: [-0.2302% -0.0341% +0.1713%] (p = 0.74 > 0.05)
-                        No change in performance detected.
-Found 6 outliers among 100 measurements (6.00%)
-  3 (3.00%) low mild
+                        time:   [283.07 µs 283.37 µs 283.64 µs]
+Found 1 outliers among 100 measurements (1.00%)
   1 (1.00%) high mild
-  2 (2.00%) high severe
 Benchmarking output/vk_aggregation/n16
 Benchmarking output/vk_aggregation/n16: Warming up for 3.0000 s
-Benchmarking output/vk_aggregation/n16: Collecting 100 samples in estimated 5.1234 s (141k iterations)
+Benchmarking output/vk_aggregation/n16: Collecting 100 samples in estimated 5.0009 s (136k iterations)
 Benchmarking output/vk_aggregation/n16: Analyzing
 output/vk_aggregation/n16
-                        time:   [36.550 µs 36.558 µs 36.567 µs]
-                        change: [-3.5014% -3.4139% -3.2871%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 5 outliers among 100 measurements (5.00%)
+                        time:   [36.532 µs 36.541 µs 36.551 µs]
+Found 6 outliers among 100 measurements (6.00%)
+  1 (1.00%) low severe
   2 (2.00%) low mild
-  2 (2.00%) high mild
-  1 (1.00%) high severe
+  3 (3.00%) high mild
 
 Benchmarking initiate/poly_prove_schnorr/n16
 Benchmarking initiate/poly_prove_schnorr/n16: Warming up for 3.0000 s
-Benchmarking initiate/poly_prove_schnorr/n16: Collecting 100 samples in estimated 7.3451 s (15k iterations)
+Benchmarking initiate/poly_prove_schnorr/n16: Collecting 100 samples in estimated 5.0417 s (10k iterations)
 Benchmarking initiate/poly_prove_schnorr/n16: Analyzing
 initiate/poly_prove_schnorr/n16
-                        time:   [491.39 µs 491.57 µs 491.75 µs]
-                        change: [+1.9713% +2.0885% +2.2110%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 7 outliers among 100 measurements (7.00%)
-  1 (1.00%) low severe
+                        time:   [493.09 µs 493.66 µs 494.23 µs]
+Found 2 outliers among 100 measurements (2.00%)
   1 (1.00%) low mild
-  4 (4.00%) high mild
   1 (1.00%) high severe
 
 Benchmarking output/poly_verify_single_schnorr/n16
 Benchmarking output/poly_verify_single_schnorr/n16: Warming up for 3.0000 s
-Benchmarking output/poly_verify_single_schnorr/n16: Collecting 100 samples in estimated 6.0974 s (20k iterations)
+Benchmarking output/poly_verify_single_schnorr/n16: Collecting 100 samples in estimated 6.0616 s (20k iterations)
 Benchmarking output/poly_verify_single_schnorr/n16: Analyzing
 output/poly_verify_single_schnorr/n16
-                        time:   [301.96 µs 302.01 µs 302.07 µs]
-                        change: [-18.544% -18.510% -18.474%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 4 outliers among 100 measurements (4.00%)
-  1 (1.00%) low mild
-  2 (2.00%) high mild
-  1 (1.00%) high severe
+                        time:   [299.68 µs 299.74 µs 299.80 µs]
+Found 7 outliers among 100 measurements (7.00%)
+  2 (2.00%) low severe
+  2 (2.00%) low mild
+  3 (3.00%) high mild
 Benchmarking output/poly_verify_batch_schnorr/n16
 Benchmarking output/poly_verify_batch_schnorr/n16: Warming up for 3.0000 s
-Benchmarking output/poly_verify_batch_schnorr/n16: Collecting 100 samples in estimated 5.1017 s (1000 iterations)
+Benchmarking output/poly_verify_batch_schnorr/n16: Collecting 100 samples in estimated 5.0953 s (1000 iterations)
 Benchmarking output/poly_verify_batch_schnorr/n16: Analyzing
 output/poly_verify_batch_schnorr/n16
-                        time:   [5.0949 ms 5.0961 ms 5.0974 ms]
-                        change: [-18.477% -18.451% -18.426%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 4 outliers among 100 measurements (4.00%)
-  1 (1.00%) low mild
-  1 (1.00%) high mild
-  2 (2.00%) high severe
+                        time:   [5.0873 ms 5.0883 ms 5.0894 ms]
 Benchmarking output/signature_verify_batch_schnorr/n16
 Benchmarking output/signature_verify_batch_schnorr/n16: Warming up for 3.0000 s
-Benchmarking output/signature_verify_batch_schnorr/n16: Collecting 100 samples in estimated 5.1833 s (2000 iterations)
+Benchmarking output/signature_verify_batch_schnorr/n16: Collecting 100 samples in estimated 5.1843 s (2000 iterations)
 Benchmarking output/signature_verify_batch_schnorr/n16: Analyzing
 output/signature_verify_batch_schnorr/n16
-                        time:   [2.5885 ms 2.5890 ms 2.5894 ms]
-                        change: [-8.8089% -8.7867% -8.7638%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 5 outliers among 100 measurements (5.00%)
-  4 (4.00%) high mild
+                        time:   [2.5905 ms 2.5909 ms 2.5913 ms]
+Found 9 outliers among 100 measurements (9.00%)
+  2 (2.00%) low mild
+  6 (6.00%) high mild
   1 (1.00%) high severe
 Benchmarking output/wire_verify_batch_schnorr/n16
 Benchmarking output/wire_verify_batch_schnorr/n16: Warming up for 3.0000 s
-Benchmarking output/wire_verify_batch_schnorr/n16: Collecting 100 samples in estimated 6.5970 s (15k iterations)
+Benchmarking output/wire_verify_batch_schnorr/n16: Collecting 100 samples in estimated 6.5617 s (15k iterations)
 Benchmarking output/wire_verify_batch_schnorr/n16: Analyzing
 output/wire_verify_batch_schnorr/n16
-                        time:   [435.44 µs 435.47 µs 435.51 µs]
-                        change: [-35.784% -35.659% -35.588%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 5 outliers among 100 measurements (5.00%)
-  1 (1.00%) low severe
+                        time:   [433.10 µs 433.14 µs 433.18 µs]
+Found 6 outliers among 100 measurements (6.00%)
+  2 (2.00%) low mild
   3 (3.00%) high mild
   1 (1.00%) high severe
 Benchmarking output/wire_decode_batch_schnorr/n16
 Benchmarking output/wire_decode_batch_schnorr/n16: Warming up for 3.0000 s
-Benchmarking output/wire_decode_batch_schnorr/n16: Collecting 100 samples in estimated 5.1276 s (1900 iterations)
+Benchmarking output/wire_decode_batch_schnorr/n16: Collecting 100 samples in estimated 5.0990 s (1900 iterations)
 Benchmarking output/wire_decode_batch_schnorr/n16: Analyzing
 output/wire_decode_batch_schnorr/n16
-                        time:   [2.6951 ms 2.6956 ms 2.6962 ms]
-                        change: [-8.6452% -8.6161% -8.5900%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 4 outliers among 100 measurements (4.00%)
-  3 (3.00%) high mild
-  1 (1.00%) high severe
+                        time:   [2.6822 ms 2.6826 ms 2.6830 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  1 (1.00%) low mild
+  2 (2.00%) high mild
 
 Benchmarking initiate/poly_prove_fischlin_small/n16
 Benchmarking initiate/poly_prove_fischlin_small/n16: Warming up for 3.0000 s
-Benchmarking initiate/poly_prove_fischlin_small/n16: Collecting 100 samples in estimated 5.3183 s (1500 iterations)
+Benchmarking initiate/poly_prove_fischlin_small/n16: Collecting 100 samples in estimated 6.4922 s (400 iterations)
 Benchmarking initiate/poly_prove_fischlin_small/n16: Analyzing
 initiate/poly_prove_fischlin_small/n16
-                        time:   [3.4766 ms 3.5288 ms 3.5813 ms]
-                        change: [-4.1757% -2.1188% -0.1017%] (p = 0.05 < 0.05)
-                        Change within noise threshold.
+                        time:   [16.075 ms 16.316 ms 16.562 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
 
 Benchmarking output/poly_verify_single_fischlin_small/n16
 Benchmarking output/poly_verify_single_fischlin_small/n16: Warming up for 3.0000 s
-Benchmarking output/poly_verify_single_fischlin_small/n16: Collecting 100 samples in estimated 5.1700 s (2400 iterations)
+Benchmarking output/poly_verify_single_fischlin_small/n16: Collecting 100 samples in estimated 5.1612 s (2400 iterations)
 Benchmarking output/poly_verify_single_fischlin_small/n16: Analyzing
 output/poly_verify_single_fischlin_small/n16
-                        time:   [2.1538 ms 2.1548 ms 2.1559 ms]
-                        change: [-26.765% -26.722% -26.680%] (p = 0.00 < 0.05)
-                        Performance has improved.
+                        time:   [2.1452 ms 2.1460 ms 2.1468 ms]
+Found 2 outliers among 100 measurements (2.00%)
+  2 (2.00%) high mild
 Benchmarking output/poly_verify_batch_fischlin_small/n16
 Benchmarking output/poly_verify_batch_fischlin_small/n16: Warming up for 3.0000 s
-Benchmarking output/poly_verify_batch_fischlin_small/n16: Collecting 100 samples in estimated 6.9275 s (200 iterations)
+Benchmarking output/poly_verify_batch_fischlin_small/n16: Collecting 100 samples in estimated 6.9015 s (200 iterations)
 Benchmarking output/poly_verify_batch_fischlin_small/n16: Analyzing
 output/poly_verify_batch_fischlin_small/n16
-                        time:   [34.516 ms 34.528 ms 34.539 ms]
-                        change: [-25.801% -25.770% -25.737%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 3 outliers among 100 measurements (3.00%)
+                        time:   [34.500 ms 34.511 ms 34.522 ms]
+Found 1 outliers among 100 measurements (1.00%)
   1 (1.00%) low mild
-  2 (2.00%) high mild
 Benchmarking output/signature_verify_batch_fischlin_small/n16
 Benchmarking output/signature_verify_batch_fischlin_small/n16: Warming up for 3.0000 s
-Benchmarking output/signature_verify_batch_fischlin_small/n16: Collecting 100 samples in estimated 5.5377 s (300 iterations)
+Benchmarking output/signature_verify_batch_fischlin_small/n16: Collecting 100 samples in estimated 5.4910 s (300 iterations)
 Benchmarking output/signature_verify_batch_fischlin_small/n16: Analyzing
 output/signature_verify_batch_fischlin_small/n16
-                        time:   [18.388 ms 18.391 ms 18.394 ms]
-                        change: [-0.2223% -0.2008% -0.1804%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 4 outliers among 100 measurements (4.00%)
-  4 (4.00%) high mild
+                        time:   [18.305 ms 18.308 ms 18.310 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
 Benchmarking output/wire_verify_batch_fischlin_small/n16
 Benchmarking output/wire_verify_batch_fischlin_small/n16: Warming up for 3.0000 s
-Benchmarking output/wire_verify_batch_fischlin_small/n16: Collecting 100 samples in estimated 9.7212 s (10k iterations)
+Benchmarking output/wire_verify_batch_fischlin_small/n16: Collecting 100 samples in estimated 9.6969 s (10k iterations)
 Benchmarking output/wire_verify_batch_fischlin_small/n16: Analyzing
 output/wire_verify_batch_fischlin_small/n16
-                        time:   [962.42 µs 962.53 µs 962.64 µs]
-                        change: [-21.959% -21.879% -21.819%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 3 outliers among 100 measurements (3.00%)
-  1 (1.00%) low mild
-  1 (1.00%) high mild
-  1 (1.00%) high severe
+                        time:   [959.70 µs 959.84 µs 959.99 µs]
+Found 4 outliers among 100 measurements (4.00%)
+  4 (4.00%) high mild
 Benchmarking output/wire_decode_batch_fischlin_small/n16
 Benchmarking output/wire_decode_batch_fischlin_small/n16: Warming up for 3.0000 s
-Benchmarking output/wire_decode_batch_fischlin_small/n16: Collecting 100 samples in estimated 5.7939 s (300 iterations)
+Benchmarking output/wire_decode_batch_fischlin_small/n16: Collecting 100 samples in estimated 5.7689 s (300 iterations)
 Benchmarking output/wire_decode_batch_fischlin_small/n16: Analyzing
 output/wire_decode_batch_fischlin_small/n16
-                        time:   [19.338 ms 19.341 ms 19.343 ms]
-                        change: [+0.2186% +0.2375% +0.2559%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 3 outliers among 100 measurements (3.00%)
-  1 (1.00%) low mild
-  2 (2.00%) high mild
+                        time:   [19.196 ms 19.199 ms 19.202 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) high mild
 
 Benchmarking initiate/encrypt_shares_batch/n64
 Benchmarking initiate/encrypt_shares_batch/n64: Warming up for 3.0000 s
 
 Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.4s, enable flat sampling, or reduce sample count to 60.
-Benchmarking initiate/encrypt_shares_batch/n64: Collecting 100 samples in estimated 6.3879 s (5050 iterations)
+Benchmarking initiate/encrypt_shares_batch/n64: Collecting 100 samples in estimated 6.4270 s (5050 iterations)
 Benchmarking initiate/encrypt_shares_batch/n64: Analyzing
 initiate/encrypt_shares_batch/n64
-                        time:   [1.2723 ms 1.2724 ms 1.2725 ms]
-Found 5 outliers among 100 measurements (5.00%)
-  2 (2.00%) high mild
+                        time:   [1.2728 ms 1.2728 ms 1.2729 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  1 (1.00%) low mild
+  4 (4.00%) high mild
   3 (3.00%) high severe
 
 Benchmarking output/decrypt_batch/n64
 Benchmarking output/decrypt_batch/n64: Warming up for 3.0000 s
-Benchmarking output/decrypt_batch/n64: Collecting 100 samples in estimated 5.2107 s (2000 iterations)
+Benchmarking output/decrypt_batch/n64: Collecting 100 samples in estimated 5.1983 s (2000 iterations)
 Benchmarking output/decrypt_batch/n64: Analyzing
 output/decrypt_batch/n64
-                        time:   [2.6058 ms 2.6061 ms 2.6065 ms]
-Found 6 outliers among 100 measurements (6.00%)
-  4 (4.00%) high mild
-  2 (2.00%) high severe
+                        time:   [2.5902 ms 2.5905 ms 2.5909 ms]
+Found 5 outliers among 100 measurements (5.00%)
+  5 (5.00%) high mild
 Benchmarking output/pedvss_opening_check_batch/n64
 Benchmarking output/pedvss_opening_check_batch/n64: Warming up for 3.0000 s
 
 Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.0s, enable flat sampling, or reduce sample count to 60.
-Benchmarking output/pedvss_opening_check_batch/n64: Collecting 100 samples in estimated 5.9668 s (5050 iterations)
+Benchmarking output/pedvss_opening_check_batch/n64: Collecting 100 samples in estimated 5.9785 s (5050 iterations)
 Benchmarking output/pedvss_opening_check_batch/n64: Analyzing
 output/pedvss_opening_check_batch/n64
-                        time:   [1.1884 ms 1.1892 ms 1.1900 ms]
-Found 4 outliers among 100 measurements (4.00%)
-  3 (3.00%) low mild
-  1 (1.00%) high mild
+                        time:   [1.1844 ms 1.1851 ms 1.1859 ms]
+Found 1 outliers among 100 measurements (1.00%)
+  1 (1.00%) low mild
 Benchmarking output/vk_aggregation/n64
 Benchmarking output/vk_aggregation/n64: Warming up for 3.0000 s
-Benchmarking output/vk_aggregation/n64: Collecting 100 samples in estimated 5.8140 s (10k iterations)
+Benchmarking output/vk_aggregation/n64: Collecting 100 samples in estimated 5.8788 s (10k iterations)
 Benchmarking output/vk_aggregation/n64: Analyzing
 output/vk_aggregation/n64
-                        time:   [579.00 µs 579.15 µs 579.30 µs]
-Found 5 outliers among 100 measurements (5.00%)
-  1 (1.00%) low mild
+                        time:   [581.01 µs 581.15 µs 581.30 µs]
+Found 6 outliers among 100 measurements (6.00%)
   4 (4.00%) high mild
+  2 (2.00%) high severe
 
 Benchmarking initiate/poly_prove_schnorr/n64
 Benchmarking initiate/poly_prove_schnorr/n64: Warming up for 3.0000 s
-Benchmarking initiate/poly_prove_schnorr/n64: Collecting 100 samples in estimated 5.0694 s (2300 iterations)
+Benchmarking initiate/poly_prove_schnorr/n64: Collecting 100 samples in estimated 5.1298 s (2300 iterations)
 Benchmarking initiate/poly_prove_schnorr/n64: Analyzing
 initiate/poly_prove_schnorr/n64
-                        time:   [2.2280 ms 2.2289 ms 2.2299 ms]
+                        time:   [2.2097 ms 2.2104 ms 2.2112 ms]
 
 Benchmarking output/poly_verify_single_schnorr/n64
 Benchmarking output/poly_verify_single_schnorr/n64: Warming up for 3.0000 s
 
 Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 7.5s, enable flat sampling, or reduce sample count to 50.
-Benchmarking output/poly_verify_single_schnorr/n64: Collecting 100 samples in estimated 7.5030 s (5050 iterations)
+Benchmarking output/poly_verify_single_schnorr/n64: Collecting 100 samples in estimated 7.5049 s (5050 iterations)
 Benchmarking output/poly_verify_single_schnorr/n64: Analyzing
 output/poly_verify_single_schnorr/n64
-                        time:   [1.4839 ms 1.4844 ms 1.4848 ms]
-Found 7 outliers among 100 measurements (7.00%)
-  6 (6.00%) high mild
+                        time:   [1.4791 ms 1.4795 ms 1.4799 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
   1 (1.00%) high severe
 Benchmarking output/poly_verify_batch_schnorr/n64
 Benchmarking output/poly_verify_batch_schnorr/n64: Warming up for 3.0000 s
 
 Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 9.6s, or reduce sample count to 50.
-Benchmarking output/poly_verify_batch_schnorr/n64: Collecting 100 samples in estimated 9.6430 s (100 iterations)
+Benchmarking output/poly_verify_batch_schnorr/n64: Collecting 100 samples in estimated 9.6062 s (100 iterations)
 Benchmarking output/poly_verify_batch_schnorr/n64: Analyzing
 output/poly_verify_batch_schnorr/n64
-                        time:   [96.025 ms 96.042 ms 96.059 ms]
+                        time:   [95.878 ms 95.899 ms 95.920 ms]
 Benchmarking output/signature_verify_batch_schnorr/n64
 Benchmarking output/signature_verify_batch_schnorr/n64: Warming up for 3.0000 s
-Benchmarking output/signature_verify_batch_schnorr/n64: Collecting 100 samples in estimated 6.8328 s (200 iterations)
+Benchmarking output/signature_verify_batch_schnorr/n64: Collecting 100 samples in estimated 6.8511 s (200 iterations)
 Benchmarking output/signature_verify_batch_schnorr/n64: Analyzing
 output/signature_verify_batch_schnorr/n64
-                        time:   [34.224 ms 34.229 ms 34.234 ms]
-Found 5 outliers among 100 measurements (5.00%)
-  1 (1.00%) low mild
-  4 (4.00%) high mild
+                        time:   [34.223 ms 34.229 ms 34.235 ms]
+Found 4 outliers among 100 measurements (4.00%)
+  2 (2.00%) low mild
+  2 (2.00%) high mild
 Benchmarking output/wire_verify_batch_schnorr/n64
 Benchmarking output/wire_verify_batch_schnorr/n64: Warming up for 3.0000 s
-Benchmarking output/wire_verify_batch_schnorr/n64: Collecting 100 samples in estimated 5.1928 s (2000 iterations)
+Benchmarking output/wire_verify_batch_schnorr/n64: Collecting 100 samples in estimated 5.1635 s (2000 iterations)
 Benchmarking output/wire_verify_batch_schnorr/n64: Analyzing
 output/wire_verify_batch_schnorr/n64
-                        time:   [2.5958 ms 2.5961 ms 2.5964 ms]
-Found 5 outliers among 100 measurements (5.00%)
-  5 (5.00%) high mild
+                        time:   [2.5789 ms 2.5792 ms 2.5795 ms]
+Found 8 outliers among 100 measurements (8.00%)
+  8 (8.00%) high mild
 Benchmarking output/wire_decode_batch_schnorr/n64
 Benchmarking output/wire_decode_batch_schnorr/n64: Warming up for 3.0000 s
-Benchmarking output/wire_decode_batch_schnorr/n64: Collecting 100 samples in estimated 7.2026 s (200 iterations)
+Benchmarking output/wire_decode_batch_schnorr/n64: Collecting 100 samples in estimated 7.1625 s (200 iterations)
 Benchmarking output/wire_decode_batch_schnorr/n64: Analyzing
 output/wire_decode_batch_schnorr/n64
-                        time:   [35.929 ms 35.934 ms 35.939 ms]
+                        time:   [35.790 ms 35.794 ms 35.800 ms]
 Found 2 outliers among 100 measurements (2.00%)
   2 (2.00%) high mild
 
 Benchmarking initiate/poly_prove_fischlin_small/n64
 Benchmarking initiate/poly_prove_fischlin_small/n64: Warming up for 3.0000 s
-Benchmarking initiate/poly_prove_fischlin_small/n64: Collecting 100 samples in estimated 5.1193 s (400 iterations)
+
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 6.4s, or reduce sample count to 70.
+Benchmarking initiate/poly_prove_fischlin_small/n64: Collecting 100 samples in estimated 6.4231 s (100 iterations)
 Benchmarking initiate/poly_prove_fischlin_small/n64: Analyzing
 initiate/poly_prove_fischlin_small/n64
-                        time:   [12.429 ms 12.702 ms 12.985 ms]
-Found 3 outliers among 100 measurements (3.00%)
-  1 (1.00%) low mild
+                        time:   [63.360 ms 65.141 ms 66.988 ms]
+Found 1 outliers among 100 measurements (1.00%)
   1 (1.00%) high mild
-  1 (1.00%) high severe
 
 Benchmarking output/poly_verify_single_fischlin_small/n64
 Benchmarking output/poly_verify_single_fischlin_small/n64: Warming up for 3.0000 s
-Benchmarking output/poly_verify_single_fischlin_small/n64: Collecting 100 samples in estimated 5.5936 s (700 iterations)
+Benchmarking output/poly_verify_single_fischlin_small/n64: Collecting 100 samples in estimated 5.5975 s (700 iterations)
 Benchmarking output/poly_verify_single_fischlin_small/n64: Analyzing
 output/poly_verify_single_fischlin_small/n64
-                        time:   [7.9796 ms 7.9846 ms 7.9895 ms]
+                        time:   [7.9992 ms 8.0033 ms 8.0074 ms]
 Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) low mild
+  1 (1.00%) high mild
 Benchmarking output/poly_verify_batch_fischlin_small/n64
 Benchmarking output/poly_verify_batch_fischlin_small/n64: Warming up for 3.0000 s
 
 Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 51.2s, or reduce sample count to 10.
-Benchmarking output/poly_verify_batch_fischlin_small/n64: Collecting 100 samples in estimated 51.221 s (100 iterations)
+Benchmarking output/poly_verify_batch_fischlin_small/n64: Collecting 100 samples in estimated 51.242 s (100 iterations)
 Benchmarking output/poly_verify_batch_fischlin_small/n64: Analyzing
 output/poly_verify_batch_fischlin_small/n64
-                        time:   [511.58 ms 511.68 ms 511.77 ms]
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) low mild
+                        time:   [511.96 ms 512.02 ms 512.09 ms]
+Found 6 outliers among 100 measurements (6.00%)
+  3 (3.00%) low mild
+  3 (3.00%) high mild
 Benchmarking output/signature_verify_batch_fischlin_small/n64
 Benchmarking output/signature_verify_batch_fischlin_small/n64: Warming up for 3.0000 s
 
-Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 27.7s, or reduce sample count to 10.
-Benchmarking output/signature_verify_batch_fischlin_small/n64: Collecting 100 samples in estimated 27.719 s (100 iterations)
+Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 27.6s, or reduce sample count to 10.
+Benchmarking output/signature_verify_batch_fischlin_small/n64: Collecting 100 samples in estimated 27.621 s (100 iterations)
 Benchmarking output/signature_verify_batch_fischlin_small/n64: Analyzing
 output/signature_verify_batch_fischlin_small/n64
-                        time:   [275.83 ms 275.87 ms 275.91 ms]
+                        time:   [276.07 ms 276.09 ms 276.12 ms]
 Found 1 outliers among 100 measurements (1.00%)
   1 (1.00%) high mild
 Benchmarking output/wire_verify_batch_fischlin_small/n64
 Benchmarking output/wire_verify_batch_fischlin_small/n64: Warming up for 3.0000 s
-Benchmarking output/wire_verify_batch_fischlin_small/n64: Collecting 100 samples in estimated 5.4585 s (500 iterations)
+Benchmarking output/wire_verify_batch_fischlin_small/n64: Collecting 100 samples in estimated 5.4660 s (500 iterations)
 Benchmarking output/wire_verify_batch_fischlin_small/n64: Analyzing
 output/wire_verify_batch_fischlin_small/n64
-                        time:   [10.925 ms 10.927 ms 10.929 ms]
+                        time:   [10.936 ms 10.939 ms 10.941 ms]
 Found 7 outliers among 100 measurements (7.00%)
   7 (7.00%) high mild
 Benchmarking output/wire_decode_batch_fischlin_small/n64
 Benchmarking output/wire_decode_batch_fischlin_small/n64: Warming up for 3.0000 s
 
 Warning: Unable to complete 100 samples in 5.0s. You may wish to increase target time to 29.6s, or reduce sample count to 10.
-Benchmarking output/wire_decode_batch_fischlin_small/n64: Collecting 100 samples in estimated 29.564 s (100 iterations)
+Benchmarking output/wire_decode_batch_fischlin_small/n64: Collecting 100 samples in estimated 29.594 s (100 iterations)
 Benchmarking output/wire_decode_batch_fischlin_small/n64: Analyzing
 output/wire_decode_batch_fischlin_small/n64
-                        time:   [296.21 ms 296.25 ms 296.28 ms]
-Found 1 outliers among 100 measurements (1.00%)
-  1 (1.00%) low mild
+                        time:   [295.56 ms 295.58 ms 295.61 ms]
+Found 3 outliers among 100 measurements (3.00%)
+  2 (2.00%) high mild
+  1 (1.00%) high severe
 
 Benchmarking initiate/encrypt_shares_batch/n512
 Benchmarking initiate/encrypt_shares_batch/n512: Warming up for 3.0000 s
-Benchmarking initiate/encrypt_shares_batch/n512: Collecting 10 samples in estimated 5.5319 s (550 iterations)
+Benchmarking initiate/encrypt_shares_batch/n512: Collecting 10 samples in estimated 5.0084 s (495 iterations)
 Benchmarking initiate/encrypt_shares_batch/n512: Analyzing
 initiate/encrypt_shares_batch/n512
-                        time:   [10.116 ms 10.117 ms 10.118 ms]
-                        change: [-37.852% -37.825% -37.798%] (p = 0.00 < 0.05)
-                        Performance has improved.
+                        time:   [10.119 ms 10.120 ms 10.121 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
 
 Benchmarking output/decrypt_batch/n512
 Benchmarking output/decrypt_batch/n512: Warming up for 3.0000 s
-Benchmarking output/decrypt_batch/n512: Collecting 10 samples in estimated 5.4742 s (275 iterations)
+Benchmarking output/decrypt_batch/n512: Collecting 10 samples in estimated 5.4680 s (275 iterations)
 Benchmarking output/decrypt_batch/n512: Analyzing
 output/decrypt_batch/n512
-                        time:   [19.922 ms 19.924 ms 19.929 ms]
-                        change: [-31.817% -31.769% -31.721%] (p = 0.00 < 0.05)
-                        Performance has improved.
+                        time:   [19.834 ms 19.837 ms 19.839 ms]
 Benchmarking output/pedvss_opening_check_batch/n512
 Benchmarking output/pedvss_opening_check_batch/n512: Warming up for 3.0000 s
-Benchmarking output/pedvss_opening_check_batch/n512: Collecting 10 samples in estimated 5.2592 s (550 iterations)
+Benchmarking output/pedvss_opening_check_batch/n512: Collecting 10 samples in estimated 5.3025 s (550 iterations)
 Benchmarking output/pedvss_opening_check_batch/n512: Analyzing
 output/pedvss_opening_check_batch/n512
-                        time:   [9.6258 ms 9.6356 ms 9.6447 ms]
-                        change: [-1.3257% -1.1683% -0.9982%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+                        time:   [9.6758 ms 9.6786 ms 9.6812 ms]
 Benchmarking output/vk_aggregation/n512
 Benchmarking output/vk_aggregation/n512: Warming up for 3.0000 s
-Benchmarking output/vk_aggregation/n512: Collecting 10 samples in estimated 5.7069 s (110 iterations)
+Benchmarking output/vk_aggregation/n512: Collecting 10 samples in estimated 5.7165 s (110 iterations)
 Benchmarking output/vk_aggregation/n512: Analyzing
 output/vk_aggregation/n512
-                        time:   [57.533 ms 64.029 ms 72.477 ms]
-                        change: [-8.3625% +0.4879% +7.9106%] (p = 0.92 > 0.05)
-                        No change in performance detected.
+                        time:   [49.408 ms 50.724 ms 52.157 ms]
 
 Benchmarking initiate/poly_prove_schnorr/n512
 Benchmarking initiate/poly_prove_schnorr/n512: Warming up for 3.0000 s
-Benchmarking initiate/poly_prove_schnorr/n512: Collecting 10 samples in estimated 6.9140 s (165 iterations)
+Benchmarking initiate/poly_prove_schnorr/n512: Collecting 10 samples in estimated 6.9969 s (165 iterations)
 Benchmarking initiate/poly_prove_schnorr/n512: Analyzing
 initiate/poly_prove_schnorr/n512
-                        time:   [42.361 ms 42.368 ms 42.373 ms]
-                        change: [+11.405% +11.444% +11.482%] (p = 0.00 < 0.05)
-                        Performance has regressed.
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) low severe
+                        time:   [41.958 ms 41.964 ms 41.971 ms]
 
 Benchmarking output/poly_verify_single_schnorr/n512
 Benchmarking output/poly_verify_single_schnorr/n512: Warming up for 3.0000 s
-Benchmarking output/poly_verify_single_schnorr/n512: Collecting 10 samples in estimated 5.7517 s (165 iterations)
+Benchmarking output/poly_verify_single_schnorr/n512: Collecting 10 samples in estimated 5.7526 s (165 iterations)
 Benchmarking output/poly_verify_single_schnorr/n512: Analyzing
 output/poly_verify_single_schnorr/n512
-                        time:   [34.887 ms 34.892 ms 34.899 ms]
-                        change: [+7.1683% +7.2055% +7.2405%] (p = 0.00 < 0.05)
-                        Performance has regressed.
+                        time:   [34.552 ms 34.561 ms 34.571 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
 Benchmarking output/poly_verify_batch_schnorr/n512
 Benchmarking output/poly_verify_batch_schnorr/n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 180.5s.
-Benchmarking output/poly_verify_batch_schnorr/n512: Collecting 10 samples in estimated 180.48 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 178.4s.
+Benchmarking output/poly_verify_batch_schnorr/n512: Collecting 10 samples in estimated 178.42 s (10 iterations)
 Benchmarking output/poly_verify_batch_schnorr/n512: Analyzing
 output/poly_verify_batch_schnorr/n512
-                        time:   [17.854 s 17.857 s 17.860 s]
-                        change: [+6.8233% +6.8598% +6.8979%] (p = 0.00 < 0.05)
-                        Performance has regressed.
+                        time:   [17.695 s 17.696 s 17.697 s]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) low mild
 Benchmarking output/signature_verify_batch_schnorr/n512
 Benchmarking output/signature_verify_batch_schnorr/n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 20.5s.
-Benchmarking output/signature_verify_batch_schnorr/n512: Collecting 10 samples in estimated 20.528 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 20.6s.
+Benchmarking output/signature_verify_batch_schnorr/n512: Collecting 10 samples in estimated 20.577 s (10 iterations)
 Benchmarking output/signature_verify_batch_schnorr/n512: Analyzing
 output/signature_verify_batch_schnorr/n512
-                        time:   [2.0580 s 2.0581 s 2.0582 s]
-                        change: [+0.8112% +0.8227% +0.8343%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
+                        time:   [2.0510 s 2.0518 s 2.0526 s]
 Benchmarking output/wire_verify_batch_schnorr/n512
 Benchmarking output/wire_verify_batch_schnorr/n512: Warming up for 3.0000 s
-Benchmarking output/wire_verify_batch_schnorr/n512: Collecting 10 samples in estimated 9.4825 s (110 iterations)
+Benchmarking output/wire_verify_batch_schnorr/n512: Collecting 10 samples in estimated 9.4725 s (110 iterations)
 Benchmarking output/wire_verify_batch_schnorr/n512: Analyzing
 output/wire_verify_batch_schnorr/n512
-                        time:   [86.197 ms 86.217 ms 86.238 ms]
-                        change: [-12.601% -12.533% -12.458%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) low mild
+                        time:   [86.160 ms 86.177 ms 86.190 ms]
 Benchmarking output/wire_decode_batch_schnorr/n512
 Benchmarking output/wire_decode_batch_schnorr/n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 21.8s.
-Benchmarking output/wire_decode_batch_schnorr/n512: Collecting 10 samples in estimated 21.790 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 21.7s.
+Benchmarking output/wire_decode_batch_schnorr/n512: Collecting 10 samples in estimated 21.747 s (10 iterations)
 Benchmarking output/wire_decode_batch_schnorr/n512: Analyzing
 output/wire_decode_batch_schnorr/n512
-                        time:   [2.1758 s 2.1764 s 2.1769 s]
-                        change: [+0.3278% +0.3593% +0.3841%] (p = 0.00 < 0.05)
-                        Change within noise threshold.
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) low mild
+                        time:   [2.1757 s 2.1763 s 2.1769 s]
 
 Benchmarking initiate/poly_prove_fischlin_small/n512
 Benchmarking initiate/poly_prove_fischlin_small/n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 7.0s or enable flat sampling.
-Benchmarking initiate/poly_prove_fischlin_small/n512: Collecting 10 samples in estimated 7.0159 s (55 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 9.6s.
+Benchmarking initiate/poly_prove_fischlin_small/n512: Collecting 10 samples in estimated 9.5593 s (10 iterations)
 Benchmarking initiate/poly_prove_fischlin_small/n512: Analyzing
 initiate/poly_prove_fischlin_small/n512
-                        time:   [121.34 ms 125.37 ms 130.36 ms]
-                        change: [-6.1534% -0.4509% +5.6807%] (p = 0.89 > 0.05)
-                        No change in performance detected.
+                        time:   [824.15 ms 853.64 ms 882.99 ms]
 
 Benchmarking output/poly_verify_single_fischlin_small/n512
 Benchmarking output/poly_verify_single_fischlin_small/n512: Warming up for 3.0000 s
-Benchmarking output/poly_verify_single_fischlin_small/n512: Collecting 10 samples in estimated 9.6203 s (110 iterations)
+Benchmarking output/poly_verify_single_fischlin_small/n512: Collecting 10 samples in estimated 9.5666 s (110 iterations)
 Benchmarking output/poly_verify_single_fischlin_small/n512: Analyzing
 output/poly_verify_single_fischlin_small/n512
-                        time:   [87.106 ms 87.167 ms 87.240 ms]
-                        change: [-9.0321% -8.9426% -8.8578%] (p = 0.00 < 0.05)
-                        Performance has improved.
-Found 2 outliers among 10 measurements (20.00%)
-  1 (10.00%) low severe
-  1 (10.00%) low mild
+                        time:   [87.741 ms 87.788 ms 87.831 ms]
 Benchmarking output/poly_verify_batch_fischlin_small/n512
 Benchmarking output/poly_verify_batch_fischlin_small/n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 447.1s.
-Benchmarking output/poly_verify_batch_fischlin_small/n512: Collecting 10 samples in estimated 447.09 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 447.5s.
+Benchmarking output/poly_verify_batch_fischlin_small/n512: Collecting 10 samples in estimated 447.48 s (10 iterations)
 Benchmarking output/poly_verify_batch_fischlin_small/n512: Analyzing
 output/poly_verify_batch_fischlin_small/n512
-                        time:   [44.555 s 44.594 s 44.652 s]
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) high severe
+                        time:   [44.947 s 44.958 s 44.969 s]
 Benchmarking output/signature_verify_batch_fischlin_small/n512
 Benchmarking output/signature_verify_batch_fischlin_small/n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 173.9s.
-Benchmarking output/signature_verify_batch_fischlin_small/n512: Collecting 10 samples in estimated 173.87 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 173.3s.
+Benchmarking output/signature_verify_batch_fischlin_small/n512: Collecting 10 samples in estimated 173.33 s (10 iterations)
 Benchmarking output/signature_verify_batch_fischlin_small/n512: Analyzing
 output/signature_verify_batch_fischlin_small/n512
-                        time:   [17.316 s 17.319 s 17.322 s]
-Found 1 outliers among 10 measurements (10.00%)
-  1 (10.00%) low mild
+                        time:   [17.320 s 17.326 s 17.331 s]
 Benchmarking output/wire_verify_batch_fischlin_small/n512
 Benchmarking output/wire_verify_batch_fischlin_small/n512: Warming up for 3.0000 s
 
 Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 6.4s.
-Benchmarking output/wire_verify_batch_fischlin_small/n512: Collecting 10 samples in estimated 6.3841 s (10 iterations)
+Benchmarking output/wire_verify_batch_fischlin_small/n512: Collecting 10 samples in estimated 6.3701 s (10 iterations)
 Benchmarking output/wire_verify_batch_fischlin_small/n512: Analyzing
 output/wire_verify_batch_fischlin_small/n512
-                        time:   [638.50 ms 638.72 ms 638.90 ms]
+                        time:   [637.64 ms 637.89 ms 638.17 ms]
+Found 1 outliers among 10 measurements (10.00%)
+  1 (10.00%) high mild
 Benchmarking output/wire_decode_batch_fischlin_small/n512
 Benchmarking output/wire_decode_batch_fischlin_small/n512: Warming up for 3.0000 s
 
-Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 185.6s.
-Benchmarking output/wire_decode_batch_fischlin_small/n512: Collecting 10 samples in estimated 185.59 s (10 iterations)
+Warning: Unable to complete 10 samples in 5.0s. You may wish to increase target time to 186.0s.
+Benchmarking output/wire_decode_batch_fischlin_small/n512: Collecting 10 samples in estimated 185.96 s (10 iterations)
 Benchmarking output/wire_decode_batch_fischlin_small/n512: Analyzing
 output/wire_decode_batch_fischlin_small/n512
-                        time:   [18.585 s 18.588 s 18.592 s]
+                        time:   [18.539 s 18.542 s 18.544 s]
 
