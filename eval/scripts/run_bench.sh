@@ -49,6 +49,7 @@ fi
     echo "rustc=$(rustc -V)"
     echo "cargo=$(cargo -V)"
     echo "rustflags=${RUSTFLAGS:-<unset>}"
+    echo "rayon_threads=1, except parallel_scaling and optimizations which use all cores"
     echo "nproc=$(nproc 2>/dev/null || sysctl -n hw.ncpu)"
     if command -v lscpu >/dev/null; then
         echo "cpu=$(lscpu | sed -n 's/^Model name: *//p' | head -1)"

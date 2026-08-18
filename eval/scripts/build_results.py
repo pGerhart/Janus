@@ -230,6 +230,8 @@ def main():
     parts.append(f"| OS | {info.get('uname', '?')} |")
     parts.append(f"| Rust | {info.get('rustc', '?')} |")
     parts.append(f"| RUSTFLAGS | `{info.get('rustflags', '<unset>')}` |")
+    if "rayon_threads" in info:
+        parts.append(f"| Rayon threads | {info['rayon_threads']} |")
     parts.append(f"| Date | {info.get('date', '?')} |\n")
     parts.append(
         "`(t, n)` = (degree, parties), every setting n-out-of-n with `t = n - 1`. "
